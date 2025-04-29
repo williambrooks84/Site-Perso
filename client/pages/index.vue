@@ -1,9 +1,9 @@
 <template>
-    <p class="text-blue-700">test</p>
+    <Hero/>
 </template>
 
 <script setup>
-
+import Hero from '~/components/Hero/Hero.vue'
 </script>
 
 <style scoped>
