@@ -56,6 +56,5 @@ const props = defineProps({
 </script>
 
 <style scoped>
-@import "tailwindcss";
-@import "@nuxt/ui";
+
 </style>

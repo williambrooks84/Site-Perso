@@ -9,7 +9,7 @@
                 </ul>
             </div>
         </div>
-        <Button label="En savoir plus" padding="px-4 py-2" bgColor="bg-primary hover:bg-secondary transition"
+        <Button label="En savoir plus" padding="px-4 py-2" bgColor="bg-primary hover:bg-hover transition"
         textColor="text-light hover:text-primary" textSize="text-lg" rounded="rounded-lg" />
     </div>    
 </template>

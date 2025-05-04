@@ -1,7 +1,7 @@
 <template>
     <a 
         :href="href || '#'" 
-        class="text-light text-xl font-semibold uppercase hover:underline hover:decoration-primary hover:decoration-2 underline-offset-7 hover:text-primary hover:bg-secondary px-3 py-2 rounded transition"
+        class="text-light text-xl font-semibold uppercase hover:underline hover:decoration-primary hover:decoration-2 underline-offset-7 hover:text-primary hover:bg-hover px-3 py-2 rounded transition"
     >
         {{name}}
     </a>
@@ -17,6 +17,5 @@ const props = defineProps({
 </script>
 
 <style scoped>
-@import "tailwindcss";
-@import "@nuxt/ui";
+
 </style>

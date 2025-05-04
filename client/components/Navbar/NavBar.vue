@@ -23,7 +23,7 @@
                 :key="link.name" 
                 :href="link.href" 
                 :name="link.name" 
-                class="hover:text-primary hover:bg-secondary px-3 py-2 rounded transition"
+                class="px-3 py-2 rounded"
                 />
             </div>
 
