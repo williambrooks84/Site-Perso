@@ -1,7 +1,7 @@
 <template>
     <ul>
-        <li class="flex items-center text-2xl font-semibold text-gray-700 dark:text-gray-200">
-            <img :src="icon" alt="">
+        <li class="flex items-center text-md lg:text-xl font-semibold text-dark dark:text-light">
+            <i :class="['bi', icon]" class="mr-3 text-primary"></i>
             {{ text }}
         </li>
     </ul>
@@ -9,6 +9,11 @@
 
 <script setup>
 const props = defineProps({
+
+    icon: {
+        type: String,
+        required: true
+    },
 
     text: {
         type: String,

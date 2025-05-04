@@ -50,8 +50,7 @@ const showModal = ref(false)
 
 const navLinks = [
     { name: 'Accueil', href: '/' },
-    { name: 'Qui suis-je ?', href: '/#' },
-    { name: 'Mon parcours', href: '/#' },
+    { name: 'Qui suis-je ?', href: '/quisuisje' },
     { name: 'Mon portfolio', href: '/#' },
     { name: 'Voir mon CV', href: '/#' }
 ];
