@@ -2,7 +2,7 @@
     <div
       ref="elementRef"
       :class="[
-        'flex flex-col items-center gap-2 transition-all duration-700',
+        'flex flex-col items-center gap-2 transition-transform duration-300 hover:scale-150',
         isVisible ? 'translate-x-0 opacity-100' : '-translate-x-10 opacity-0'
       ]"
     >

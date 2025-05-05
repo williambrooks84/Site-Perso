@@ -2,7 +2,7 @@
   <button
     v-ripple
     :class="[ 
-      'relative overflow-hidden flex items-center uppercase space-x-3 box-border',
+      'relative overflow-hidden flex items-center uppercase space-x-3 box-border cursor-pointer',
       padding,
       bgColor,
       textColor,
