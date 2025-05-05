@@ -5,10 +5,11 @@
         <p class="body-text">En dehors de ma formation, je suis passionné des transports en commun (surtout les bus et les trains) et je fais de la photographie dessus, en plus des paysages. Je suis contributeur sur l'association en ligne <a class="body-link" href="https://tc-infos.fr" target="_blank" rel="noopener noreferrer">TC Infos</a>.</p>
         <p class="body-text">J'écoute beaucoup de musique, surtout du hard rock/métal comme Iron Maiden et Guns N' Roses et du Britpop comme Oasis. J'aime aussi les groupes de rock classique comme les Rolling Stones.</p>
     </div>
+    <MediaShowcase/>
 </template>
 
 <script setup>
-
+import MediaShowcase from '~/components/Media/MediaShowcase.vue';
 </script>
 
 <style scoped>

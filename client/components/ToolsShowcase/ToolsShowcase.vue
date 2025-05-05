@@ -2,15 +2,15 @@
     
     <div class="space-y-8 m-15">
         <h2>Mon environnement technique</h2>
-        <div class="flex flex-col gap-8">
+        <div class="flex flex-col gap-5">
             <h3>Développement :</h3>
-            <div class="flex flex-wrap justify-center gap-5">
+            <div class="flex flex-wrap justify-center gap-3">
                 <Tool v-for="(devTool, index) in devTools" :key="index" :icon="devTool.icon" :label="devTool.label"
                     class="w-1/4 xl:w-1/8" />
             </div>
         </div>
 
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-5">
             <h3>Design et graphisme :</h3>
             <div class="flex flex-wrap justify-center gap-3">
                 <Tool v-for="(designTool, index) in designTools" :key="index" :icon="designTool.icon"
@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-5">
             <h3>En cours d'acquisition :</h3>
             <div class="flex flex-wrap justify-center gap-3">
                 <Tool v-for="(pendingTool, index) in pendingTools" :key="index" :icon="pendingTool.icon"
