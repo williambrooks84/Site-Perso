@@ -5,6 +5,8 @@
     --color-primary: #265F00;
     --color-secondary: 	#60A5FA ;
     --color-hover: #AAEFDF;
+    --color-border-grey: #bbbbbb;
+    --color-grey: #b3b3b3;
     --color-light: #EFFDFA;
     --color-dark: #1A2523;
 }
@@ -13,6 +15,7 @@
     --color-primary: var(--color-primary);
     --color-secondary: var(--color-secondary);
     --color-hover: var(--color-hover);
+    --color-border-grey: var(--color-border-grey);
     --color-light: var(--color-light);
     --color-dark: var(--color-dark);
 }

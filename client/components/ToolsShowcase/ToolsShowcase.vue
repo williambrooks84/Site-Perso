@@ -1,6 +1,6 @@
 <template>
     
-    <div class="space-y-8 m-15">
+    <div class="space-y-8 mt-15">
         <h2>Mon environnement technique</h2>
         <div class="flex flex-col gap-5">
             <h3>Développement :</h3>

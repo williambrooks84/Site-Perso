@@ -1,6 +1,8 @@
 <template>
     <NavBar/>
-    <slot/>
+    <div class="p-10 lg:p-20">
+        <slot/>
+    </div>
 </template>
 
 <script setup>

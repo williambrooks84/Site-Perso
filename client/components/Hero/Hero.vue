@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col justify-center items-center p-10 lg:p-20 gap-8 lg:gap-10">
+    <div class="flex flex-col justify-center items-center gap-8 lg:gap-10">
         <h2>Qui suis-je ?</h2>
         <div class="flex flex-col lg:flex-row gap-7 lg:gap-15 items-center justify-center">
             <img class="w-[300px] xl:w-auto h-auto rounded-3xl xl:rounded-4xl" src="/assets/img/will.jpg" alt="will" />

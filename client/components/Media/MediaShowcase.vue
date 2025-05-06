@@ -1,6 +1,10 @@
 <template>
-    <div class="flex flex-row justify-center items-center gap-4">
-        <Media v-for="(media, index) in media" :key="index" :icon="media.icon" :name="media.name" :link="media.link" size="large"/>
+    <div class="flex flex-col gap-8">
+        <h2>Venez voir mes réseaux sociaux</h2>
+        <div class="flex flex-wrap gap-6 lg:flex-row justify-between items-center">
+            <Media v-for="(media, index) in media" :key="index" :icon="media.icon" :name="media.name" :link="media.link"
+                size="large" />
+        </div>
     </div>
 </template>
 

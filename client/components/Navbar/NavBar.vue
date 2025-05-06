@@ -31,7 +31,7 @@
         </div>    
     </nav>
     <!-- Mobile nav links -->
-    <div v-if="isMobileMenuOpen" class="xl:hidden absolute w-2/3 bg-primary flex flex-col px-4 pb-4 gap-2 space-y-2 right-0 transition">
+    <div v-show="isMobileMenuOpen" class="xl:hidden absolute w-2/3 bg-primary flex flex-col px-4 pb-4 gap-2 space-y-2 right-0 transition">
         <NavLink v-for="link in navLinks" :key="link.name" :href="link.href" :name="link.name" />
     </div>
 </template>
@@ -46,7 +46,7 @@ defineProps({
     show: Boolean
 });
 
-const showModal = ref(false)
+// Removed unused showModal variable
 
 const navLinks = [
     { name: 'Accueil', href: '/' },

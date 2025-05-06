@@ -1,6 +1,6 @@
 <template>
     <a :href="link">
-        <img :src="icon" :alt="name" :class="sizeClass" />
+        <img :src="icon" :alt="name" :class="['transition-transform duration-300 hover:scale-125', sizeClass]" />
     </a>
 </template>
 
@@ -28,7 +28,7 @@ const props = defineProps({
 
 const sizeClass = {
     default: 'w-10',
-    large: 'w-20'
+    large: 'w-12 lg:w-20'
 }[props.size] || 'w-10';
 
 </script>
