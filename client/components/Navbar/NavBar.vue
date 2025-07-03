@@ -50,7 +50,7 @@ const navLinks = [
     { name: 'Accueil', href: '/' },
     { name: 'Qui suis-je ?', href: '/quisuisje' },
     { name: 'Mon portfolio', href: '/#' },
-    { name: 'Voir mon CV', href: '/#' }
+    { name: 'Voir mon CV', href: '/moncv' }
 ];
 
 const isMobileMenuOpen = ref(false);
