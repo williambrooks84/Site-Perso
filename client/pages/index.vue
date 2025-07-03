@@ -1,7 +1,7 @@
 <template>
     <Hero/>
     <ToolsShowcase/>
-    <Contact/>
+    
 </template>
 
 <script setup>

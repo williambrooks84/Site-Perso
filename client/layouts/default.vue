@@ -1,6 +1,6 @@
 <template>
     <NavBar/>
-    <div class="p-10 lg:p-20">
+    <div class="pt-40 p-10 lg:p-32">
         <slot/>
     </div>
 </template>

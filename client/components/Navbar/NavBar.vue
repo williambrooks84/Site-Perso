@@ -1,15 +1,13 @@
 <template>
-    <nav class="shadow-md w-full">
+    <nav class="fixed top-0 left-0 z-50 w-full shadow-md">
         <div class="bg-primary">  
             <div class="container mx-auto p-4 flex items-center justify-between">
-            <img src="" alt="logo">
+            <img src="/assets/img/logo.svg" alt="logo" class="h-8" />
             <a href="#" class="flex items-center">
                 <svg width="133" height="48" viewBox="0 0 133 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <!-- SVG paths stay the same -->
                 </svg>
             </a>
-
-            <span id="slogan" class="mx-auto hidden sm:inline-flex xl:hidden text-light ">Impossible n'est pas possible</span>
 
             <!-- Mobile menu button (optional if you want responsiveness later) -->
             <button class="xl:hidden text-gray-600 focus:outline-none" @click="isMobileMenuOpen = !isMobileMenuOpen">
