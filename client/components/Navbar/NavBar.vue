@@ -8,20 +8,25 @@
                         <!-- SVG paths stay the same -->
                     </svg>
                 </a>
-                <!-- Mobile menu button -->
-                <button class="xl:hidden focus:outline-none"
-                    @click="isMobileMenuOpen = !isMobileMenuOpen">
-                    <i :class="isMobileMenuOpen ? 'bi bi-x-lg text-4xl text-secondary' : 'bi bi-list text-4xl text-white'"></i>
-                </button>
-                <!-- Navigation Links -->
-                <div class="hidden xl:flex space-x-8 items-center justify-center flex-1">
-                    <NavLink v-for="link in navLinks" :key="link.name" :href="link.href" :name="link.name"
-                        class="px-3 py-2 rounded" />
-                    <!-- Me contacter button -->
-                    <button class="ml-4 px-4 py-2 bg-secondary text-white rounded hover:bg-secondary-dark transition"
-                        @click="showContactModal = true">
-                        <i class="bi bi-pencil-fill"></i>
-                        Me contacter
+                <div class="flex items-center flex-1 justify-end xl:justify-center space-x-4">
+                    <!-- Desktop nav links and theme toggle -->
+                    <div class="hidden xl:flex space-x-8 items-center">
+                        <NavLink v-for="link in navLinks" :key="link.name" :href="link.href" :name="link.name" class="px-3 py-2 rounded" />
+                        <!-- Theme toggle button (desktop, left of contact) -->
+                        <ThemeButton class="ml-4 mr-2" />
+                        <!-- Me contacter button -->
+                        <button class="px-4 py-2 bg-secondary text-white rounded hover:bg-secondary-dark transition"
+                            @click="showContactModal = true">
+                            <i class="bi bi-pencil-fill"></i>
+                            Me contacter
+                        </button>
+                    </div>
+                    <!-- Mobile theme toggle (left of burger) -->
+                    <ThemeButton class="ml-4 mr-2 xl:hidden" />
+                    <!-- Mobile menu button -->
+                    <button class="xl:hidden focus:outline-none"
+                        @click="isMobileMenuOpen = !isMobileMenuOpen">
+                        <i :class="isMobileMenuOpen ? 'bi bi-x-lg text-4xl text-secondary' : 'bi bi-list text-4xl text-white'"></i>
                     </button>
                 </div>
             </div>
@@ -42,9 +47,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref} from 'vue';
 import NavLink from './NavLink.vue';
 import Contact from '../Contact/Contact.vue';
+import ThemeButton from './ThemeButton.vue';
 
 const navLinks = [
     { name: 'Accueil', href: '/' },
@@ -55,6 +61,7 @@ const navLinks = [
 
 const isMobileMenuOpen = ref(false);
 const showContactModal = ref(false);
+
 </script>
 
 <style scoped>

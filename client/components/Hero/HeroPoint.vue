@@ -1,6 +1,6 @@
 <template>
     <ul>
-        <li class="flex items-center text-md lg:text-xl font-semibold text-dark dark:text-light">
+        <li class="flex items-center text-md lg:text-xl font-semibold text-dark">
             <i :class="['bi', icon]" class="mr-3 text-secondary"></i>
             {{ text }}
         </li>

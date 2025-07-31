@@ -1,14 +1,24 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
-:root{
+:root {
     --color-primary: #265F00;
-    --color-secondary: 	#60A5FA ;
+    --color-secondary: #60A5FA;
     --color-hover: #AAEFDF;
     --color-border-grey: #bbbbbb;
     --color-grey: #b3b3b3;
     --color-light: #EFFDFA;
     --color-dark: #1A2523;
+}
+
+.dark {
+    --color-primary: #a3e635;
+    --color-secondary: #3f79f7;
+    --color-hover: #334155;
+    --color-border-grey: #444;
+    --color-grey: #888;
+    --color-light: #1A2523;
+    --color-dark: #f3f4f6; /* <-- white-ish for dark mode */
 }
 
 @theme static {
