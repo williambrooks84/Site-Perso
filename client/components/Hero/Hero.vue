@@ -9,23 +9,25 @@
                 </ul>
             </div>
         </div>
-        <Button label="En savoir plus" padding="px-4 py-2" bgColor="bg-primary hover:bg-hover transition"
-        textColor="text-light hover:text-primary" textSize="text-lg" rounded="rounded-lg" />
-    </div>    
+        <a href="/quisuisje"
+            class="px-6 py-3 bg-primary text-light rounded font-semibold uppercase text-lg transition hover:underline hover:decoration-primary hover:decoration-2 underline-offset-7 hover:text-primary hover:bg-hover">
+            En savoir plus
+        </a>
+    </div>
 </template>
 
 <script setup>
 import HeroPoint from './HeroPoint.vue';
 
 const items = [
-{ icon: 'bi-person-fill', text: 'William Brooks' },
-{ icon: 'bi-calendar-fill', text: '20 ans' },
-{ icon: 'bi-geo-alt-fill', text: 'Limoges, France (binational France/Rouayme-Uni)' },
-{ icon: 'bi-code-slash', text: 'Développeur Web' },
-{ icon: 'bi-camera-fill', text: 'Photographe' },
-{ icon: 'bi-bus-front-fill', text: 'Passionné de transports en commun (bus, trains, trams, etc)' },
-{ icon: 'bi-controller', text: 'Amateur de jeux vidéo (principalement Team Fortress 2)' },
-{ icon: 'bi-music-note-beamed', text: 'Fan de musique (Hard Rock/Métal, Rock et Britpop)' }
+    { icon: 'bi-person-fill', text: 'William Brooks' },
+    { icon: 'bi-calendar-fill', text: '20 ans' },
+    { icon: 'bi-geo-alt-fill', text: 'Limoges, France (binational France/Rouayme-Uni)' },
+    { icon: 'bi-code-slash', text: 'Développeur Web' },
+    { icon: 'bi-camera-fill', text: 'Photographe' },
+    { icon: 'bi-bus-front-fill', text: 'Passionné de transports en commun (bus, trains, trams, etc)' },
+    { icon: 'bi-controller', text: 'Amateur de jeux vidéo (principalement Team Fortress 2)' },
+    { icon: 'bi-music-note-beamed', text: 'Fan de musique (Hard Rock/Métal, Rock et Britpop)' }
 ];
 
 </script>
