@@ -1,6 +1,6 @@
 <template>
   <button
-    class="p-2 rounded text-light transition"
+    class="p-2 rounded text-light transition hover:underline hover:decoration-primary hover:decoration-2 underline-offset-7 hover:text-primary hover:bg-hover"
     @click="toggleTheme"
     aria-label="Toggle theme"
   >

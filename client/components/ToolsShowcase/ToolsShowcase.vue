@@ -27,8 +27,15 @@
         </div>
         <div class="flex flex-col items-center justify-center pt-3 gap-3">
             <p class="body-text">Vous souhaitez voir mes compétences mises en application ?</p>
-            <Button label="Consultez mes projets" padding="px-4 py-2" bgColor="bg-primary hover:bg-hover transition"
-            textColor="text-light hover:text-primary" textSize="text-lg" rounded="rounded-lg" />
+            <Button
+            label="Consultez mes projets"
+            padding="px-4 py-2"
+            bgColor="bg-primary hover:bg-hover transition"
+            textColor="text-light hover:text-primary"
+            textSize="text-lg"
+            rounded="rounded-lg"
+            @click="$router.push('/portfolio')"
+            />
         </div>
     </div>
 </template>
