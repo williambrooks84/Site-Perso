@@ -1,7 +1,8 @@
 <template>
-    <Hero/>
-    <ToolsShowcase/>
-    
+    <Hero />
+    <ToolsShowcase />
+    <MediaShowcase />
+
 </template>
 
 <script setup>
@@ -11,6 +12,4 @@ import Contact from '~/components/Contact/Contact.vue';
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
