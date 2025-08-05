@@ -18,7 +18,7 @@
     --color-border-grey: #444;
     --color-grey: #888;
     --color-light: #1A2523;
-    --color-dark: #f3f4f6; /* <-- white-ish for dark mode */
+    --color-dark: #f3f4f6; 
 }
 
 @theme static {
