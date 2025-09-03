@@ -7,7 +7,7 @@
                 {{ content }}
             </p>
         </div>
-        <img :src="image" :alt="name" class="w-100 h-auto" />
+        <img v-if="image" :src="image" :alt="name" class="w-100 h-auto" />
     </div>
 </template>
 
