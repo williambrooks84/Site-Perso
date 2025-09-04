@@ -5,7 +5,7 @@ Ce projet est mon propre portfolio vitrine pour donner des informatons sur moi-m
 ## Technologies utilisées  
 
 ### Frontend  
-- **Nuxt** ([nuxt.com](https://nuxt.com)) : Framework basé sur Vue.js qui facilite la création d’applications web modernes, rapides et optimisées.  
+- **Nuxt** ([nuxt.com](https://nuxt.com)) : Framework basé sur Vue.js qui facilite la création d’applications web modernes, rapides et optimisées.
 
 ### Backend  
 - **API WordPress** ([wordpress.org](https://wordpress.org)) : Accéder et de gérer les contenus d’un site WordPress via des requêtes HTTP en JSON.  
@@ -14,13 +14,12 @@ Ce projet est mon propre portfolio vitrine pour donner des informatons sur moi-m
 
 ### 1. Cloner le projet
 ```bash
-git clone https://github.com/williambrooks84/SAE303.git
+git clone https://github.com/williambrooks84/Site-Perso.git
 ```
 
 ### 2. Installation des dépendances  
 ```bash
-npm install vite
-npm install tailwindcss
+npm install
 ```
 
 ### 3. Lancement du projet en local  
