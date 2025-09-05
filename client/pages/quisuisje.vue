@@ -13,6 +13,7 @@
                 Roses et du Britpop comme Oasis. J'aime aussi les groupes de rock classique comme les Rolling Stones.
             </p>
         </div>
+        <Study />
         <div class="my-10">
             <MediaShowcase />
         </div>
@@ -21,6 +22,7 @@
 
 <script setup>
 import MediaShowcase from '~/components/Media/MediaShowcase.vue';
+import Study from '~/components/Study/Study.vue';
 </script>
 
 <style scoped></style>
