@@ -2,73 +2,97 @@
 @import "@nuxt/ui";
 
 :root {
-    --color-primary: #265F00;
-    --color-secondary: #60A5FA;
-    --color-hover: #AAEFDF;
-    --color-border-grey: #bbbbbb;
-    --color-grey: #b3b3b3;
-    --color-light: #EFFDFA;
-    --color-dark: #1A2523;
+  --color-primary: #265f00;
+  --color-secondary: #60a5fa;
+  --color-hover: #aaefdf;
+  --color-border-grey: #bbbbbb;
+  --color-grey: #b3b3b3;
+  --color-light: #effdfa;
+  --color-dark: #1a2523;
 }
 
 .dark {
-    --color-primary: #a3e635;
-    --color-secondary: #3f79f7;
-    --color-hover: #334155;
-    --color-border-grey: #444;
-    --color-grey: #888;
-    --color-light: #1A2523;
-    --color-dark: #f3f4f6; 
+  --color-primary: #a3e635;
+  --color-secondary: #3f79f7;
+  --color-hover: #334155;
+  --color-border-grey: #444;
+  --color-grey: #888;
+  --color-light: #1a2523;
+  --color-dark: #f3f4f6;
 }
 
 @theme static {
-    --color-primary: var(--color-primary);
-    --color-secondary: var(--color-secondary);
-    --color-hover: var(--color-hover);
-    --color-border-grey: var(--color-border-grey);
-    --color-light: var(--color-light);
-    --color-dark: var(--color-dark);
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-hover: var(--color-hover);
+  --color-border-grey: var(--color-border-grey);
+  --color-light: var(--color-light);
+  --color-dark: var(--color-dark);
 }
 
-.body-text{
-    font-size: 1rem;
-    color: var(--color-dark);
-    @media (min-width: 1024px) {
-        font-size: 1.5rem;
-    }
+.body-text {
+  font-size: 1rem;
+  color: var(--color-dark);
+  @media (min-width: 1024px) {
+    font-size: 1.5rem;
+  }
 }
 
-.body-link{
-    color: var(--color-primary);
-    font-weight: 700;
-    text-decoration: underline;
+.body-link {
+  color: var(--color-primary);
+  font-weight: 700;
+  text-decoration: underline;
 }
 
 h2 {
-    text-align: center;
-    color: var(--color-primary);
-    font-size: 1.5rem;
-    font-weight: 700; 
+  text-align: center;
+  color: var(--color-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
 }
 
 @media (min-width: 1024px) {
-    h2 {
-        text-align: left;
-        font-size: 2.25rem; 
-    }
+  h2 {
+    text-align: left;
+    font-size: 2.25rem;
+  }
 }
 
 h3 {
-    text-align: center;
-    color: var(--color-primary);
-    font-size: 1.25rem; 
-    font-weight: 600; 
+  text-align: center;
+  color: var(--color-primary);
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
 @media (min-width: 1024px) {
-    h3 {
-        text-align: left;
-        margin-left: 5rem;
-        font-size: 2rem;
-    }
+  h3 {
+    text-align: left;
+    margin-left: 5rem;
+    font-size: 2rem;
+  }
+}
+
+.btn-primary {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  background-color: var(--color-primary);
+  color: var(--color-light);
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 1.125rem;
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--color-primary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 7px;
+  color: var(--color-primary);
+  background-color: var(--color-hover);
 }

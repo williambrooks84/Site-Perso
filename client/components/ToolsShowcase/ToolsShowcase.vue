@@ -28,7 +28,7 @@
         <div class="flex flex-col items-center justify-center pt-3 gap-3">
             <p class="body-text">Vous souhaitez voir mes compétences mises en application ?</p>
             <a href="/portfolio"
-                class="px-6 py-3 bg-primary text-light rounded font-semibold uppercase text-lg transition hover:underline hover:decoration-primary hover:decoration-2 underline-offset-7 hover:text-primary hover:bg-hover">
+                class="btn-primary">
                 Consultez mes projets
             </a>
         </div>

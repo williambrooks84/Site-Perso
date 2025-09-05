@@ -10,7 +10,7 @@
             </div>
         </div>
         <a href="/quisuisje"
-            class="px-6 py-3 bg-primary text-light rounded font-semibold uppercase text-lg transition hover:underline hover:decoration-primary hover:decoration-2 underline-offset-7 hover:text-primary hover:bg-hover">
+            class="btn-primary">
             En savoir plus
         </a>
     </div>
