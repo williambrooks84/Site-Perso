@@ -40,46 +40,31 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
+import { useTheme } from '~/composables/useTheme.js';
 import NavLink from './NavLink.vue';
 import Contact from '../Contact/Contact.vue';
 import ThemeButton from './ThemeButton.vue';
 import ContactButton from './ContactButton.vue'; 
 
 const navLinks = [
-    { name: 'Accueil', href: '/' },
-    { name: 'Qui suis-je ?', href: '/quisuisje' },
-    { name: 'Mon portfolio', href: '/portfolio' },
-    { name: 'Mon CV', href: '/moncv' }
+  { name: 'Accueil', href: '/' },
+  { name: 'Qui suis-je ?', href: '/quisuisje' },
+  { name: 'Mon portfolio', href: '/portfolio' },
+  { name: 'Mon CV', href: '/moncv' }
 ];
 
 const isMobileMenuOpen = ref(false);
 const showContactModal = ref(false);
-
-// Track theme reactively
-const isDark = ref(false);
-
-function updateTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-        isDark.value = savedTheme === 'dark';
-    } else {
-        isDark.value = document.documentElement.classList.contains('dark');
-    }
-}
-
-// Update on mount and when theme changes
-updateTheme();
-window.addEventListener('storage', updateTheme);
-window.addEventListener('DOMContentLoaded', updateTheme);
-
-// Optionally, listen for class changes (if theme is toggled via class)
-const observer = new MutationObserver(updateTheme);
-observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-
+const { isDark } = useTheme();
 const logoSrc = ref(isDark.value ? '/assets/img/logo-dark.svg' : '/assets/img/logo.svg');
+
+// Met à jour le logo si isDark change dynamiquement côté client
 watch(isDark, (val) => {
     logoSrc.value = val ? '/assets/img/logo-dark.svg' : '/assets/img/logo.svg';
+});
+onMounted(() => {
+    logoSrc.value = isDark.value ? '/assets/img/logo-dark.svg' : '/assets/img/logo.svg';
 });
 </script>
 
