@@ -2,7 +2,9 @@
     <nav class="fixed top-0 left-0 z-50 w-full shadow-md">
         <div class="bg-primary">
             <div class="container mx-auto p-4 flex items-center justify-between">
-                <img :src="logoSrc" alt="logo" class="h-8" />
+                <client-only>
+                    <img :src="logoSrc" alt="logo" class="h-8" />
+                </client-only>
                 <a href="#" class="flex items-center">
                     <svg width="133" height="48" viewBox="0 0 133 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <!-- SVG paths stay the same -->
@@ -14,12 +16,16 @@
                         <NavLink v-for="link in navLinks" :key="link.name" :href="link.href" :name="link.name"
                             class="px-3 py-2 rounded" />
                         <!-- Theme toggle button (desktop, left of contact) -->
-                        <ThemeButton class="ml-4 mr-2" />
+                        <client-only>
+                            <ThemeButton class="ml-4 mr-2" />
+                        </client-only>
                         <!-- Me contacter button -->
                         <ContactButton @click="showContactModal = true" />
                     </div>
                     <!-- Mobile theme toggle (left of burger) -->
-                    <ThemeButton class="ml-4 mr-2 xl:hidden" />
+                    <client-only>
+                      <ThemeButton class="ml-4 mr-2 xl:hidden" />
+                    </client-only>
                     <!-- Mobile menu button -->
                     <button class="xl:hidden focus:outline-none transition" @click="isMobileMenuOpen = !isMobileMenuOpen">
                         <i

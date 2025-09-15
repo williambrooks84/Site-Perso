@@ -1,6 +1,6 @@
 <template>
-  <div class="row">
-    <div class="col-md-4 mb-4" v-for="projet in projets" :key="projet.id">
+  <div class="flex flex-col justify-center gap-8">
+    <div class=" mb-4" v-for="projet in projets" :key="projet.id">
       <div class="w-full flex flex-col md:flex-row gap-4 md:gap-8">
         <!-- Image -->
         <img
@@ -11,14 +11,31 @@
         />
 
         <!-- Content -->
-        <div class="flex flex-col justify-between md:items-center gap-4">
-          <h5 class="text-center text-2xl md:text-4xl" v-html="projet.title.rendered"></h5>
-          <p class="text-sm md:text-lg">
-            {{ projet.custom_fields.short_description || 'Aucune description disponible.' }}
+        <div class="flex flex-col justify-between items-center gap-4 text-center w-full">
+          <h5 class="text-2xl md:text-4xl" v-html="projet.title.rendered"></h5>
+          <p class="text-sm md:text-lg text-left">
+            {{ projet.custom_fields.description || 'Aucune description disponible.' }}
           </p>
-          <NuxtLink v-if="projet.custom_fields.custom_link" :to="projet.custom_fields.custom_link" class="btn-primary md:w-fit">
-            Voir le projet
-          </NuxtLink>
+          <div class="flex flex-col md:flex-row gap-4">
+            <a
+              v-if="projet.custom_fields.project_link"
+              :href="projet.custom_fields.project_link"
+              class="btn-primary md:w-fit"
+              target="_blank"
+              rel="noopener"
+            >
+              Voir le projet
+            </a>
+            <a
+              v-if="projet.custom_fields.site_link"
+              :href="projet.custom_fields.site_link"
+              class="btn-primary md:w-fit"
+              target="_blank"
+              rel="noopener"
+            >
+              Voir le site hébergé
+            </a>
+          </div>
         </div>
       </div>
     </div>
