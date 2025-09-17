@@ -1,12 +1,12 @@
 <template>
   <div class="flex flex-col justify-center gap-8">
     <div class=" mb-4" v-for="projet in projets" :key="projet.id">
-      <div class="w-full flex flex-col md:flex-row gap-4 md:gap-8">
+      <div class="w-full flex flex-col items-center xl:flex-row gap-4 md:gap-8">
         <!-- Image -->
         <img
           v-if="projet._embedded && projet._embedded['wp:featuredmedia']"
           :src="projet._embedded['wp:featuredmedia'][0].source_url"
-          class="w-full h-auto md:w-96"
+          class="w-full h-auto md:w-96 md:h-64 object-cover"
           :alt="projet.title.rendered"
         />
 
