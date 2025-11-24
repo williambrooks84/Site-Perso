@@ -22,7 +22,7 @@ import HeroPoint from './HeroPoint.vue';
 const items = [
     { icon: 'bi-person-fill', text: 'William Brooks' },
     { icon: 'bi-calendar-fill', text: '20 ans' },
-    { icon: 'bi-geo-alt-fill', text: 'Limoges, France (binational France/Rouayme-Uni)' },
+    { icon: 'bi-geo-alt-fill', text: 'Limoges, France (binational France/Royaume-Uni)' },
     { icon: 'bi-code-slash', text: 'Développeur Web' },
     { icon: 'bi-camera-fill', text: 'Photographe' },
     { icon: 'bi-bus-front-fill', text: 'Passionné de transports en commun (bus, trains, trams, etc)' },

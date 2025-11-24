@@ -20,7 +20,7 @@
                             <ThemeButton class="ml-4 mr-2" />
                         </client-only>
                         <!-- Me contacter button -->
-                        <ContactButton @click="showContactModal = true" />
+                        <!--<ContactButton @click="showContactModal = true" />-->
                     </div>
                     <!-- Mobile theme toggle (left of burger) -->
                     <client-only>
@@ -39,10 +39,10 @@
     <div v-show="isMobileMenuOpen"
         class="xl:hidden fixed top-20 right-0 w-2/3 bg-primary flex flex-col px-4 pb-4 gap-2 space-y-2 z-50 transition">
         <NavLink v-for="link in navLinks" :key="link.name" :href="link.href" :name="link.name" />
-        <ContactButton class="mt-2 w-fit" @click="showContactModal = true" />
+        <!--<ContactButton class="mt-2 w-fit" @click="showContactModal = true" />-->
     </div>
     <!-- Contact Modal -->
-    <Contact v-if="showContactModal" @close="showContactModal = false" />
+    <!--<Contact v-if="showContactModal" @close="showContactModal = false" />-->
 </template>
 
 <script setup>

@@ -23,5 +23,12 @@ export default defineNuxtConfig({
       lastmod: new Date().toISOString()
     },
     xsl: false // ✅ pour éviter l’erreur /__sitemap__/style.xsl
+  },
+  app: {
+    head: {
+      link: [
+        { rel: 'icon', type: 'image/png', href: '/favicon.png', sizes: '48x48' }
+      ]
+    }
   }
 });
