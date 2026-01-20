@@ -73,6 +73,23 @@ h3 {
   }
 }
 
+h4 {
+  text-align: center;
+  color: var(--color-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+@media (min-width: 1024px) {
+  h4 {
+    text-align: left;
+    margin-left: 5rem;
+    font-size: 1.5rem;
+  }
+}
+
 .btn-primary {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
