@@ -21,7 +21,7 @@ import HeroPoint from './HeroPoint.vue';
 
 const items = [
     { icon: 'bi-person-fill', text: 'William Brooks' },
-    { icon: 'bi-calendar-fill', text: '20 ans' },
+    { icon: 'bi-calendar-fill', text: '21 ans' },
     { icon: 'bi-geo-alt-fill', text: 'Limoges, France (binational France/Royaume-Uni)' },
     { icon: 'bi-code-slash', text: 'Développeur Web' },
     { icon: 'bi-camera-fill', text: 'Photographe' },
@@ -33,5 +33,4 @@ const items = [
 </script>
 
 <style scoped>
-/* Ajoutez vos styles spécifiques ici */
 </style>

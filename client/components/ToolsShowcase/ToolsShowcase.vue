@@ -27,8 +27,7 @@
         </div>
         <div class="flex flex-col items-center justify-center pt-3 gap-3">
             <p class="body-text">Vous souhaitez voir mes compétences mises en application ?</p>
-            <a href="/portfolio"
-                class="btn-primary">
+            <a href="/portfolio" class="btn-primary">
                 Consultez mes projets
             </a>
         </div>
@@ -37,7 +36,6 @@
 
 <script setup>
 import Tool from './Tool.vue'
-import Button from '../Button.vue'
 
 const devTools = [
     {
@@ -73,12 +71,8 @@ const devTools = [
         label: 'React'
     },
     {
-        icon: '/assets/icons/tools/vitejs.svg',
-        label: 'Vite'
-    },
-    {
-        icon: '/assets/icons/tools/nodejs.svg',
-        label: 'Node.js'
+        icon: '/assets/icons/tools/nuxt.svg',
+        label: 'Nuxt'
     },
     {
         icon: '/assets/icons/tools/docker.svg',
@@ -87,10 +81,6 @@ const devTools = [
     {
         icon: '/assets/icons/tools/symfony.svg',
         label: 'Symfony'
-    },
-    {
-        icon: '/assets/icons/tools/doctrine.svg',
-        label: 'Doctrine'
     },
     {
         icon: '/assets/icons/tools/github.svg',
@@ -124,12 +114,24 @@ const pendingTools = [
         label: 'Bootstrap'
     },
     {
-        icon: '/assets/icons/tools/nuxt.svg',
-        label: 'Nuxt'
+        icon: '/assets/icons/tools/nextjs.svg',
+        label: 'Next.js'
     },
     {
-        icon: '/assets/icons/tools/vuejs.svg',
-        label: 'Vue.js'
+        icon: '/assets/icons/tools/flutter.svg',
+        label: 'Flutter'
+    },
+    {
+        icon: '/assets/icons/tools/dart.svg',
+        label: 'Dart'
+    },
+    {
+        icon: '/assets/icons/tools/nodejs.svg',
+        label: 'Node.js'
+    },
+    {
+        icon: '/assets/icons/tools/mongodb.svg',
+        label: 'MongoDB'
     },
     {
         icon: '/assets/icons/tools/wordpress.svg',
