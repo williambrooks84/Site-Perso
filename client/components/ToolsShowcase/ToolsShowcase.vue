@@ -10,6 +10,7 @@
                     <h4>Langages</h4>
                     <div class="flex flex-wrap justify-center gap-3">
                         <Tool v-for="(devTool, index) in devTools.languages" :key="`lang-${index}`" :icon="devTool.icon"
+                            :icon-dark="devTool.iconDark"
                             :label="devTool.label" class="w-1/4 xl:w-1/8" />
                     </div>
                 </div>
@@ -17,16 +18,28 @@
                 <div class="flex flex-col gap-5">
                     <h4>Frameworks</h4>
                     <div class="flex flex-wrap justify-center gap-3">
-                        <Tool v-for="(devTool, index) in devTools.frameworks" :key="`fw-${index}`" :icon="devTool.icon"
-                            :label="devTool.label" class="w-1/4 xl:w-1/8" />
+                        <Tool
+                            v-for="(devTool, index) in devTools.frameworks"
+                            :key="`fw-${index}`"
+                            :icon="devTool.icon"
+                            :icon-dark="devTool.iconDark"
+                            :label="devTool.label"
+                            class="w-1/4 xl:w-1/8"
+                        />
                     </div>
                 </div>
 
                 <div class="flex flex-col gap-5">
                     <h4>Outils & environnements</h4>
                     <div class="flex flex-wrap justify-center gap-3">
-                        <Tool v-for="(devTool, index) in devTools.tools" :key="`tool-${index}`" :icon="devTool.icon"
-                            :label="devTool.label" class="w-1/4 xl:w-1/8" />
+                        <Tool
+                            v-for="(devTool, index) in devTools.tools"
+                            :key="`tool-${index}`"
+                            :icon="devTool.icon"
+                            :icon-dark="devTool.iconDark"
+                            :label="devTool.label"
+                            class="w-1/4 xl:w-1/8"
+                        />
                     </div>
                 </div>
             </div>
@@ -34,7 +47,7 @@
             <div class="flex flex-col gap-5">
                 <h3>Design et graphisme :</h3>
                 <div class="flex flex-wrap justify-center gap-3">
-                    <Tool v-for="(designTool, index) in designTools" :key="index" :icon="designTool.icon"
+                    <Tool v-for="(designTool, index) in designTools" :key="index" :icon="designTool.icon" :icon-dark="designTool.iconDark"
                         :label="designTool.label" class="w-1/4 xl:w-1/8" />
                 </div>
             </div>
@@ -46,7 +59,7 @@
                     <h4>Technologies & frameworks</h4>
                     <div class="flex flex-wrap justify-center gap-3">
                         <Tool v-for="(pendingTool, index) in pendingTools.tech" :key="`pending-tech-${index}`"
-                            :icon="pendingTool.icon" :label="pendingTool.label" class="w-1/4 xl:w-1/8" />
+                            :icon="pendingTool.icon" :icon-dark="pendingTool.iconDark" :label="pendingTool.label" class="w-1/4 xl:w-1/8" />
                     </div>
                 </div>
             </div>
@@ -66,8 +79,8 @@ import Tool from './Tool.vue'
 
 const devTools = {
     languages: [
-        { icon: '/assets/icons/tools/html.svg', label: 'HTML' },
-        { icon: '/assets/icons/tools/css.svg', label: 'CSS' },
+        { icon: '/assets/icons/tools/html.svg', iconDark: '/assets/icons/tools/html-dark.svg', label: 'HTML' },
+        { icon: '/assets/icons/tools/css.svg', iconDark: '/assets/icons/tools/css-dark.svg', label: 'CSS' },
         { icon: '/assets/icons/tools/js.svg', label: 'JavaScript' },
         { icon: '/assets/icons/tools/typescript.svg', label: 'TypeScript' },
         { icon: '/assets/icons/tools/php.svg', label: 'PHP' },
@@ -75,14 +88,25 @@ const devTools = {
     frameworks: [
         { icon: '/assets/icons/tools/tailwindcss.svg', label: 'Tailwind CSS' },
         { icon: '/assets/icons/tools/react.svg', label: 'React' },
-        { icon: '/assets/icons/tools/nextjs.svg', label: 'Next.js' },
+        {
+            icon: '/assets/icons/tools/nextjs.svg',
+            iconDark: '/assets/icons/tools/nextjs-dark.svg',
+            label: 'Next.js'
+        },
         { icon: '/assets/icons/tools/nuxt.svg', label: 'Nuxt' },
-        { icon: '/assets/icons/tools/symfony.svg', label: 'Symfony' },
+        {
+            icon: '/assets/icons/tools/symfony.svg',
+            iconDark: '/assets/icons/tools/symfony-dark.svg',
+            label: 'Symfony'
+        },
     ],
     tools: [
-        { icon: '/assets/icons/tools/github.svg', label: 'GitHub' },
+        {
+            icon: '/assets/icons/tools/github.svg',
+            iconDark: '/assets/icons/tools/github-dark.svg',
+            label: 'GitHub'
+        },
         { icon: '/assets/icons/tools/vscode.svg', label: 'VS Code' },
-        { icon: '/assets/icons/tools/docker.svg', label: 'Docker' },
         { icon: '/assets/icons/tools/filezilla.svg', label: 'FileZilla' },
         { icon: '/assets/icons/tools/linux.svg', label: 'Linux' },
         { icon: '/assets/icons/tools/postman.svg', label: 'Postman' },
@@ -97,7 +121,7 @@ const pendingTools = {
         { icon: '/assets/icons/tools/flutter.svg', label: 'Flutter' },
         { icon: '/assets/icons/tools/dart.svg', label: 'Dart' },
         { icon: '/assets/icons/tools/nodejs.svg', label: 'Node.js' },
-        { icon: '/assets/icons/tools/mongodb.svg', label: 'MongoDB' }, { icon: '/assets/icons/tools/wordpress.svg', label: 'Wordpress' },
+        { icon: '/assets/icons/tools/mongodb.svg', label: 'MongoDB' },         { icon: '/assets/icons/tools/docker.svg', label: 'Docker' }, { icon: '/assets/icons/tools/nginx.svg', label: 'Nginx' }, { icon: '/assets/icons/tools/csharp.svg', label: 'C#' }, { icon: '/assets/icons/tools/wordpress.svg', label: 'Wordpress' }
     ],
 }
 
