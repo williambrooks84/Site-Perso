@@ -1,6 +1,6 @@
 <template>
     <nav class="fixed top-0 left-0 z-50 w-full shadow-md">
-        <div class="bg-primary">
+        <div class="bg-[var(--color-primary)]">
             <div class="container mx-auto p-4 flex items-center justify-between">
                 <client-only>
                     <img :src="logoSrc" alt="logo" class="h-8" />
