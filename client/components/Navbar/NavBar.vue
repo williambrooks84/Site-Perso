@@ -49,9 +49,7 @@
 import { ref, watch, onMounted } from 'vue';
 import { useTheme } from '~/composables/useTheme.js';
 import NavLink from './NavLink.vue';
-import Contact from '../Contact/Contact.vue';
 import ThemeButton from './ThemeButton.vue';
-import ContactButton from './ContactButton.vue'; 
 
 const navLinks = [
   { name: 'Accueil', href: '/' },
@@ -62,11 +60,9 @@ const navLinks = [
 ];
 
 const isMobileMenuOpen = ref(false);
-const showContactModal = ref(false);
 const { isDark } = useTheme();
 const logoSrc = ref(isDark.value ? '/assets/img/logo-dark.svg' : '/assets/img/logo.svg');
 
-// Met à jour le logo si isDark change dynamiquement côté client
 watch(isDark, (val) => {
     logoSrc.value = val ? '/assets/img/logo-dark.svg' : '/assets/img/logo.svg';
 });
