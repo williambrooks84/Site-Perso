@@ -8,13 +8,13 @@
       >
         &times;
       </button>
-      <ContactForm />
+      <ContactInfos />
     </div>
   </div>
 </template>
 
 <script setup>
-import ContactForm from './ContactForm.vue';
+// import ContactForm from './ContactForm.vue';
 import ContactInfos from './ContactInfos.vue';
 </script>
 

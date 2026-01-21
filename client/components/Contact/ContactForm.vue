@@ -92,13 +92,13 @@
                 <p v-if="error" class="error-message mt-4 text-red-500">{{ error }}</p>
             </div>
         </div>
-        <div v-if="showToast" class="fixed top-8 left-1/2 transform -translate-x-1/2 bg-green-500 dark:bg-green-700 text-white px-6 py-3 rounded shadow-lg z-[9999] text-lg font-semibold">
+        <div v-if="showToast" class="fixed top-8 left-1/2 transform -translate-x-1/2 bg-green-500 dark:bg-green-700 text-white px-6 py-3 rounded shadow-lg z-9999 text-lg font-semibold">
             J'ai bien reçu votre message
         </div>
-        <div v-if="showInvalidPopup" class="fixed top-8 left-1/2 transform -translate-x-1/2 bg-red-500 dark:bg-red-700 text-white px-6 py-3 rounded shadow-lg z-[9999] text-lg font-semibold">
+        <div v-if="showInvalidPopup" class="fixed top-8 left-1/2 transform -translate-x-1/2 bg-red-500 dark:bg-red-700 text-white px-6 py-3 rounded shadow-lg z-9999 text-lg font-semibold">
             Informations incorrectes ou manquantes
         </div>
-        <canvas ref="confettiCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-[9998]" v-show="showConfetti"></canvas>
+        <canvas ref="confettiCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-9998" v-show="showConfetti"></canvas>
     </section>
 </template>
 

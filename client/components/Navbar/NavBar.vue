@@ -13,7 +13,7 @@
                 <div class="flex items-center flex-1 justify-end xl:justify-center space-x-4">
                     <!-- Desktop nav links and theme toggle -->
                     <div class="hidden xl:flex space-x-8 items-center">
-                        <NavLink v-for="link in navLinks" :key="link.name" :href="link.href" :name="link.name"
+                        <NavLink v-for="link in navLinks" :key="link.name" :href="link.href" :name="link.name" :icon="link.icon"
                             class="px-3 py-2 rounded" />
                         <!-- Theme toggle button (desktop, left of contact) -->
                         <client-only>
@@ -37,8 +37,8 @@
     </nav>
     <!-- Mobile nav links -->
     <div v-show="isMobileMenuOpen"
-        class="xl:hidden fixed top-20 right-0 w-2/3 bg-primary flex flex-col px-4 pb-4 gap-2 space-y-2 z-50 transition">
-        <NavLink v-for="link in navLinks" :key="link.name" :href="link.href" :name="link.name" />
+        class="xl:hidden fixed top-20 right-0 w-2/3 bg-[var(--color-primary)] flex flex-col px-4 pb-4 gap-2 space-y-2 z-50 transition">
+        <NavLink v-for="link in navLinks" :key="link.name" :href="link.href" :name="link.name" :icon="link.icon" />
         <!--<ContactButton class="mt-2 w-fit" @click="showContactModal = true" />-->
     </div>
     <!-- Contact Modal -->
@@ -57,7 +57,8 @@ const navLinks = [
   { name: 'Accueil', href: '/' },
   { name: 'Qui suis-je ?', href: '/quisuisje' },
   { name: 'Mon portfolio', href: '/portfolio' },
-  { name: 'Mon CV', href: '/moncv' }
+  { name: 'Mon CV', href: '/moncv' },
+  { name: 'Me contacter', href: '/contact', icon: 'bi-pencil-fill' },
 ];
 
 const isMobileMenuOpen = ref(false);
