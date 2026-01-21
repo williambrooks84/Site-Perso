@@ -57,11 +57,9 @@ import { ref, onMounted, computed } from 'vue'
 const projets = ref([])
 
 const getCategoryInfo = (projet) => {
-  // Use the projet_categories field instead of embedded terms
   const categories = projet.projet_categories
   if (!categories || categories.length === 0) return null
   
-  // Return the first category with its order
   const term = categories[0]
   return { name: term.name, order: term.order || 0 }
 }

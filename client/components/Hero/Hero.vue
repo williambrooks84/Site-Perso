@@ -2,7 +2,7 @@
     <div class="flex flex-col justify-center items-center gap-8 lg:gap-10">
         <h2>Qui suis-je ?</h2>
         <div class="flex flex-col lg:flex-row gap-7 lg:gap-15 items-center justify-center">
-            <img class="w-[300px] xl:w-auto h-auto rounded-3xl xl:rounded-4xl" src="/assets/img/will.jpg" alt="will" />
+            <img class="w-75 xl:w-auto h-auto rounded-3xl xl:rounded-4xl" src="/assets/img/will.jpg" alt="will" />
             <div>
                 <ul role="list" class="space-y-5">
                     <HeroPoint v-for="(item, index) in items" :key="index" :icon="item.icon" :text="item.text" />

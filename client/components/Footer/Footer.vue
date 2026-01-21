@@ -1,5 +1,4 @@
 <template>
-    <!-- Arrow button at bottom center, only when footer is closed -->
     <button
         v-if="!isOpen"
         class="fixed bottom-0 left-1/2 transform -translate-x-1/2 bg-secondary text-dark rounded-full p-2 z-50 transition hover:bg-hover"
@@ -15,7 +14,6 @@
             isOpen ? 'bottom-0' : '-bottom-22'
         ]"
     >
-        <!-- Arrow button inside footer to close, only when open -->
         <button
             v-if="isOpen"
             class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-secondary text-dark rounded-full p-2 transition hover:bg-hover"
@@ -25,7 +23,6 @@
             <i class="bi bi-chevron-down text-2xl"></i>
         </button>
         <div class="pt-8 pb-6">
-            <!-- Desktop: first line centered, links side by side below -->
             <div class="flex flex-col items-center font-semibold">
                 <span class="mb-2 text-center">
                     © {{ currentYear }} William Brooks. Tous droits réservés.
