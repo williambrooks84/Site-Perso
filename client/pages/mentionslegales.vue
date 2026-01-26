@@ -41,6 +41,35 @@
 </template>
 
 <script setup>
+useHead({
+  title: 'William Brooks - Mentions légales',
+  meta: [
+    {
+      name: 'description',
+      content: 'Retrouvez les mentions légales du site portfolio de William Brooks, développeur web étudiant à Limoges.'
+    },
+    {
+      name: 'keywords',
+      content: 'développeur web, développeur front-end, étudiant, Limoges, informatique'
+    },
+    {
+      property: 'og:title',
+      content: 'William Brooks - Développeur Web sur Limoges'
+    },
+    {
+      property: 'og:description',
+      content: 'William Brooks est un développeur web étudiant à Limoges, intéressé par l\'informatique depuis un jeune âge.'
+    },
+    {
+      property: 'og:url',
+      content: 'https://willbrooks.fr'
+    },
+    {
+      property: 'og:type',
+      content: 'website'
+    }
+  ]
+})
 </script>
 
 <style scoped>

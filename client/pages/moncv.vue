@@ -9,6 +9,36 @@
 import Cv from '~/components/CV/Cv.vue'
 import DownloadCvButton from '~/components/CV/DownloadCvButton.vue'
 
+useHead({
+  title: 'William Brooks - CV',
+  meta: [
+    {
+      name: 'description',
+      content: 'Retrouvez le CV de William Brooks, développeur web étudiant à Limoges.'
+    },
+    {
+      name: 'keywords',
+      content: 'développeur web, développeur front-end, étudiant, Limoges, informatique'
+    },
+    {
+      property: 'og:title',
+      content: 'William Brooks - Développeur Web sur Limoges'
+    },
+    {
+      property: 'og:description',
+      content: 'William Brooks est un développeur web étudiant à Limoges, intéressé par l\'informatique depuis un jeune âge.'
+    },
+    {
+      property: 'og:url',
+      content: 'https://willbrooks.fr'
+    },
+    {
+      property: 'og:type',
+      content: 'website'
+    }
+  ]
+})
+
 const buttonProps = [
     {
         href: '/assets/pdf/cv.pdf',
