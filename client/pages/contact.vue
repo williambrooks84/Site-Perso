@@ -1,11 +1,16 @@
 <template>
-    <div class="flex flex-col items-center gap-10">
-        <ContactInfos />
+  <div class="flex flex-col items-center gap-20">
+    <ContactInfos />
+    <div class="w-full flex flex-col gap-8">
+      <h2>Ou venez me suivre sur mes réseaux sociaux :</h2>
+      <MediaShowcase />
     </div>
+  </div>
 </template>
 
 <script setup>
 import ContactInfos from '../components/Contact/ContactInfos.vue';
+import MediaShowcase from '../components/Media/MediaShowcase.vue';
 
 useHead({
   title: 'William Brooks - Contact',

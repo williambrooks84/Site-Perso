@@ -1,7 +1,10 @@
 <template>
     <Hero />
     <ToolsShowcase />
-    <MediaShowcase />
+    <div class="flex flex-col gap-8">
+        <h2>Venez voir mes réseaux sociaux</h2>
+        <MediaShowcase />
+    </div>
 
 </template>
 

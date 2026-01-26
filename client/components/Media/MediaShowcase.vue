@@ -1,6 +1,4 @@
 <template>
-  <div class="flex flex-col gap-8">
-    <h2>Venez voir mes réseaux sociaux</h2>
     <div class="flex flex-wrap gap-6 lg:flex-row justify-between items-center">
       <Media
         v-for="(mediaItem, index) in media"
@@ -11,14 +9,12 @@
         size="large"
       />
     </div>
-  </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import Media from './Media.vue'
 
-// --- Détection du thème côté client ---
 const isDark = ref(false)
 
 onMounted(() => {
@@ -38,7 +34,6 @@ onMounted(() => {
   }
 })
 
-// --- Liste des médias ---
 const media = computed(() => [
   { icon: '/assets/icons/media/facebook.svg', name: 'Facebook', link: 'https://www.facebook.com/profile.php?id=100026596052394' },
   { icon: isDark.value ? '/assets/icons/media/github-dark.svg' : '/assets/icons/media/github.svg', name: 'GitHub', link: 'https://github.com/williambrooks84' },
@@ -50,9 +45,7 @@ const media = computed(() => [
   { icon: '/assets/icons/media/youtube.svg', name: 'YouTube', link: 'https://www.youtube.com/channel/UC3u-t_nbl1A9rPIw0qYT4XQ' }
 ])
 
-// --- Réagir aux changements de thème pour mettre à jour les icônes ---
 watch(isDark, () => {
-  // le computed "media" se met automatiquement à jour
 })
 </script>
 
