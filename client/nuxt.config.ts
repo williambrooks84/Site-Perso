@@ -27,7 +27,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       link: [
-        { rel: 'icon', type: 'image/png', href: '/favicon.png', sizes: '48x48' }
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
       ]
     }
   },
