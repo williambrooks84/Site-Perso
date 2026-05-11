@@ -10,22 +10,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # =========================
+      # Checkout
+      # =========================
       - name: Checkout
         uses: actions/checkout@v4
 
+      # =========================
+      # Node setup (frontend)
+      # =========================
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20.19.0"
+          node-version: "20"
 
-      - name: Install dependencies
+      - name: Install frontend dependencies
         working-directory: client
         run: npm ci
 
-      - name: Generate static site
+      - name: Generate static frontend
         working-directory: client
         run: npm run generate
 
+      # =========================
+      # SSH setup
+      # =========================
       - name: Setup SSH
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -36,35 +45,60 @@ jobs:
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+
           if [ -n "$VPS_KNOWN_HOSTS" ]; then
             echo "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
           else
-            ssh-keyscan -p "${VPS_PORT:-22}" -H "$VPS_HOST" >> ~/.ssh/known_hosts
+            ssh-keyscan -p "$VPS_PORT" -H "$VPS_HOST" >> ~/.ssh/known_hosts
           fi
 
-      - name: Deploy client with rsync
+      # =========================
+      # Deploy FRONTEND
+      # =========================
+      - name: Deploy frontend
         env:
           VPS_USER: ${{ secrets.VPS_USER }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_PORT: ${{ secrets.VPS_PORT }}
-          VPS_PATH: ${{ secrets.VPS_PATH }}
+          VPS_FRONTEND_PATH: ${{ secrets.VPS_PATH }}
         run: |
-          rsync -az --delete -e "ssh -i ~/.ssh/id_rsa -p ${VPS_PORT:-22} -o StrictHostKeyChecking=yes" ./client/dist/ ${VPS_USER}@${VPS_HOST}:${VPS_PATH}
+          rsync -az --delete \
+            -e "ssh -i ~/.ssh/id_rsa -p $VPS_PORT" \
+            ./client/dist/ \
+            $VPS_USER@$VPS_HOST:$VPS_FRONTEND_PATH
 
-      - name: Deploy API with rsync
+      # =========================
+      # Deploy SYMFONY API (SAFE)
+      # =========================
+      - name: Deploy API
         env:
           VPS_USER: ${{ secrets.VPS_USER }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_PORT: ${{ secrets.VPS_PORT }}
           VPS_API_PATH: ${{ secrets.VPS_API_PATH }}
         run: |
-          rsync -az --delete -e "ssh -i ~/.ssh/id_rsa -p ${VPS_PORT:-22} -o StrictHostKeyChecking=yes" ./api/ ${VPS_USER}@${VPS_HOST}:${VPS_API_PATH}
+          rsync -az --delete \
+            --exclude vendor \
+            --exclude var \
+            --exclude .env.local \
+            -e "ssh -i ~/.ssh/id_rsa -p $VPS_PORT" \
+            ./api/ \
+            $VPS_USER@$VPS_HOST:$VPS_API_PATH
 
-      - name: Install Composer dependencies on VPS
+      # =========================
+      # Install + build Symfony (production-safe)
+      # =========================
+      - name: Symfony install & cache warmup
         env:
           VPS_USER: ${{ secrets.VPS_USER }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_PORT: ${{ secrets.VPS_PORT }}
           VPS_API_PATH: ${{ secrets.VPS_API_PATH }}
         run: |
-          ssh -i ~/.ssh/id_rsa -p ${VPS_PORT:-22} -o StrictHostKeyChecking=yes ${VPS_USER}@${VPS_HOST} "cd ${VPS_API_PATH} && composer install --no-dev --optimize-autoloader && php bin/console cache:clear"
+          ssh -i ~/.ssh/id_rsa -p $VPS_PORT \
+          $VPS_USER@$VPS_HOST "
+            cd $VPS_API_PATH &&
+            composer install --no-dev --optimize-autoloader --no-interaction &&
+            APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear &&
+            APP_ENV=prod php bin/console cache:warmup
+          "
