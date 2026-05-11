@@ -1,4 +1,4 @@
-name: Build & Deploy to VPS
+name: Build & Deploy (Safe Atomic)
 
 on:
   push:
@@ -11,103 +11,113 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    env:
+      RELEASE_NAME: release-${{ github.run_id }}
+
     steps:
-      # ==========================================
-      # Checkout repository
-      # ==========================================
+      # =========================
+      # Checkout
+      # =========================
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ==========================================
-      # Setup Node.js
-      # ==========================================
+      # =========================
+      # Node setup
+      # =========================
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      # ==========================================
-      # Install frontend dependencies
-      # ==========================================
-      - name: Install frontend dependencies
+      # =========================
+      # Build frontend
+      # =========================
+      - name: Install frontend deps
         working-directory: client
         run: npm ci
 
-      # ==========================================
-      # Build Nuxt static site
-      # ==========================================
-      - name: Generate static frontend
+      - name: Generate Nuxt build
         working-directory: client
         run: npm run generate
 
-      # ==========================================
-      # Setup SSH
-      # ==========================================
+      # Safety check (prevents empty deploys)
+      - name: Validate build output
+        run: test -d client/.output/public
+
+      # =========================
+      # SSH setup
+      # =========================
       - name: Setup SSH
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          VPS_HOST: ${{ secrets.VPS_HOST }}
-          VPS_PORT: ${{ secrets.VPS_PORT }}
         run: |
           mkdir -p ~/.ssh
-
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
-
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H -p "${{ secrets.VPS_PORT }}" "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
 
-          ssh-keyscan -H -p "$VPS_PORT" "$VPS_HOST" >> ~/.ssh/known_hosts
-
-      # ==========================================
-      # Deploy frontend
-      # ==========================================
-      - name: Deploy frontend
-        env:
-          VPS_USER: ${{ secrets.VPS_USER }}
-          VPS_HOST: ${{ secrets.VPS_HOST }}
-          VPS_PORT: ${{ secrets.VPS_PORT }}
-          VPS_PATH: ${{ secrets.VPS_PATH }}
+      # =========================
+      # Create remote release folder
+      # =========================
+      - name: Prepare remote release directory
         run: |
-          rsync -az --delete \
-            -e "ssh -i ~/.ssh/id_ed25519 -p $VPS_PORT -o StrictHostKeyChecking=yes" \
+          ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }} \
+          ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
+          "mkdir -p /var/www/releases/${{ env.RELEASE_NAME }}"
+
+      # =========================
+      # Deploy frontend (NO DELETE)
+      # =========================
+      - name: Deploy frontend (safe)
+        run: |
+          rsync -az \
+            -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }}" \
             ./client/.output/public/ \
-            $VPS_USER@$VPS_HOST:$VPS_PATH
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/releases/${{ env.RELEASE_NAME }}/client
 
-      # ==========================================
-      # Deploy Symfony API
-      # ==========================================
+      # =========================
+      # Deploy API (safe, no delete)
+      # =========================
       - name: Deploy Symfony API
-        env:
-          VPS_USER: ${{ secrets.VPS_USER }}
-          VPS_HOST: ${{ secrets.VPS_HOST }}
-          VPS_PORT: ${{ secrets.VPS_PORT }}
-          VPS_API_PATH: ${{ secrets.VPS_API_PATH }}
         run: |
-          rsync -az --delete \
+          rsync -az \
             --exclude vendor \
             --exclude var \
             --exclude .env.local \
-            -e "ssh -i ~/.ssh/id_ed25519 -p $VPS_PORT -o StrictHostKeyChecking=yes" \
+            -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }}" \
             ./api/ \
-            $VPS_USER@$VPS_HOST:$VPS_API_PATH
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/releases/${{ env.RELEASE_NAME }}/api
 
-      # ==========================================
-      # Install Symfony dependencies
-      # ==========================================
-      - name: Install Symfony dependencies
-        env:
-          VPS_USER: ${{ secrets.VPS_USER }}
-          VPS_HOST: ${{ secrets.VPS_HOST }}
-          VPS_PORT: ${{ secrets.VPS_PORT }}
-          VPS_API_PATH: ${{ secrets.VPS_API_PATH }}
+      # =========================
+      # Install backend deps + build
+      # =========================
+      - name: Install Symfony dependencies (remote)
         run: |
-          ssh \
-            -i ~/.ssh/id_ed25519 \
-            -p "$VPS_PORT" \
-            -o StrictHostKeyChecking=yes \
-            "$VPS_USER@$VPS_HOST" \
-            "
-              cd $VPS_API_PATH && \
-              composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist && \
-              APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear && \
-              APP_ENV=prod php bin/console cache:warmup
-            "
+          ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }} \
+          ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
+          "
+            cd /var/www/releases/${{ env.RELEASE_NAME }}/api && \
+            composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist && \
+            APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear && \
+            APP_ENV=prod php bin/console cache:warmup
+          "
+
+      # =========================
+      # Atomic switch (zero downtime)
+      # =========================
+      - name: Activate new release
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }} \
+          ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
+          "
+            ln -sfn /var/www/releases/${{ env.RELEASE_NAME }} /var/www/current
+          "
+
+      # =========================
+      # Optional cleanup (keep last 3 releases)
+      # =========================
+      - name: Cleanup old releases
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }} \
+          ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
+          "
+            ls -1dt /var/www/releases/* | tail -n +4 | xargs rm -rf || true
+          "
