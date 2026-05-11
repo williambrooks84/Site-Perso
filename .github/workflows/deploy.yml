@@ -11,13 +11,13 @@ jobs:
 
     steps:
       # =========================
-      # Checkout
+      # Checkout repo
       # =========================
       - name: Checkout
         uses: actions/checkout@v4
 
       # =========================
-      # Node setup (frontend)
+      # Node setup (Nuxt frontend)
       # =========================
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -49,26 +49,26 @@ jobs:
           if [ -n "$VPS_KNOWN_HOSTS" ]; then
             echo "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
           else
-            ssh-keyscan -p "$VPS_PORT" -H "$VPS_HOST" >> ~/.ssh/known_hosts
+            ssh-keyscan -p "${VPS_PORT:-22}" -H "$VPS_HOST" >> ~/.ssh/known_hosts
           fi
 
       # =========================
-      # Deploy FRONTEND
+      # Deploy FRONTEND (Nuxt static)
       # =========================
       - name: Deploy frontend
         env:
           VPS_USER: ${{ secrets.VPS_USER }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_PORT: ${{ secrets.VPS_PORT }}
-          VPS_FRONTEND_PATH: ${{ secrets.VPS_PATH }}
+          VPS_PATH: ${{ secrets.VPS_PATH }}
         run: |
           rsync -az --delete \
-            -e "ssh -i ~/.ssh/id_rsa -p $VPS_PORT" \
-            ./client/dist/ \
-            $VPS_USER@$VPS_HOST:$VPS_FRONTEND_PATH
+            -e "ssh -i ~/.ssh/id_rsa -p ${VPS_PORT:-22}" \
+            ./client/.output/public/ \
+            ${VPS_USER}@${VPS_HOST}:${VPS_PATH}
 
       # =========================
-      # Deploy SYMFONY API (SAFE)
+      # Deploy Symfony API
       # =========================
       - name: Deploy API
         env:
@@ -81,23 +81,23 @@ jobs:
             --exclude vendor \
             --exclude var \
             --exclude .env.local \
-            -e "ssh -i ~/.ssh/id_rsa -p $VPS_PORT" \
+            -e "ssh -i ~/.ssh/id_rsa -p ${VPS_PORT:-22}" \
             ./api/ \
-            $VPS_USER@$VPS_HOST:$VPS_API_PATH
+            ${VPS_USER}@${VPS_HOST}:${VPS_API_PATH}
 
       # =========================
-      # Install + build Symfony (production-safe)
+      # Install Symfony deps on VPS
       # =========================
-      - name: Symfony install & cache warmup
+      - name: Install Symfony dependencies on VPS
         env:
           VPS_USER: ${{ secrets.VPS_USER }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_PORT: ${{ secrets.VPS_PORT }}
           VPS_API_PATH: ${{ secrets.VPS_API_PATH }}
         run: |
-          ssh -i ~/.ssh/id_rsa -p $VPS_PORT \
-          $VPS_USER@$VPS_HOST "
-            cd $VPS_API_PATH &&
+          ssh -i ~/.ssh/id_rsa -p ${VPS_PORT:-22} \
+          ${VPS_USER}@${VPS_HOST} "
+            cd ${VPS_API_PATH} &&
             composer install --no-dev --optimize-autoloader --no-interaction &&
             APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear &&
             APP_ENV=prod php bin/console cache:warmup
