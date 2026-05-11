@@ -53,28 +53,32 @@ jobs:
       # =========================
       # BACKUP + DEPLOY FRONTEND
       # =========================
-      - name: Deploy frontend (safe overwrite)
+      - name: Deploy frontend
         run: |
           ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }} \
           ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
-          "cp -r /var/www/html/client /var/www/html/client_backup_$(date +%s) || true"
+          "mkdir -p /var/backups/client && \
+           tar -czf /var/backups/client/client_$(date +%s).tar.gz -C /var/www/html client || true"
 
           rsync -az \
-            -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }}" \
+            --no-times --omit-dir-times \
             --exclude ".git" \
+            -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }}" \
             ./client/.output/public/ \
             ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/client
 
       # =========================
       # BACKUP + DEPLOY API
       # =========================
-      - name: Deploy Symfony API (safe overwrite)
+      - name: Deploy Symfony API
         run: |
           ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }} \
           ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
-          "cp -r /var/www/html/api /var/www/html/api_backup_$(date +%s) || true"
+          "mkdir -p /var/backups/api && \
+           tar -czf /var/backups/api/api_$(date +%s).tar.gz -C /var/www/html api || true"
 
           rsync -az \
+            --no-times --omit-dir-times \
             --exclude vendor \
             --exclude var \
             --exclude .env.local \
