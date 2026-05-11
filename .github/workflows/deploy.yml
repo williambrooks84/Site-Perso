@@ -1,4 +1,4 @@
-name: Build & Deploy (Simple Safe)
+name: Deploy (Clean Safe Version)
 
 on:
   push:
@@ -33,7 +33,7 @@ jobs:
         working-directory: client
         run: npm ci
 
-      - name: Generate Nuxt site
+      - name: Build frontend
         working-directory: client
         run: npm run generate
 
@@ -48,29 +48,21 @@ jobs:
           ssh-keyscan -H -p "${{ secrets.VPS_PORT }}" "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
 
       # =========================
-      # FRONTEND DEPLOY
+      # DEPLOY FRONTEND (CLEAN)
       # =========================
       - name: Deploy frontend
         run: |
-          rsync -az \
-            --delete \
-            --no-perms \
-            --no-owner \
-            --no-group \
+          rsync -r --delete \
             -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }}" \
             ./client/.output/public/ \
             ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/client/
 
       # =========================
-      # API DEPLOY
+      # DEPLOY API (CLEAN)
       # =========================
       - name: Deploy API
         run: |
-          rsync -az \
-            --delete \
-            --no-perms \
-            --no-owner \
-            --no-group \
+          rsync -r \
             --exclude vendor \
             --exclude var \
             --exclude .env.local \
@@ -79,7 +71,7 @@ jobs:
             ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/api/
 
       # =========================
-      # Symfony build
+      # Symfony install (server side)
       # =========================
       - name: Symfony build
         run: |
@@ -87,7 +79,6 @@ jobs:
           ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
           "
             cd /var/www/html/api &&
-            composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist &&
-            APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear &&
-            APP_ENV=prod php bin/console cache:warmup
+            composer install --no-dev --optimize-autoloader --no-interaction &&
+            php bin/console cache:clear --env=prod
           "
