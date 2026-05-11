@@ -100,7 +100,7 @@ const groupedProjects = computed(() => {
 
 onMounted(async () => {
   try {
-    const res = await fetch('https://api.willbrooks.fr/wp-json/wp/v2/projet?_embed')
+    const res = await fetch('https://wp.willbrooks.fr/wp-json/wp/v2/projet?_embed')
     projets.value = await res.json()
   } catch (err) {
     console.error('Erreur API:', err)
