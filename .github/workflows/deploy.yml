@@ -2,7 +2,9 @@ name: Build & Deploy to VPS
 
 on:
   push:
-    branches: [ssr, main]
+    branches:
+      - main
+      - ssr
   workflow_dispatch:
 
 jobs:
@@ -10,51 +12,70 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # =========================
-      # Checkout repo
-      # =========================
+      # ==========================================
+      # Checkout repository
+      # ==========================================
       - name: Checkout
         uses: actions/checkout@v4
 
-      # =========================
-      # Node setup (Nuxt frontend)
-      # =========================
+      # ==========================================
+      # Setup Node.js
+      # ==========================================
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: 20
 
+      # ==========================================
+      # Install frontend dependencies
+      # ==========================================
       - name: Install frontend dependencies
         working-directory: client
         run: npm ci
 
+      # ==========================================
+      # Build Nuxt static site
+      # ==========================================
       - name: Generate static frontend
         working-directory: client
         run: npm run generate
 
-      # =========================
-      # SSH setup
-      # =========================
+      # ==========================================
+      # Setup SSH
+      # ==========================================
       - name: Setup SSH
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_PORT: ${{ secrets.VPS_PORT }}
-          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
         run: |
           mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
 
-          if [ -n "$VPS_KNOWN_HOSTS" ]; then
-            echo "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
-          else
-            ssh-keyscan -p "${VPS_PORT:-22}" -H "$VPS_HOST" >> ~/.ssh/known_hosts
-          fi
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
 
-      # =========================
-      # Deploy FRONTEND (Nuxt static)
-      # =========================
+          chmod 600 ~/.ssh/id_ed25519
+
+          ssh-keyscan -H -p "$VPS_PORT" "$VPS_HOST" >> ~/.ssh/known_hosts
+
+      # ==========================================
+      # Debug SSH connection
+      # ==========================================
+      - name: Debug SSH connection
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+        run: |
+          ssh -vvv \
+            -i ~/.ssh/id_ed25519 \
+            -p "$VPS_PORT" \
+            -o StrictHostKeyChecking=yes \
+            "$VPS_USER@$VPS_HOST" \
+            "echo CONNECTED"
+
+      # ==========================================
+      # Deploy frontend
+      # ==========================================
       - name: Deploy frontend
         env:
           VPS_USER: ${{ secrets.VPS_USER }}
@@ -63,14 +84,14 @@ jobs:
           VPS_PATH: ${{ secrets.VPS_PATH }}
         run: |
           rsync -az --delete \
-            -e "ssh -i ~/.ssh/id_rsa -p ${VPS_PORT:-22}" \
+            -e "ssh -i ~/.ssh/id_ed25519 -p $VPS_PORT -o StrictHostKeyChecking=yes" \
             ./client/.output/public/ \
-            ${VPS_USER}@${VPS_HOST}:${VPS_PATH}
+            $VPS_USER@$VPS_HOST:$VPS_PATH
 
-      # =========================
+      # ==========================================
       # Deploy Symfony API
-      # =========================
-      - name: Deploy API
+      # ==========================================
+      - name: Deploy Symfony API
         env:
           VPS_USER: ${{ secrets.VPS_USER }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
@@ -81,24 +102,28 @@ jobs:
             --exclude vendor \
             --exclude var \
             --exclude .env.local \
-            -e "ssh -i ~/.ssh/id_rsa -p ${VPS_PORT:-22}" \
+            -e "ssh -i ~/.ssh/id_ed25519 -p $VPS_PORT -o StrictHostKeyChecking=yes" \
             ./api/ \
-            ${VPS_USER}@${VPS_HOST}:${VPS_API_PATH}
+            $VPS_USER@$VPS_HOST:$VPS_API_PATH
 
-      # =========================
-      # Install Symfony deps on VPS
-      # =========================
-      - name: Install Symfony dependencies on VPS
+      # ==========================================
+      # Install Symfony dependencies
+      # ==========================================
+      - name: Install Symfony dependencies
         env:
           VPS_USER: ${{ secrets.VPS_USER }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_PORT: ${{ secrets.VPS_PORT }}
           VPS_API_PATH: ${{ secrets.VPS_API_PATH }}
         run: |
-          ssh -i ~/.ssh/id_rsa -p ${VPS_PORT:-22} \
-          ${VPS_USER}@${VPS_HOST} "
-            cd ${VPS_API_PATH} &&
-            composer install --no-dev --optimize-autoloader --no-interaction &&
-            APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear &&
-            APP_ENV=prod php bin/console cache:warmup
-          "
+          ssh \
+            -i ~/.ssh/id_ed25519 \
+            -p "$VPS_PORT" \
+            -o StrictHostKeyChecking=yes \
+            "$VPS_USER@$VPS_HOST" \
+            "
+              cd $VPS_API_PATH && \
+              composer install --no-dev --optimize-autoloader --no-interaction && \
+              APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear && \
+              APP_ENV=prod php bin/console cache:warmup
+            "
