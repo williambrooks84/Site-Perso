@@ -58,22 +58,6 @@ jobs:
           ssh-keyscan -H -p "$VPS_PORT" "$VPS_HOST" >> ~/.ssh/known_hosts
 
       # ==========================================
-      # Debug SSH connection
-      # ==========================================
-      - name: Debug SSH connection
-        env:
-          VPS_USER: ${{ secrets.VPS_USER }}
-          VPS_HOST: ${{ secrets.VPS_HOST }}
-          VPS_PORT: ${{ secrets.VPS_PORT }}
-        run: |
-          ssh -vvv \
-            -i ~/.ssh/id_ed25519 \
-            -p "$VPS_PORT" \
-            -o StrictHostKeyChecking=yes \
-            "$VPS_USER@$VPS_HOST" \
-            "echo CONNECTED"
-
-      # ==========================================
       # Deploy frontend
       # ==========================================
       - name: Deploy frontend
@@ -123,7 +107,7 @@ jobs:
             "$VPS_USER@$VPS_HOST" \
             "
               cd $VPS_API_PATH && \
-              composer install --no-dev --optimize-autoloader --no-interaction && \
+              composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist && \
               APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear && \
               APP_ENV=prod php bin/console cache:warmup
             "
