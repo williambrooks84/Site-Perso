@@ -42,7 +42,7 @@ jobs:
             ssh-keyscan -p "${VPS_PORT:-22}" -H "$VPS_HOST" >> ~/.ssh/known_hosts
           fi
 
-      - name: Deploy with rsync
+      - name: Deploy client with rsync
         env:
           VPS_USER: ${{ secrets.VPS_USER }}
           VPS_HOST: ${{ secrets.VPS_HOST }}
@@ -50,3 +50,21 @@ jobs:
           VPS_PATH: ${{ secrets.VPS_PATH }}
         run: |
           rsync -az --delete -e "ssh -i ~/.ssh/id_rsa -p ${VPS_PORT:-22} -o StrictHostKeyChecking=yes" ./client/dist/ ${VPS_USER}@${VPS_HOST}:${VPS_PATH}
+
+      - name: Deploy API with rsync
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+          VPS_API_PATH: ${{ secrets.VPS_API_PATH }}
+        run: |
+          rsync -az --delete -e "ssh -i ~/.ssh/id_rsa -p ${VPS_PORT:-22} -o StrictHostKeyChecking=yes" ./api/ ${VPS_USER}@${VPS_HOST}:${VPS_API_PATH}
+
+      - name: Install Composer dependencies on VPS
+        env:
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT }}
+          VPS_API_PATH: ${{ secrets.VPS_API_PATH }}
+        run: |
+          ssh -i ~/.ssh/id_rsa -p ${VPS_PORT:-22} -o StrictHostKeyChecking=yes ${VPS_USER}@${VPS_HOST} "cd ${VPS_API_PATH} && composer install --no-dev --optimize-autoloader && php bin/console cache:clear"
