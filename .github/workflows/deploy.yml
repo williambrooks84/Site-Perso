@@ -1,4 +1,4 @@
-name: Build & Deploy (Safe Simple)
+name: Build & Deploy (Simple Safe)
 
 on:
   push:
@@ -37,9 +37,6 @@ jobs:
         working-directory: client
         run: npm run generate
 
-      - name: Validate build
-        run: test -d client/.output/public
-
       # =========================
       # SSH setup
       # =========================
@@ -51,51 +48,46 @@ jobs:
           ssh-keyscan -H -p "${{ secrets.VPS_PORT }}" "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
 
       # =========================
-      # BACKUP + DEPLOY FRONTEND
+      # FRONTEND DEPLOY
       # =========================
       - name: Deploy frontend
         run: |
-          ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }} \
-          ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
-          "mkdir -p /var/backups/client && \
-           tar -czf /var/backups/client/client_$(date +%s).tar.gz -C /var/www/html client || true"
-
           rsync -az \
-            --no-times --omit-dir-times \
-            --exclude ".git" \
+            --delete \
+            --no-perms \
+            --no-owner \
+            --no-group \
             -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }}" \
             ./client/.output/public/ \
-            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/client
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/client/
 
       # =========================
-      # BACKUP + DEPLOY API
+      # API DEPLOY
       # =========================
-      - name: Deploy Symfony API
+      - name: Deploy API
         run: |
-          ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }} \
-          ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
-          "mkdir -p /var/backups/api && \
-           tar -czf /var/backups/api/api_$(date +%s).tar.gz -C /var/www/html api || true"
-
           rsync -az \
-            --no-times --omit-dir-times \
+            --delete \
+            --no-perms \
+            --no-owner \
+            --no-group \
             --exclude vendor \
             --exclude var \
             --exclude .env.local \
             -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }}" \
             ./api/ \
-            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/api
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/api/
 
       # =========================
-      # Symfony build on server
+      # Symfony build
       # =========================
-      - name: Install Symfony deps remotely
+      - name: Symfony build
         run: |
           ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }} \
           ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
           "
-            cd /var/www/html/api && \
-            composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist && \
-            APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear && \
+            cd /var/www/html/api &&
+            composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist &&
+            APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear &&
             APP_ENV=prod php bin/console cache:warmup
           "
