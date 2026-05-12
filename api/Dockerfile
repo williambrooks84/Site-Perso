@@ -34,13 +34,8 @@ COPY . /var/www/html
 # Create public directory before composer install (needed for assets:install)
 RUN mkdir -p /var/www/html/public
 
-# Create .env file for composer install (excluded from .dockerignore)
-RUN echo "APP_ENV=prod" > /var/www/html/.env && \
-    echo "APP_SECRET=NotASecretJustForBuild" >> /var/www/html/.env && \
-    echo "APP_DEBUG=0" >> /var/www/html/.env
-
-# Install dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Install dependencies without post-install scripts (which require runtime setup)
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 # Set permissions for Symfony
 RUN mkdir -p /var/www/html/var /var/www/html/vendor \
