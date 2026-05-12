@@ -71,12 +71,12 @@ jobs:
             ./api/ \
             ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/api/
 
-      - name: Deploy compose file
+      - name: Deploy api compose file
         run: |
           rsync -r \
             -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }}" \
-            docker-compose.yml \
-            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/
+            api/docker-compose.yml \
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/api/
 
       # =========================
       # Docker Compose Build & Run
@@ -86,7 +86,7 @@ jobs:
           ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }} \
           ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
           "
-            cd /var/www/html &&
+            cd /var/www/html/api &&
             docker info >/dev/null &&
             docker-compose down --remove-orphans || true &&
             docker-compose build --no-cache &&

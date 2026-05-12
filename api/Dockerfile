@@ -32,7 +32,8 @@ WORKDIR /var/www/html
 COPY . /var/www/html
 
 # Set permissions for Symfony
-RUN chown -R www-data:www-data /var/www/html/var /var/www/html/vendor
+RUN mkdir -p /var/www/html/var /var/www/html/vendor \
+    && chown -R www-data:www-data /var/www/html/var /var/www/html/vendor
 
 USER www-data
 
