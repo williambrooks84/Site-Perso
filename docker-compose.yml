@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ./api
+    container_name: symfony_api
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./api:/var/www/html
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: prod
+    command: bash -c "composer install --no-dev --optimize-autoloader && php bin/console cache:clear --env=prod && php -S 0.0.0.0:8000 -t public"

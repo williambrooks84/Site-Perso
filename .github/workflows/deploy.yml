@@ -58,27 +58,29 @@ jobs:
             ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/client/
 
       # =========================
-      # DEPLOY API (CLEAN)
+      # DEPLOY API & DOCKER
       # =========================
-      - name: Deploy API
+      - name: Deploy API with Docker
         run: |
           rsync -r \
-            --exclude vendor \
-            --exclude var \
             --exclude .env.local \
+            --exclude vendor \
+            --exclude var/cache \
+            --exclude var/log \
             -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }}" \
-            ./api/ \
-            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/api/
+            ./api/ docker-compose.yml \
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/
 
       # =========================
-      # Symfony install (server side)
+      # Docker Compose Build & Run
       # =========================
-      - name: Symfony build
+      - name: Build and run Docker containers
         run: |
           ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }} \
           ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
           "
-            cd /var/www/html/api &&
-            composer install --no-dev --optimize-autoloader --no-interaction &&
-            php bin/console cache:clear --env=prod
+            cd /var/www/html &&
+            docker compose down --remove-orphans || true &&
+            docker compose build --no-cache &&
+            docker compose up -d
           "
