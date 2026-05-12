@@ -3,24 +3,22 @@ FROM php:8.2-fpm
 
 # Install system dependencies and PHP extensions
 RUN set -eux; \
-    apt-get clean; \
-    rm -rf /var/lib/apt/lists/*; \
     apt-get update -o Acquire::Retries=5; \
     apt-get install -y --no-install-recommends \
         libicu-dev \
         libpq-dev \
         libzip-dev \
-        zip \
-        unzip \
-        git \
         libxml2-dev \
         libonig-dev \
         libpng-dev \
         libjpeg-dev \
-        libfreetype6-dev; \
-    docker-php-ext-install intl pdo pdo_mysql pdo_pgsql zip xml opcache gd; \
+        libfreetype6-dev \
+        zip \
+        unzip \
+        git; \
     docker-php-ext-configure gd --with-freetype --with-jpeg; \
-    rm -rf /var/lib/apt/lists/*
+    docker-php-ext-install -j$(nproc) intl pdo pdo_mysql pdo_pgsql zip xml dom opcache gd; \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
