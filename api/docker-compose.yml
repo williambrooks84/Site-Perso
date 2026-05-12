@@ -11,8 +11,6 @@ services:
       - .:/var/www/html/api
       - /var/www/html/api/var/cache
       - /var/www/html/api/var/log
-      - /var/www/html/api/vendor
-      - /var/www/html/api/public
     ports:
       - "9000:9000"
     environment:
