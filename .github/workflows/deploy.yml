@@ -68,36 +68,15 @@ jobs:
             --exclude var/cache \
             --exclude var/log \
             -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }}" \
-            ./api/ docker-compose.yml \
-            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/
+            ./api/ \
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/api/
 
-      # =========================
-      # Install Docker (if needed)
-      # =========================
-      - name: Install Docker if needed
+      - name: Deploy compose file
         run: |
-          ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }} \
-          ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
-          "
-            if ! command -v docker &> /dev/null; then
-              echo 'Installing Docker...'
-              curl -fsSL https://get.docker.com -o get-docker.sh
-              sudo sh get-docker.sh
-              sudo usermod -aG docker ${{ secrets.VPS_USER }}
-              echo 'Docker installed successfully'
-            else
-              echo 'Docker is already installed'
-            fi
-            
-            if ! command -v docker-compose &> /dev/null; then
-              echo 'Installing Docker Compose...'
-              sudo curl -L \"https://github.com/docker/compose/releases/latest/download/docker-compose-\$(uname -s)-\$(uname -m)\" -o /usr/local/bin/docker-compose
-              sudo chmod +x /usr/local/bin/docker-compose
-              echo 'Docker Compose installed successfully'
-            else
-              echo 'Docker Compose is already installed'
-            fi
-          "
+          rsync -r \
+            -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }}" \
+            docker-compose.yml \
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/
 
       # =========================
       # Docker Compose Build & Run
@@ -108,7 +87,7 @@ jobs:
           ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
           "
             cd /var/www/html &&
-            docker compose down --remove-orphans || true &&
-            docker compose build --no-cache &&
-            docker compose up -d
+            docker-compose down --remove-orphans || true &&
+            docker-compose build --no-cache &&
+            docker-compose up -d
           "
