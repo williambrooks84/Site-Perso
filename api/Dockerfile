@@ -31,10 +31,14 @@ WORKDIR /var/www/html
 # Copy project files
 COPY . /var/www/html
 
+# Create public directory before composer install (needed for assets:install)
+RUN mkdir -p /var/www/html/public
+
+# Install dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
 # Set permissions for Symfony
 RUN mkdir -p /var/www/html/var /var/www/html/vendor \
-    && chown -R www-data:www-data /var/www/html/var /var/www/html/vendor
-
-USER www-data
+    && chown -R www-data:www-data /var/www/html/var /var/www/html/vendor /var/www/html/public
 
 CMD ["php-fpm"]

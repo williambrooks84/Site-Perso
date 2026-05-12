@@ -9,8 +9,12 @@ services:
     working_dir: /var/www/html
     volumes:
       - .:/var/www/html
+      - /var/www/html/var/cache
+      - /var/www/html/var/log
+      - /var/www/html/vendor
+      - /var/www/html/public
     ports:
       - "8000:8000"
     environment:
       APP_ENV: prod
-    command: bash -c "composer install --no-dev --optimize-autoloader && php bin/console cache:clear --env=prod && php -S 0.0.0.0:8000 -t public"
+    command: php-fpm
