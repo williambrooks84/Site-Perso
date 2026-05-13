@@ -1,22 +1,30 @@
-version: '3.3'
+version: '3.8'
 
 services:
   api:
     build:
       context: .
+      dockerfile: Dockerfile
+
     container_name: symfony_api
     restart: unless-stopped
+
     working_dir: /var/www/html/api
-    volumes:
-      - .:/var/www/html/api
-      - /var/www/html/api/var/cache
-      - /var/www/html/api/var/log
+
     ports:
       - "9000:9000"
+
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
     environment:
       APP_ENV: prod
       APP_DEBUG: '0'
+
+      # REQUIRED (your crash source)
+      CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN}
+      DEFAULT_URI: ${DEFAULT_URI}
+
       DATABASE_URL: ${DATABASE_URL}
-    command: php-fpm
+
+    # IMPORTANT: no bind mount in production

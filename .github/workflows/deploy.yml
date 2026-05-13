@@ -1,4 +1,4 @@
-name: Deploy (Clean Safe Version)
+name: Deploy (Clean Stable Version)
 
 on:
   push:
@@ -29,7 +29,7 @@ jobs:
       # =========================
       # Build frontend
       # =========================
-      - name: Install frontend deps
+      - name: Install frontend dependencies
         working-directory: client
         run: npm ci
 
@@ -48,7 +48,7 @@ jobs:
           ssh-keyscan -H -p "${{ secrets.VPS_PORT }}" "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
 
       # =========================
-      # DEPLOY FRONTEND (CLEAN)
+      # DEPLOY FRONTEND
       # =========================
       - name: Deploy frontend
         run: |
@@ -58,12 +58,13 @@ jobs:
             ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/client/
 
       # =========================
-      # DEPLOY API & DOCKER
+      # DEPLOY API CODE
       # =========================
-      - name: Deploy API with Docker
+      - name: Deploy API source
         run: |
           rsync -r \
             --exclude .env.local \
+            --exclude .env \
             --exclude vendor \
             --exclude var/cache \
             --exclude var/log \
@@ -71,7 +72,10 @@ jobs:
             ./api/ \
             ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/api/
 
-      - name: Deploy api compose file
+      # =========================
+      # DEPLOY COMPOSE FILE
+      # =========================
+      - name: Deploy docker-compose
         run: |
           rsync -r \
             -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }}" \
@@ -79,16 +83,21 @@ jobs:
             ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/api/
 
       # =========================
-      # Docker Compose Build & Run
+      # BUILD + RESTART CONTAINERS
       # =========================
-      - name: Build and run Docker containers
+      - name: Build and restart containers
         run: |
           ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }} \
           ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
           "
-            cd /var/www/html/api &&
-            docker info >/dev/null &&
-            docker-compose down --remove-orphans || true &&
-            docker-compose build --no-cache &&
-            docker-compose up -d
+            set -e
+            cd /var/www/html/api
+
+            echo 'Stopping containers...'
+            docker-compose down --remove-orphans || true
+
+            echo 'Building and starting...'
+            docker-compose up -d --build --force-recreate
+
+            echo 'Done.'
           "
