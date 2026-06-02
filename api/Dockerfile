@@ -26,7 +26,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html/api
 
 # Copy only API first (better caching)
-COPY ./api /var/www/html/api
+COPY . /var/www/html/api
 
 # Install dependencies
 RUN composer install \
