@@ -1,0 +1,147 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un projet{% endblock %}
+
+{% block body %}
+    <main class="admin-page">
+        <section class="admin-card">
+            <h1>Ajouter un projet manuellement</h1>
+            <p>Ce formulaire enregistre un nouveau projet dans votre API.</p>
+
+            {% for message in app.flashes('success') %}
+                <div class="flash-success">{{ message }}</div>
+            {% endfor %}
+
+            {% if errors is not empty %}
+                <div class="flash-error">
+                    <ul>
+                        {% for error in errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <form method="post" class="project-form">
+                <label>
+                    <span>Titre</span>
+                    <input type="text" name="title" value="{{ data.title }}" required>
+                </label>
+
+                <label>
+                    <span>Description</span>
+                    <textarea name="description" rows="6" required>{{ data.description }}</textarea>
+                </label>
+
+                <label>
+                    <span>Lien du projet</span>
+                    <input type="url" name="projectLink" value="{{ data.projectLink }}" placeholder="https://...">
+                </label>
+
+                <label>
+                    <span>Lien du site</span>
+                    <input type="url" name="siteLink" value="{{ data.siteLink }}" placeholder="https://...">
+                </label>
+
+                <label>
+                    <span>Illustration</span>
+                    <input type="text" name="illustration" value="{{ data.illustration }}" placeholder="/assets/img/projet.jpg">
+                </label>
+
+                <button type="submit">Enregistrer</button>
+            </form>
+        </section>
+    </main>
+
+    <style>
+        .admin-page {
+            min-height: 100vh;
+            padding: 48px 20px;
+            background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .admin-card {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 32px;
+            border-radius: 24px;
+            background: white;
+            box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+        }
+
+        .admin-card h1 {
+            margin: 0 0 8px;
+            font-size: 2rem;
+            color: #0f172a;
+        }
+
+        .admin-card p {
+            margin: 0 0 24px;
+            color: #475569;
+        }
+
+        .flash-success,
+        .flash-error {
+            margin-bottom: 20px;
+            padding: 14px 16px;
+            border-radius: 14px;
+        }
+
+        .flash-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .flash-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .project-form {
+            display: grid;
+            gap: 18px;
+        }
+
+        .project-form label {
+            display: grid;
+            gap: 8px;
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .project-form input,
+        .project-form textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 14px;
+            font: inherit;
+            background: #fff;
+            color: #0f172a;
+        }
+
+        .project-form input:focus,
+        .project-form textarea:focus {
+            outline: 2px solid #6366f1;
+            outline-offset: 2px;
+            border-color: #6366f1;
+        }
+
+        .project-form button {
+            justify-self: start;
+            padding: 14px 22px;
+            border: 0;
+            border-radius: 999px;
+            background: #111827;
+            color: white;
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .project-form button:hover {
+            background: #1f2937;
+        }
+    </style>
+{% endblock %}
