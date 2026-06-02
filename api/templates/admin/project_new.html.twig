@@ -8,6 +8,8 @@
             <h1>Ajouter un projet manuellement</h1>
             <p>Ce formulaire enregistre un nouveau projet dans votre API.</p>
 
+            <p><a href="{{ path('admin_projects_index') }}">Voir les projets enregistrés</a></p>
+
             {% for message in app.flashes('success') %}
                 <div class="flash-success">{{ message }}</div>
             {% endfor %}
@@ -22,7 +24,7 @@
                 </div>
             {% endif %}
 
-            <form method="post" class="project-form">
+            <form method="post" enctype="multipart/form-data" class="project-form">
                 <label>
                     <span>Titre</span>
                     <input type="text" name="title" value="{{ data.title }}" required>
@@ -46,6 +48,12 @@
                 <label>
                     <span>Illustration</span>
                     <input type="text" name="illustration" value="{{ data.illustration }}" placeholder="/assets/img/projet.jpg">
+                </label>
+
+                <label>
+                    <span>Image</span>
+                    <input type="file" name="imageFile" accept="image/*">
+                    <small>Le fichier sera enregistré en base64 dans la base de données.</small>
                 </label>
 
                 <button type="submit">Enregistrer</button>

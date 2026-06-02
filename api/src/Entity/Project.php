@@ -30,6 +30,9 @@ class Project
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $illustration = null;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $imageBase64 = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -91,6 +94,18 @@ class Project
     public function setIllustration(?string $illustration): static
     {
         $this->illustration = $illustration;
+
+        return $this;
+    }
+
+    public function getImageBase64(): ?string
+    {
+        return $this->imageBase64;
+    }
+
+    public function setImageBase64(?string $imageBase64): static
+    {
+        $this->imageBase64 = $imageBase64;
 
         return $this;
     }

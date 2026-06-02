@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Projets enregistrés{% endblock %}
+
+{% block body %}
+    <main class="admin-page">
+        <section class="admin-card">
+            <h1>Projets enregistrés</h1>
+            <p><a href="{{ path('admin_project_new') }}">Ajouter un nouveau projet</a></p>
+
+            {% if projects is empty %}
+                <p>Aucun projet n'a encore été enregistré.</p>
+            {% else %}
+                <div class="table-wrap">
+                    <table class="projects-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Titre</th>
+                                <th>Description</th>
+                                <th>Liens</th>
+                                <th>Image</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for project in projects %}
+                                <tr>
+                                    <td>{{ project.id }}</td>
+                                    <td>{{ project.title }}</td>
+                                    <td>{{ project.description }}</td>
+                                    <td>
+                                        {% if project.projectLink %}
+                                            <div><a href="{{ project.projectLink }}" target="_blank" rel="noopener noreferrer">Projet</a></div>
+                                        {% endif %}
+                                        {% if project.siteLink %}
+                                            <div><a href="{{ project.siteLink }}" target="_blank" rel="noopener noreferrer">Site</a></div>
+                                        {% endif %}
+                                        {% if not project.projectLink and not project.siteLink %}
+                                            <span>Aucun lien</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if project.imageBase64 %}
+                                            <img src="{{ project.imageBase64 }}" alt="{{ project.title }}" class="project-preview">
+                                        {% else %}
+                                            <span>Aucune image</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </section>
+    </main>
+
+    <style>
+        .admin-page {
+            min-height: 100vh;
+            padding: 48px 20px;
+            background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .admin-card {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px;
+            border-radius: 24px;
+            background: white;
+            box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+        }
+
+        .admin-card h1 {
+            margin: 0 0 8px;
+            font-size: 2rem;
+            color: #0f172a;
+        }
+
+        .admin-card p {
+            margin: 0 0 20px;
+            color: #475569;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        .projects-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .projects-table th,
+        .projects-table td {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 14px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .projects-table th {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .project-preview {
+            max-width: 140px;
+            max-height: 100px;
+            object-fit: cover;
+            border-radius: 12px;
+            display: block;
+        }
+    </style>
+{% endblock %}
