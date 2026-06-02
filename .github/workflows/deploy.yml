@@ -64,7 +64,6 @@ jobs:
         run: |
           rsync -r \
             --exclude .env.local \
-            --exclude .env \
             --exclude vendor \
             --exclude var/cache \
             --exclude var/log \
