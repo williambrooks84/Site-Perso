@@ -28,6 +28,10 @@ WORKDIR /var/www/html/api
 # Copy only API first (better caching)
 COPY . /var/www/html/api
 
+# Symfony runtime runs as www-data and needs to read .env at boot.
+RUN chown www-data:www-data /var/www/html/api/.env \
+    && chmod 644 /var/www/html/api/.env
+
 # Install dependencies
 RUN composer install \
     --no-dev \
