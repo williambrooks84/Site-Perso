@@ -1,11 +1,11 @@
 <template>
-    <a
-      :href="href"
-      :download="download"
-      class="btn-primary w-fit"
-    >
-      {{label}}
-    </a>
+  <a
+    :href="href"
+    :download="download"
+    class="btn-primary w-fit"
+  >
+    {{ label }}
+  </a>
 </template>
 
 <script setup>

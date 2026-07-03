@@ -2,7 +2,7 @@
   <div class="flex flex-col items-center gap-20">
     <ContactInfos />
     <div class="w-full flex flex-col gap-8">
-      <h2>Ou venez me suivre sur mes réseaux sociaux :</h2>
+      <h2>Ou venez voir mes réseaux sociaux :</h2>
       <MediaShowcase />
     </div>
   </div>

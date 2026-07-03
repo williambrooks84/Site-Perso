@@ -43,7 +43,7 @@
 import ContactInfo from './ContactInfo.vue';
 
 const infos = [
-  { icon: 'bi-envelope-fill', label: 'Mail', content: 'william.brooks@etu.unilim.fr' },
+  { icon: 'bi-envelope-fill', label: 'Mail', content: 'wfjb04@aol.com' },
   { icon: 'bi-telephone-fill', label: 'Téléphone', content: '+33 7 81 47 13 04' },
 ];
 </script>

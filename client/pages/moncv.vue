@@ -1,7 +1,13 @@
 <template>
     <div class="w-full flex flex-col justify-center items-center gap-10">
-        <DownloadCvButton :href="buttonProps[0].href" :download="buttonProps[0].download" :label="buttonProps[0].label" />
-        <Cv />
+        <ClientOnly>
+            <Cv />
+            <DownloadCvButton
+              :href="buttonProps[0].href"
+              :download="buttonProps[0].download"
+              :label="buttonProps[0].label"
+            />
+        </ClientOnly>
     </div>
 </template>
 

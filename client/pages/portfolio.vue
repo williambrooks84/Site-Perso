@@ -1,6 +1,12 @@
 <template>
-    <div class="flex flex-col items-center justify-center min-h-[60vh]">
+    <div class="flex flex-col items-center justify-center min-h-[60vh] gap-20 pb-20">
         <Project />
+        <div class="flex flex-col items-center justify-center gap-7">
+            <p class="body-text">Envie d'aller plus loin dans mes réalisations ?</p>
+            <a href="https://sites.google.com/view/portfoliobrooksw" class="btn-secondary">
+                Consultez mon portfolio de compétences
+            </a>
+        </div>
     </div>
 </template>
 

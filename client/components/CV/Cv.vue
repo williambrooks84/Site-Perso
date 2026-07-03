@@ -1,11 +1,13 @@
 <template>
-  <div class="w-full flex justify-center">
+  <!-- <div class="w-full flex justify-center">
     <img :src="cvImageUrl" alt="cv" />
-  </div>
+  </div> -->
+  <CvPreview/>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import CvPreview from './CvPreview.vue'
 
 const cvImageUrl = ref('')
 
@@ -20,6 +22,7 @@ onMounted(async () => {
     // fallback to asset image
   }
 })
+
 </script>
 
 <style scoped>

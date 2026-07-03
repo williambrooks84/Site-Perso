@@ -110,6 +110,21 @@ h4 {
   transition: all 0.2s;
 }
 
+.btn-secondary {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  background-color: var(--color-secondary);
+  color: var(--color-dark);
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 1.125rem;
+  transition: all 0.2s;
+}
+
 .btn-primary:hover {
   text-decoration: underline;
   text-decoration-color: var(--color-primary);
@@ -118,3 +133,13 @@ h4 {
   color: var(--color-primary);
   background-color: var(--color-hover);
 }
+
+.btn-secondary:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--color-secondary);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 7px;
+  color: var(--color-secondary);
+  background-color: var(--color-hover);
+}
+

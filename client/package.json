@@ -11,14 +11,19 @@
   },
   "dependencies": {
     "@heroicons/vue": "^2.2.0",
+    "@i2d/nuxt-pdf-frame": "^0.6.1",
     "@nuxt/ui": "^3.1.0",
     "@nuxtjs/sitemap": "^7.4.3",
     "bootstrap-icons": "^1.11.3",
     "canvas-confetti": "^1.9.3",
+    "estree-walker": "2.0.2",
     "nuxt": "^3.16.2",
     "nuxt-ripple": "^0.0.8",
     "vue": "^3.5.13",
     "vue-pdf-embed": "^2.1.2",
     "vue-router": "^4.5.1"
+  },
+  "overrides": {
+    "estree-walker": "2.0.2"
   }
 }
