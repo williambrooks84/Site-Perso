@@ -62,7 +62,7 @@ class ProjectAdminController extends AbstractController
             }
 
             if ($imageFile instanceof UploadedFile && !$imageFile->isValid()) {
-                $errors[] = 'Le téléversement de l\'image a échoué.';
+                $errors[] = 'Téléversement échoué (code erreur : ' . $imageFile->getError() . ')';
             }
 
             if ($errors === []) {
