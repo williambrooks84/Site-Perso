@@ -1,21 +1,17 @@
 <template>
   <div>
-    <div class="flex flex-col justify-center items-center gap-8 lg:gap-10">
+    <div class="flex flex-col text-justify justify-center items-center gap-8 lg:gap-10">
       <img src="/assets/img/will.jpg" class="w-48 h-auto rounded-xl" alt="">
-      <p class="body-text">Je suis William Brooks (ou tout simplement Will). J'ai 20 ans et je suis un étudiant en
-        BUT MMI (Métiers du Multimédia et de l'Internet) dans le parcours du développement web. Depuis tout
-        jeune, je suis très intéressé par l'informatique.</p>
+      <p class="body-text">Je suis William Brooks. J'ai 21 ans et je suis un développeur web junior full-stack. Intéressé par l'informatique depuis un jeune âge, j'ai décidé de faire des études dans le domaine du développement web afin d'approfondir mes connaissances dessus et d'en faire mon métier.</p>
       <p class="body-text">En dehors de ma formation, je suis passionné des transports en commun (surtout les bus
         et les trains) et je fais de la photographie dessus, en plus des paysages. Je suis contributeur sur
         l'association en ligne <a class="body-link" href="https://tc-infos.fr" target="_blank"
-          rel="noopener noreferrer">TC Infos</a>.</p>
-      <p class="body-text">J'écoute beaucoup de musique, surtout du hard rock/métal comme Iron Maiden et Guns N'
-        Roses et du Britpop comme Oasis. J'aime aussi les groupes de rock classique comme les Rolling Stones.
-      </p>
+          rel="noopener noreferrer">TC Infos</a>, un site qui permet de référencer tous les transports en commun de France, et je publie des photos assez régulièrement sur les réseaux sociaux.</p>
     </div>
     <Study />
+    <Experience />
     <div class="flex flex-col gap-8 mt-10">
-      <h2>Venez voir mes réseaux sociaux</h2>
+      <h2>Envie de savoir plus sur moi ? Venez consulter mes réseaux sociaux :</h2>
       <MediaShowcase />
     </div>
   </div>
@@ -24,6 +20,7 @@
 <script setup>
 import MediaShowcase from '~/components/Media/MediaShowcase.vue';
 import Study from '~/components/Study/Study.vue';
+import Experience from '~/components/Study/Experience.vue';
 
 useHead({
   title: 'William Brooks - Qui suis-je ?',

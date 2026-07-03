@@ -26,8 +26,8 @@ const items = [
     { icon: 'bi-code-slash', text: 'Développeur Web' },
     { icon: 'bi-camera-fill', text: 'Photographe' },
     { icon: 'bi-bus-front-fill', text: 'Passionné de transports en commun (bus, trains, trams, etc)' },
-    { icon: 'bi-controller', text: 'Amateur de jeux vidéo (principalement Team Fortress 2)' },
-    { icon: 'bi-music-note-beamed', text: 'Fan de musique (Hard Rock/Métal, Rock et Britpop)' }
+    { icon: 'bi-controller', text: 'Amateur de jeux vidéos' },
+    { icon: 'bi-music-note-beamed', text: 'Fan de musique (toutes sortes mais principalement Rock, Métal et Britpop)' }
 ];
 
 </script>

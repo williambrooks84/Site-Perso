@@ -20,7 +20,7 @@
             <!-- Content -->
             <div class="flex flex-col justify-between items-center gap-4 text-center w-full">
               <h5 class="text-2xl md:text-4xl" v-html="projet.title.rendered"></h5>
-              <p class="text-sm md:text-lg text-left">
+              <p class="text-sm md:text-lg text-justify">
                 {{ projet.custom_fields.description || 'Aucune description disponible.' }}
               </p>
               <div class="flex flex-col md:flex-row gap-4">
@@ -31,7 +31,7 @@
                   target="_blank"
                   rel="noopener"
                 >
-                  Voir le projet
+                  Voir le code source du projet
                 </a>
                 <a
                   v-if="projet.custom_fields.site_link"
@@ -40,7 +40,7 @@
                   target="_blank"
                   rel="noopener"
                 >
-                  Voir le site hébergé
+                  Voir le projet hébergé
                 </a>
               </div>
             </div>
