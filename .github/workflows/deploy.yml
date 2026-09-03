@@ -82,9 +82,9 @@ jobs:
             ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/api/
 
       # =========================
-      # BUILD + RESTART CONTAINERS
+      # BUILD + UPDATE CONTAINERS
       # =========================
-      - name: Build and restart containers
+      - name: Build containers and run migrations
         run: |
           ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }} \
           ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
@@ -92,11 +92,19 @@ jobs:
             set -e
             cd /var/www/html/api
 
-            echo 'Stopping containers...'
-            docker-compose down --remove-orphans || true
-
-            echo 'Building and starting...'
+            echo 'Building and starting containers without removing volumes...'
             docker-compose up -d --build --force-recreate
 
-            echo 'Done.'
+            echo 'Waiting for MySQL...'
+            until docker-compose exec -T db mysqladmin ping -h localhost -uroot -proot --silent; do
+              sleep 2
+            done
+
+            echo 'Ensuring the application database exists...'
+            docker-compose exec -T db mysql -uroot -proot -e \"CREATE DATABASE IF NOT EXISTS portfolio CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE USER IF NOT EXISTS 'portfolio'@'%' IDENTIFIED BY 'PortfolioWill2025!'; GRANT ALL PRIVILEGES ON portfolio.* TO 'portfolio'@'%'; FLUSH PRIVILEGES;\"
+
+            echo 'Running Doctrine migrations...'
+            docker-compose exec -T api php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+
+            echo 'Deployment completed.'
           "
