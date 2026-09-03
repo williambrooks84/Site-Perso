@@ -111,7 +111,7 @@ jobs:
             docker-compose exec -T db mysql -uroot -proot -e \"CREATE DATABASE IF NOT EXISTS portfolio CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE USER IF NOT EXISTS 'portfolio'@'%' IDENTIFIED BY 'PortfolioWill2025!'; GRANT ALL PRIVILEGES ON portfolio.* TO 'portfolio'@'%'; FLUSH PRIVILEGES;\"
 
             echo 'Checking the database host used by Symfony...'
-            docker-compose exec -T api sh -c 'printf "%s\\n" "$DATABASE_URL" | sed -E "s#(mysql://[^:]+:)[^@]+@#\\1***@#"'
+            docker-compose exec -T api printenv DATABASE_URL | sed 's#:[^@]*@#:\***@#'
 
             echo 'Running Doctrine migrations...'
             docker-compose exec -T api php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
