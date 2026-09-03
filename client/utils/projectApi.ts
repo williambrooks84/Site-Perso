@@ -39,3 +39,23 @@ export async function createProject(
 
   return response.json()
 }
+
+export async function deleteProject(projectId: number | string, apiUrl: string) {
+  const response = await fetch(`${apiUrl}/api/projects/delete?id=${projectId}`, {
+    method: 'DELETE',
+  })
+
+  if (!response.ok) {
+    const errorText = await response.text().catch(() => '')
+    let message = errorText
+
+    try {
+      const error = JSON.parse(errorText)
+      message = error.error || error.message || errorText
+    } catch {
+      // Keep the raw response when the API does not return JSON.
+    }
+
+    throw new Error(message || `Erreur API (${response.status})`)
+  }
+}

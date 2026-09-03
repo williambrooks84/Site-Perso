@@ -92,6 +92,16 @@
                 </div>
               </div>
               <span class="rounded-full bg-emerald-100 px-2 py-1 text-xs font-medium text-emerald-700">#{{ project.id }}</span>
+              <button
+                type="button"
+                title="Supprimer le projet"
+                aria-label="Supprimer le projet"
+                class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-red-600 text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+                :disabled="removingProjectId === project.id"
+                @click="deleteProject(project)"
+              >
+                <i class="bi bi-trash" aria-hidden="true"></i>
+              </button>
             </div>
           </li>
         </ul>
@@ -102,7 +112,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { createProject } from '~/utils/projectApi'
+import { createProject, deleteProject as deleteProjectRequest } from '~/utils/projectApi'
 
 const runtimeConfig = useRuntimeConfig()
 const apiBaseUrl = runtimeConfig.public.apiUrl || 'https://api.willbrooks.fr'
@@ -116,6 +126,7 @@ const form = ref({
 
 const selectedImageFile = ref(null)
 const isSubmitting = ref(false)
+const removingProjectId = ref(null)
 const message = ref(null)
 const projects = ref([])
 
@@ -139,6 +150,29 @@ const loadProjects = async () => {
     projects.value = data.member || data
   } catch (error) {
     console.error('Erreur chargement projets:', error)
+  }
+}
+
+const deleteProject = async (project) => {
+  if (!window.confirm(`Supprimer le projet « ${project.title} » ?`)) return
+
+  removingProjectId.value = project.id
+  message.value = null
+
+  try {
+    await deleteProjectRequest(project.id, apiBaseUrl)
+    message.value = {
+      type: 'success',
+      text: 'Le projet a bien été supprimé.',
+    }
+    await loadProjects()
+  } catch (error) {
+    message.value = {
+      type: 'error',
+      text: error instanceof Error ? error.message : 'Impossible de supprimer le projet.',
+    }
+  } finally {
+    removingProjectId.value = null
   }
 }
 

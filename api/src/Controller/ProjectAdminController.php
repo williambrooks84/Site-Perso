@@ -78,6 +78,22 @@ class ProjectAdminController extends AbstractController
         ], Response::HTTP_CREATED);
     }
 
+    #[Route('/api/projects/delete', name: 'api_project_delete', methods: ['DELETE'], priority: 10)]
+    public function delete(Request $request, ProjectRepository $projectRepository, EntityManagerInterface $entityManager): JsonResponse {
+        $id = (int) $request->query->get('id');
+        $project = $projectRepository->find($id);
+        
+        if (!$project) {
+            return $this->json(['error' => 'Pas de projet avec cet ID.'], Response::HTTP_NOT_FOUND);
+        }
+
+        $entityManager->remove($project);
+        $entityManager->flush();
+
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+
+    }
+
     private function nullableString(mixed $value): ?string
     {
         $value = trim((string) $value);
