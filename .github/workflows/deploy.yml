@@ -92,6 +92,10 @@ jobs:
             set -e
             cd /var/www/html/api
 
+            echo 'Checking the VPS environment file...'
+            test -s .env || (echo 'Missing /var/www/html/api/.env on the VPS.'; exit 1)
+            grep -q '^DATABASE_URL=.*@db:' .env || (echo 'DATABASE_URL must point to the Docker service db.'; exit 1)
+
             echo 'Building and starting containers without removing volumes...'
             docker-compose up -d --build --force-recreate
 
