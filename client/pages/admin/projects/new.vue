@@ -83,7 +83,7 @@ import { onMounted, ref } from 'vue'
 import { createProject } from '~/utils/projectApi'
 
 const runtimeConfig = useRuntimeConfig()
-const apiBaseUrl = runtimeConfig.public.apiUrl || 'http://localhost:8000'
+const apiBaseUrl = runtimeConfig.public.apiUrl || 'https://api.willbrooks.fr'
 
 const form = ref({
   title: '',

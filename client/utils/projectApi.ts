@@ -7,9 +7,11 @@ export type ProjectPayload = {
   imageBase64?: string | null
 }
 
+const defaultApiUrl = 'https://api.willbrooks.fr'
+
 export async function createProject(
   payload: ProjectPayload,
-  apiUrl = 'http://localhost:8000'
+  apiUrl = defaultApiUrl
 ) {
   const response = await fetch(`${apiUrl}/api/projects`, {
     method: 'POST',

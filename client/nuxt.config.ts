@@ -2,6 +2,11 @@
 export default defineNuxtConfig({
   ssr: true,
   baseURL: '/client/',
+  runtimeConfig: {
+    public: {
+      apiUrl: process.env.NUXT_PUBLIC_API_URL || 'https://api.willbrooks.fr'
+    }
+  },
   nitro: {
     preset: 'static'
   },
