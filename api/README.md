@@ -153,3 +153,11 @@ The second response should include `Access-Control-Allow-Origin: https://willbro
 ### Important data-safety warning
 
 Do not run `docker-compose down -v` in production. The `-v` option removes the Docker volume containing the MySQL data. Normal deployments and the commands above preserve existing data.
+
+
+### Migration commands
+
+```bash
+docker compose up -d --build --force-recreate
+docker compose exec api php bin/console doctrine:migrations:migrate --no-interaction
+```

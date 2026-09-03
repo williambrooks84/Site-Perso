@@ -3,28 +3,38 @@ export type ProjectPayload = {
   description: string
   projectLink?: string
   siteLink?: string
-  illustration?: string
-  imageBase64?: string | null
+  image?: File | null
 }
-
-const defaultApiUrl = 'https://api.willbrooks.fr'
 
 export async function createProject(
   payload: ProjectPayload,
-  apiUrl = defaultApiUrl
+  apiUrl: string
 ) {
-  const response = await fetch(`${apiUrl}/api/projects`, {
+  const formData = new FormData()
+  formData.append('title', payload.title)
+  formData.append('description', payload.description)
+  if (payload.projectLink) formData.append('projectLink', payload.projectLink)
+  if (payload.siteLink) formData.append('siteLink', payload.siteLink)
+  if (payload.image) formData.append('image', payload.image, payload.image.name)
+
+  const response = await fetch(`${apiUrl}/api/projects/upload`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/ld+json',
-      Accept: 'application/ld+json',
-    },
-    body: JSON.stringify(payload),
+    headers: { Accept: 'application/json' },
+    body: formData,
   })
 
   if (!response.ok) {
     const errorText = await response.text().catch(() => '')
-    throw new Error(errorText || `Erreur API (${response.status})`)
+    let message = errorText
+
+    try {
+      const error = JSON.parse(errorText)
+      message = error.error || errorText
+    } catch {
+      // Keep the raw response when the API does not return JSON.
+    }
+
+    throw new Error(message || `Erreur API (${response.status})`)
   }
 
   return response.json()

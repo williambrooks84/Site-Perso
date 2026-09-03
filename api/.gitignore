@@ -11,3 +11,4 @@
 /.env.*
 !.env.example
 ###< symfony/framework-bundle ###
+docker-compose.override.yml

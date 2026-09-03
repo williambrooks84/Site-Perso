@@ -34,13 +34,8 @@
         </div>
 
         <div>
-          <label for="illustration" class="mb-2 block text-sm font-medium text-slate-700">Illustration</label>
-          <input id="illustration" v-model="form.illustration" type="text" class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-100" placeholder="/assets/img/projet.jpg" />
-        </div>
-
-        <div>
           <label for="image" class="mb-2 block text-sm font-medium text-slate-700">Image</label>
-          <input id="image" type="file" accept="image/*" @change="onImageSelected" class="w-full rounded-xl border border-slate-300 px-4 py-3 file:mr-4 file:rounded-md file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium" />
+          <input id="image" type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" @change="onImageSelected" class="w-full rounded-xl border border-slate-300 px-4 py-3 file:mr-4 file:rounded-md file:border-0 file:bg-slate-100 file:px-3 file:py-2 file:text-sm file:font-medium" />
         </div>
 
         <div class="flex items-center justify-end gap-4">
@@ -64,10 +59,37 @@
 
         <ul v-else class="space-y-3">
           <li v-for="project in projects" :key="project.id" class="rounded-xl border border-slate-200 bg-slate-50 p-4">
-            <div class="flex items-start justify-between gap-4">
-              <div>
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <img
+                v-if="getProjectImage(project)"
+                :src="getProjectImage(project)"
+                :alt="`Image de ${project.title}`"
+                class="h-32 w-full rounded-lg object-cover sm:w-48"
+              />
+
+              <div class="min-w-0 flex-1">
                 <p class="font-semibold text-slate-900">{{ project.title }}</p>
                 <p class="mt-1 text-sm text-slate-600">{{ project.description }}</p>
+                <div v-if="project.projectLink || project.siteLink" class="mt-4 flex flex-wrap gap-3">
+                  <a
+                    v-if="project.projectLink"
+                    :href="project.projectLink"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="rounded-lg bg-slate-900 px-3 py-2 text-sm font-medium text-white hover:bg-slate-700"
+                  >
+                    Code source
+                  </a>
+                  <a
+                    v-if="project.siteLink"
+                    :href="project.siteLink"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-white"
+                  >
+                    Voir le site
+                  </a>
+                </div>
               </div>
               <span class="rounded-full bg-emerald-100 px-2 py-1 text-xs font-medium text-emerald-700">#{{ project.id }}</span>
             </div>
@@ -90,13 +112,18 @@ const form = ref({
   description: '',
   projectLink: '',
   siteLink: '',
-  illustration: '',
 })
 
-const selectedImage = ref(null)
+const selectedImageFile = ref(null)
 const isSubmitting = ref(false)
 const message = ref(null)
 const projects = ref([])
+
+const getProjectImage = (project) => {
+  if (!project.imagePath) return ''
+  if (/^https?:\/\//.test(project.imagePath)) return project.imagePath
+  return `${apiBaseUrl}${project.imagePath.startsWith('/') ? '' : '/'}${project.imagePath}`
+}
 
 const loadProjects = async () => {
   try {
@@ -115,22 +142,25 @@ const loadProjects = async () => {
   }
 }
 
-const onImageSelected = async (event) => {
+const onImageSelected = (event) => {
   const file = event.target.files?.[0]
   if (!file) {
-    selectedImage.value = null
+    selectedImageFile.value = null
     return
   }
 
-  selectedImage.value = await fileToBase64(file)
-}
+  if (file.size > 10 * 1024 * 1024) {
+    selectedImageFile.value = null
+    event.target.value = ''
+    message.value = {
+      type: 'error',
+      text: 'L’image ne doit pas dépasser 10 Mo.',
+    }
+    return
+  }
 
-const fileToBase64 = (file) => new Promise((resolve, reject) => {
-  const reader = new FileReader()
-  reader.onload = () => resolve(reader.result)
-  reader.onerror = () => reject(new Error('Impossible de lire l’image.'))
-  reader.readAsDataURL(file)
-})
+  selectedImageFile.value = file
+}
 
 const submitProject = async () => {
   isSubmitting.value = true
@@ -142,8 +172,7 @@ const submitProject = async () => {
       description: form.value.description.trim(),
       projectLink: form.value.projectLink.trim() || null,
       siteLink: form.value.siteLink.trim() || null,
-      illustration: form.value.illustration.trim() || null,
-      imageBase64: selectedImage.value || null,
+      image: selectedImageFile.value,
     }
 
     await createProject(payload, apiBaseUrl)
@@ -158,9 +187,8 @@ const submitProject = async () => {
       description: '',
       projectLink: '',
       siteLink: '',
-      illustration: '',
     }
-    selectedImage.value = null
+    selectedImageFile.value = null
 
     const input = document.getElementById('image')
     if (input) input.value = ''

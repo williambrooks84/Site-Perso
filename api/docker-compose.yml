@@ -39,6 +39,8 @@ services:
       APP_ENV: ${APP_ENV:-prod}
       APP_DEBUG: ${APP_DEBUG:-0}
 
+    volumes:
+          - ./var/uploads:/var/www/html/api/public/uploads
     # IMPORTANT: no bind mount in production
 
 volumes:

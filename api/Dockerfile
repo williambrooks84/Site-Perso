@@ -20,6 +20,8 @@ RUN set -eux; \
         intl pdo pdo_mysql pdo_pgsql zip xml dom opcache gd; \
     rm -rf /var/lib/apt/lists/*
 
+RUN printf "upload_max_filesize=10M\npost_max_size=16M\n" > /usr/local/etc/php/conf.d/uploads.ini
+
 # Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 

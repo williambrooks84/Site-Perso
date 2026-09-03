@@ -27,11 +27,8 @@ class Project
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $siteLink = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $illustration = null;
-
-    #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $imageBase64 = null;
+    #[ORM\Column(length: 500, nullable: true)]
+    private ?string $imagePath = null;
 
     public function getId(): ?int
     {
@@ -86,26 +83,14 @@ class Project
         return $this;
     }
 
-    public function getIllustration(): ?string
+    public function getImagePath(): ?string
     {
-        return $this->illustration;
+        return $this->imagePath;
     }
 
-    public function setIllustration(?string $illustration): static
+    public function setImagePath(?string $imagePath): static
     {
-        $this->illustration = $illustration;
-
-        return $this;
-    }
-
-    public function getImageBase64(): ?string
-    {
-        return $this->imageBase64;
-    }
-
-    public function setImageBase64(?string $imageBase64): static
-    {
-        $this->imageBase64 = $imageBase64;
+        $this->imagePath = $imagePath;
 
         return $this;
     }
