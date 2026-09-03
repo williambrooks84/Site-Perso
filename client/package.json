@@ -25,5 +25,9 @@
   },
   "overrides": {
     "estree-walker": "2.0.2"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^2.5.0",
+    "vitest": "^4.1.11"
   }
 }
