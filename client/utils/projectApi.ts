@@ -1,6 +1,7 @@
 export type ProjectPayload = {
   title: string
   description: string
+  categoryId: number
   projectLink?: string
   siteLink?: string
   image?: File | null
@@ -13,6 +14,7 @@ export async function createProject(
   const formData = new FormData()
   formData.append('title', payload.title)
   formData.append('description', payload.description)
+  formData.append('categoryId', String(payload.categoryId))
   if (payload.projectLink) formData.append('projectLink', payload.projectLink)
   if (payload.siteLink) formData.append('siteLink', payload.siteLink)
   if (payload.image) formData.append('image', payload.image, payload.image.name)

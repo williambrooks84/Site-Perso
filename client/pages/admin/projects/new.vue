@@ -43,6 +43,23 @@
         </div>
 
         <div>
+          <label for="category" class="mb-2 block text-sm font-medium text-dark">
+            Catégorie
+          </label>
+
+          <select id="category" v-model="form.categoryId" required
+            class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark outline-none transition focus:border-primary focus:ring-2 focus:ring-hover">
+            <option value="" disabled>
+              Sélectionner une catégorie
+            </option>
+
+            <option v-for="category in categories" :key="category.id" :value="category.id">
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
+
+        <div>
           <label for="image" class="mb-2 block text-sm font-medium text-dark">Image</label>
           <input id="image" type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" @change="onImageSelected"
             class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark file:mr-4 file:rounded-md file:border-0 file:bg-light file:px-3 file:py-2 file:text-sm file:font-medium" />
@@ -56,13 +73,24 @@
         </div>
       </form>
 
-      <AdminProjectsList 
-        :projects="projects"
-        :removing-project-id="removingProjectId"
-        :api-base-url="apiBaseUrl"
-        @refresh="loadProjects"
-        @delete="deleteProject"
-      />
+      <AdminProjectsList :projects="projects" :removing-project-id="removingProjectId" :api-base-url="apiBaseUrl"
+        @refresh="loadProjects" @delete="deleteProject" />
+
+      <div class="mb-2 flex items-end gap-2">
+        <div class="flex-1">
+          <label for="newCategory" class="mb-2 block text-sm font-medium text-dark">
+            Nouvelle catégorie
+          </label>
+
+          <input id="newCategory" v-model="newCategoryName" type="text" placeholder="Ex: E-commerce"
+            class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark outline-none transition focus:border-primary focus:ring-2 focus:ring-hover" />
+        </div>
+
+        <button type="button" :disabled="isCreatingCategory || !newCategoryName.trim()"
+          class="btn-primary btn-sm disabled:cursor-not-allowed disabled:opacity-60" @click="createCategory">
+          {{ isCreatingCategory ? '...' : 'Ajouter' }}
+        </button>
+      </div>
     </section>
   </main>
 </template>
@@ -84,6 +112,7 @@ const form = ref({
   description: '',
   projectLink: '',
   siteLink: '',
+  categoryId: '',
 })
 
 const selectedImageFile = ref(null)
@@ -91,7 +120,11 @@ const isSubmitting = ref(false)
 const removingProjectId = ref(null)
 const message = ref(null)
 const projects = ref([])
+const categories = ref([])
+const newCategoryName = ref('')
+const isCreatingCategory = ref(false)
 
+//Charger les projets
 const loadProjects = async () => {
   try {
     const response = await fetch(`${apiBaseUrl}/api/projects`, {
@@ -109,6 +142,7 @@ const loadProjects = async () => {
   }
 }
 
+//Supprimer les projets
 const deleteProject = async (project) => {
   if (!window.confirm(`Supprimer le projet « ${project.title} » ?`)) return
 
@@ -132,6 +166,7 @@ const deleteProject = async (project) => {
   }
 }
 
+
 const onImageSelected = (event) => {
   const file = event.target.files?.[0]
   if (!file) {
@@ -152,6 +187,75 @@ const onImageSelected = (event) => {
   selectedImageFile.value = file
 }
 
+//Charger les catégories
+const loadCategories = async () => {
+  try {
+    const response = await fetch(`${apiBaseUrl}/admin/categories`, {
+      headers: {
+        Accept: 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      throw new Error('Impossible de charger les catégories')
+    }
+
+    categories.value = await response.json()
+  } catch (error) {
+    console.error('Erreur chargement catégories:', error)
+  }
+}
+
+//Créer des catégories
+const createCategory = async () => {
+  const name = newCategoryName.value.trim()
+
+  if (!name) return
+
+  isCreatingCategory.value = true
+
+  try {
+    const formData = new FormData()
+    formData.append('description', name)
+
+    const response = await fetch(`${apiBaseUrl}/api/categories/submit`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+      body: formData,
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      throw new Error(
+        data.error || 'Impossible de créer la catégorie'
+      )
+    }
+
+    const category = {
+      id: data.id,
+      name: data.title,
+    }
+
+    categories.value.push(category)
+    form.value.categoryId = category.id
+    newCategoryName.value = ''
+  } catch (error) {
+    message.value = {
+      type: 'error',
+      text: error instanceof Error
+        ? error.message
+        : 'Impossible de créer la catégorie.',
+    }
+  } finally {
+    isCreatingCategory.value = false
+  }
+}
+
+
 const submitProject = async () => {
   isSubmitting.value = true
   message.value = null
@@ -162,6 +266,7 @@ const submitProject = async () => {
       description: form.value.description.trim(),
       projectLink: form.value.projectLink.trim() || null,
       siteLink: form.value.siteLink.trim() || null,
+      categoryId: form.value.categoryId,
       image: selectedImageFile.value,
     }
 
@@ -196,9 +301,8 @@ const submitProject = async () => {
 
 onMounted(() => {
   loadProjects()
+  loadCategories()
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

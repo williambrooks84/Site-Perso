@@ -22,6 +22,7 @@
           <div class="min-w-0 flex-1">
             <h3 class="font-semibold text-dark">{{ project.title }}</h3>
             <p class="mt-1 text-sm text-dark/70">{{ project.description }}</p>
+            <p class="mt-1 text-lg"><span class="font-medium">Catégorie : </span>{{ project.category.name }}</p>
             <div v-if="project.projectLink || project.siteLink" class="mt-4 flex flex-wrap gap-3">
               <a v-if="project.projectLink" :href="project.projectLink" target="_blank" rel="noopener noreferrer"
                 class="btn-secondary btn-sm">
