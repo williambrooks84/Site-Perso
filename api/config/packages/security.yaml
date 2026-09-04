@@ -5,7 +5,10 @@ security:
 
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        users_in_memory: { memory: null }
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
 
     firewalls:
         dev:
@@ -14,7 +17,17 @@ security:
             security: false
         main:
             lazy: true
-            provider: users_in_memory
+            provider: app_user_provider
+            json_login:
+                check_path: /api/login
+                username_path: email
+                password_path: password
+                success_handler: App\Security\LoginSuccessHandler
+                failure_handler: App\Security\LoginFailureHandler
+            logout:
+                path: /api/logout
+                invalidate_session: true
+                target: /api/logout-success
 
             # Activate different ways to authenticate:
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -26,6 +39,12 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/api/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/logout$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/me$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/projects/upload$, roles: ROLE_ADMIN }
+        - { path: ^/api/projects/delete$, roles: ROLE_ADMIN }
 
 when@test:
     security:

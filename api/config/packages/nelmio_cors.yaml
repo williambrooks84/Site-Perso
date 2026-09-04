@@ -6,6 +6,7 @@ nelmio_cors:
             - '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
         allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
         allow_headers: ['Content-Type', 'Authorization']
+        allow_credentials: true
         expose_headers: ['Link']
         max_age: 3600
     paths:

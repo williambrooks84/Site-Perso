@@ -11,10 +11,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ProjectAdminController extends AbstractController
 {
     #[Route('/api/projects/upload', name: 'api_project_upload', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function upload(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $imageFile = $request->files->get('image') ?? $request->files->get('imageFile');
@@ -79,6 +81,7 @@ class ProjectAdminController extends AbstractController
     }
 
     #[Route('/api/projects/delete', name: 'api_project_delete', methods: ['DELETE'], priority: 10)]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $request, ProjectRepository $projectRepository, EntityManagerInterface $entityManager): JsonResponse {
         $id = (int) $request->query->get('id');
         $project = $projectRepository->find($id);
@@ -110,6 +113,7 @@ class ProjectAdminController extends AbstractController
     }
 
     #[Route('/admin/projects/new', name: 'admin_project_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $errors = [];

@@ -5,9 +5,16 @@ namespace App\Entity;
 use App\Repository\ProjectRepository;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
-#[ApiResource]
+#[ApiResource(operations: [
+    new GetCollection(),
+    new Get(),
+    new Post(security: "is_granted('ROLE_ADMIN')"),
+])]
 class Project
 {
     #[ORM\Id]

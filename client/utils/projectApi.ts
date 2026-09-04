@@ -20,6 +20,7 @@ export async function createProject(
   const response = await fetch(`${apiUrl}/api/projects/upload`, {
     method: 'POST',
     headers: { Accept: 'application/json' },
+    credentials: 'include',
     body: formData,
   })
 
@@ -43,6 +44,7 @@ export async function createProject(
 export async function deleteProject(projectId: number | string, apiUrl: string) {
   const response = await fetch(`${apiUrl}/api/projects/delete?id=${projectId}`, {
     method: 'DELETE',
+    credentials: 'include',
   })
 
   if (!response.ok) {

@@ -19,6 +19,11 @@
                         <client-only>
                             <ThemeButton class="ml-4 mr-2" />
                         </client-only>
+                        <client-only>
+                            <button v-if="isAuthenticated" type="button" class="text-light" @click="logout">
+                                <i class="bi bi-box-arrow-left"></i>
+                            </button>
+                        </client-only>
                         <!-- Me contacter button -->
                         <!--<ContactButton @click="showContactModal = true" />-->
                     </div>
@@ -39,6 +44,9 @@
     <div v-show="isMobileMenuOpen"
         class="xl:hidden fixed top-20 right-0 w-2/3 bg-[var(--color-primary)] flex flex-col px-4 pb-4 gap-2 space-y-2 z-50 transition">
         <NavLink v-for="link in navLinks" :key="link.name" :href="link.href" :name="link.name" :icon="link.icon" />
+        <button v-if="isAuthenticated" type="button" class="text-light mt-2 w-fit" @click="logout">
+            <i class="bi bi-box-arrow-left"></i>
+        </button>
         <!--<ContactButton class="mt-2 w-fit" @click="showContactModal = true" />-->
     </div>
     <!-- Contact Modal -->
@@ -61,6 +69,7 @@ const navLinks = [
 
 const isMobileMenuOpen = ref(false);
 const { isDark } = useTheme();
+const { isAuthenticated, checkAuthentication, logout: logoutUser } = useAuth();
 const logoSrc = ref(isDark.value ? '/assets/img/logo-dark.svg' : '/assets/img/logo.svg');
 
 watch(isDark, (val) => {
@@ -68,7 +77,20 @@ watch(isDark, (val) => {
 });
 onMounted(() => {
     logoSrc.value = isDark.value ? '/assets/img/logo-dark.svg' : '/assets/img/logo.svg';
+    checkAuthentication();
 });
+
+const logout = async () => {
+    try {
+        await logoutUser();
+    } catch {
+        // Always leave the protected area, even if the session has already expired.
+    } finally {
+        isAuthenticated.value = false;
+        isMobileMenuOpen.value = false;
+        await navigateTo('/admin');
+    }
+};
 </script>
 
 <style scoped>

@@ -161,3 +161,23 @@ Do not run `docker-compose down -v` in production. The `-v` option removes the D
 docker compose up -d --build --force-recreate
 docker compose exec api php bin/console doctrine:migrations:migrate --no-interaction
 ```
+
+
+### Create Admin user
+```bash
+docker compose up -d db
+docker compose exec api php bin/console security:hash-password
+
+docker compose exec db mysql -uportfolio -p portfolio
+
+INSERT INTO `user` (email, roles, password)
+VALUES (
+    'your-email@example.com',
+    '["ROLE_ADMIN"]',
+    'PASTE_THE_GENERATED_HASH_HERE'
+);
+
+SELECT id, email, roles FROM `user`;
+
+EXIT
+```

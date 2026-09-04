@@ -2,9 +2,10 @@
   <main class="mx-auto max-w-3xl px-4 py-12">
     <section class="rounded-2xl border border-border-grey bg-light p-8 shadow-sm">
       <header class="flex flex-col items-center justify-between gap-4">
-        <h1 class="mt-2 text-3xl font-bold text-dark">Ajouter un projet</h1>
-        <NuxtLink to="/admin/projects" class="btn-primary text-sm">
-          Voir l'ensemble des projets
+        <h1 class="text-3xl font-bold text-dark">Administration des projets</h1>
+        <NuxtLink to="/admin/projects/new"
+          class="btn-primary text-sm">
+          Ajouter un projet
         </NuxtLink>
       </header>
 
@@ -12,49 +13,6 @@
         :class="message.type === 'success' ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-red-200 bg-red-50 text-red-700'">
         {{ message.text }}
       </div>
-
-      <form class="space-y-6" @submit.prevent="submitProject">
-        <div>
-          <label for="title" class="mb-2 block text-sm font-medium text-dark">Titre</label>
-          <input id="title" v-model="form.title" type="text" required
-            class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark outline-none transition focus:border-primary focus:ring-2 focus:ring-hover" />
-        </div>
-
-        <div>
-          <label for="description" class="mb-2 block text-sm font-medium text-dark">Description</label>
-          <textarea id="description" v-model="form.description" rows="6" required
-            class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark outline-none transition focus:border-primary focus:ring-2 focus:ring-hover" />
-        </div>
-
-        <div class="grid gap-6 md:grid-cols-2">
-          <div>
-            <label for="projectLink" class="mb-2 block text-sm font-medium text-dark">Lien du projet</label>
-            <input id="projectLink" v-model="form.projectLink" type="url"
-              class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark outline-none transition focus:border-primary focus:ring-2 focus:ring-hover"
-              placeholder="https://..." />
-          </div>
-
-          <div>
-            <label for="siteLink" class="mb-2 block text-sm font-medium text-dark">Lien du site</label>
-            <input id="siteLink" v-model="form.siteLink" type="url"
-              class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark outline-none transition focus:border-primary focus:ring-2 focus:ring-hover"
-              placeholder="https://..." />
-          </div>
-        </div>
-
-        <div>
-          <label for="image" class="mb-2 block text-sm font-medium text-dark">Image</label>
-          <input id="image" type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" @change="onImageSelected"
-            class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark file:mr-4 file:rounded-md file:border-0 file:bg-light file:px-3 file:py-2 file:text-sm file:font-medium" />
-        </div>
-
-        <div class="flex items-center justify-end gap-4">
-          <button type="submit" :disabled="isSubmitting"
-            class="btn-primary btn-sm disabled:cursor-not-allowed disabled:opacity-60">
-            {{ isSubmitting ? 'Enregistrement...' : 'Enregistrer le projet' }}
-          </button>
-        </div>
-      </form>
 
       <AdminProjectsList 
         :projects="projects"
@@ -69,7 +27,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { createProject, deleteProject as deleteProjectRequest } from '~/utils/projectApi'
+import { deleteProject as deleteProjectRequest } from '~/utils/projectApi'
 import AdminProjectsList from '~/components/Admin/ProjectsList.vue'
 
 definePageMeta({
@@ -200,5 +158,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
-
+input,
+textarea {
+  font: inherit;
+}
 </style>
