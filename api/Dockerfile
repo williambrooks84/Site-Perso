@@ -42,8 +42,8 @@ RUN composer install \
     --no-scripts
 
 # Fix Symfony writable dirs (IMPORTANT FIX)
-RUN mkdir -p var/cache var/log public \
-    && chown -R www-data:www-data var public
+RUN mkdir -p var/cache var/log public migrations\
+    && chown -R www-data:www-data var public migrations
 
 USER www-data
 

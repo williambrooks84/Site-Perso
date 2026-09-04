@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use App\Entity\Category;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 #[ApiResource(operations: [
@@ -27,6 +28,10 @@ class Project
 
     #[ORM\Column(length: 1000)]
     private ?string $description = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $category = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $projectLink = null;
@@ -54,7 +59,19 @@ class Project
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+        public function getDescription(): ?string
     {
         return $this->description;
     }

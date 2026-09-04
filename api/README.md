@@ -165,6 +165,8 @@ docker compose exec api php bin/console doctrine:migrations:migrate --no-interac
 
 ### Create Admin user
 ```bash
+docker compose exec db mysql -uportfolio -p portfolio
+
 docker compose up -d db
 docker compose exec api php bin/console security:hash-password
 

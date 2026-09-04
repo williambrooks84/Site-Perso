@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Project;
 use App\Repository\ProjectRepository;
+use App\Entity\Category;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -17,8 +19,9 @@ class ProjectAdminController extends AbstractController
 {
     #[Route('/api/projects/upload', name: 'api_project_upload', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function upload(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    public function upload(Request $request, EntityManagerInterface $entityManager, CategoryRepository $categoryRepository): JsonResponse
     {
+        
         $imageFile = $request->files->get('image') ?? $request->files->get('imageFile');
         if (!$imageFile instanceof UploadedFile || !$imageFile->isValid()) {
             $uploadError = $imageFile instanceof UploadedFile ? $imageFile->getError() : 'absent';
@@ -48,6 +51,24 @@ class ProjectAdminController extends AbstractController
             return $this->json(['error' => 'Le titre et la description sont obligatoires.'], Response::HTTP_BAD_REQUEST);
         }
 
+        $categoryId = $request->request->get('categoryId');
+
+        if ($categoryId === null || !ctype_digit((string) $categoryId)) {
+            return $this->json(
+                ['error' => 'Une catégorie valide est obligatoire.'],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        $category = $categoryRepository->find((int) $categoryId);
+
+        if ($category === null) {
+            return $this->json(
+                ['error' => 'Catégorie introuvable.'],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
         $uploadDirectory = $this->getParameter('kernel.project_dir') . '/public/uploads/projects';
         if (!is_dir($uploadDirectory) && !mkdir($uploadDirectory, 0775, true) && !is_dir($uploadDirectory)) {
             return $this->json(['error' => 'Impossible de créer le dossier des images.'], Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -63,6 +84,7 @@ class ProjectAdminController extends AbstractController
         $project = new Project();
         $project->setTitle($title);
         $project->setDescription($description);
+        $project->setCategory($category);
         $project->setProjectLink($this->nullableString($request->request->get('projectLink')));
         $project->setSiteLink($this->nullableString($request->request->get('siteLink')));
         $project->setImagePath('/uploads/projects/' . $filename);
@@ -74,6 +96,10 @@ class ProjectAdminController extends AbstractController
             'id' => $project->getId(),
             'title' => $project->getTitle(),
             'description' => $project->getDescription(),
+            'category' => [
+                'id' => $project->getCategory()->getId(),
+                'name' => $project->getCategory()->getName(),
+            ],
             'projectLink' => $project->getProjectLink(),
             'siteLink' => $project->getSiteLink(),
             'imagePath' => $project->getImagePath(),
@@ -82,10 +108,11 @@ class ProjectAdminController extends AbstractController
 
     #[Route('/api/projects/delete', name: 'api_project_delete', methods: ['DELETE'], priority: 10)]
     #[IsGranted('ROLE_ADMIN')]
-    public function delete(Request $request, ProjectRepository $projectRepository, EntityManagerInterface $entityManager): JsonResponse {
+    public function delete(Request $request, ProjectRepository $projectRepository, EntityManagerInterface $entityManager): JsonResponse
+    {
         $id = (int) $request->query->get('id');
         $project = $projectRepository->find($id);
-        
+
         if (!$project) {
             return $this->json(['error' => 'Pas de projet avec cet ID.'], Response::HTTP_NOT_FOUND);
         }
@@ -94,7 +121,6 @@ class ProjectAdminController extends AbstractController
         $entityManager->flush();
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
-
     }
 
     private function nullableString(mixed $value): ?string
@@ -104,74 +130,11 @@ class ProjectAdminController extends AbstractController
         return $value !== '' ? $value : null;
     }
 
-    #[Route('/admin/projects', name: 'admin_projects_index', methods: ['GET'])]
+    #[Route('/admin/projects', name: 'api_project_index', methods: ['GET'])]
     public function index(ProjectRepository $projectRepository): Response
     {
-        return $this->render('admin/projects_index.html.twig', [
-            'projects' => $projectRepository->findBy([], ['id' => 'DESC']),
-        ]);
-    }
+        $projects = $projectRepository->findBy([], ['id' => 'DESC']);
 
-    #[Route('/admin/projects/new', name: 'admin_project_new', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADMIN')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $errors = [];
-        $data = [
-            'title' => '',
-            'description' => '',
-            'projectLink' => '',
-            'siteLink' => '',
-        ];
-
-        if ($request->isMethod('POST')) {
-            $data['title'] = trim((string) $request->request->get('title', ''));
-            $data['description'] = trim((string) $request->request->get('description', ''));
-            $data['projectLink'] = trim((string) $request->request->get('projectLink', ''));
-            $data['siteLink'] = trim((string) $request->request->get('siteLink', ''));
-            $imageFile = $request->files->get('imageFile');
-
-            if ($data['title'] === '') {
-                $errors[] = 'Le titre est obligatoire.';
-            }
-
-            if ($data['description'] === '') {
-                $errors[] = 'La description est obligatoire.';
-            }
-
-            if ($imageFile instanceof UploadedFile && $imageFile->isValid()) {
-                $imageInfo = @getimagesize($imageFile->getPathname());
-                $mimeType = $imageInfo['mime'] ?? $imageFile->getClientMimeType();
-
-                if ($mimeType === null || !str_starts_with($mimeType, 'image/')) {
-                    $errors[] = 'Le fichier sélectionné doit être une image.';
-                } else {
-                }
-            }
-
-            if ($imageFile instanceof UploadedFile && !$imageFile->isValid()) {
-                $errors[] = 'Téléversement échoué (code erreur : ' . $imageFile->getError() . ')';
-            }
-
-            if ($errors === []) {
-                $project = new Project();
-                $project->setTitle($data['title']);
-                $project->setDescription($data['description']);
-                $project->setProjectLink($data['projectLink'] !== '' ? $data['projectLink'] : null);
-                $project->setSiteLink($data['siteLink'] !== '' ? $data['siteLink'] : null);
-
-                $entityManager->persist($project);
-                $entityManager->flush();
-
-                $this->addFlash('success', 'Le projet a été ajouté.');
-
-                return $this->redirectToRoute('admin_project_new');
-            }
-        }
-
-        return $this->render('admin/project_new.html.twig', [
-            'errors' => $errors,
-            'data' => $data,
-        ]);
+        return $this->json($projects);
     }
 }
