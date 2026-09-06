@@ -35,7 +35,7 @@ class CategoryController extends AbstractController
         ], Response::HTTP_CREATED);
     }
 
-    #[Route('/admin/categories', name: 'api_category_index', methods: ['GET'])]
+    #[Route('/api/categories', name: 'api_category_index', methods: ['GET'])]
     public function index(CategoryRepository $categoryRepository): Response
     {
         $categories = $categoryRepository->findBy([], ['id' => 'DESC']);

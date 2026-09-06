@@ -159,8 +159,14 @@ Do not run `docker-compose down -v` in production. The `-v` option removes the D
 
 ```bash
 docker compose up -d --build --force-recreate
+docker compose up -d --build
+docker compose exec api php bin/console make:migration
 docker compose exec api php bin/console doctrine:migrations:migrate --no-interaction
 ```
+
+docker compose exec api php bin/console doctrine:schema:validate
+
+
 
 
 ### Create Admin user
