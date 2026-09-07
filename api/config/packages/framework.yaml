@@ -1,10 +1,8 @@
-# see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
     secret: '%env(APP_SECRET)%'
 
     session:
         enabled: true
-        cookie_domain: '.willbrooks.fr'
         cookie_path: /
         cookie_secure: true
         cookie_httponly: true
