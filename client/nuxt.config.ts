@@ -1,16 +1,30 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: true,
-  baseURL: '/client/',
+
   runtimeConfig: {
     public: {
       apiUrl: process.env.NUXT_PUBLIC_API_URL || 'https://api.willbrooks.fr'
     }
   },
+
   compatibilityDate: '2024-11-01',
-  devtools: { enabled: false },
-  modules: ['@nuxt/ui', 'nuxt-ripple', '@nuxtjs/sitemap', '@i2d/nuxt-pdf-frame'],
-  css: ['./assets/css/main.css', 'bootstrap-icons/font/bootstrap-icons.css'],
+
+  devtools: {
+    enabled: false
+  },
+
+  modules: [
+    '@nuxt/ui',
+    'nuxt-ripple',
+    '@nuxtjs/sitemap',
+    '@i2d/nuxt-pdf-frame'
+  ],
+
+  css: [
+    './assets/css/main.css',
+    'bootstrap-icons/font/bootstrap-icons.css'
+  ],
 
   site: {
     url: 'https://willbrooks.fr'
@@ -24,9 +38,11 @@ export default defineNuxtConfig({
       priority: 0.7,
       lastmod: new Date().toISOString()
     },
-    xsl: false // ✅ pour éviter l’erreur /__sitemap__/style.xsl
+    xsl: false
   },
+
   app: {
+    baseURL: '/',
     head: {
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -36,9 +52,10 @@ export default defineNuxtConfig({
       ]
     }
   },
+
   fonts: {
     providers: {
       bunny: false
     }
-  },
-});
+  }
+})

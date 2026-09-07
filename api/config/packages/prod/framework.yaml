@@ -1,0 +1,7 @@
+framework:
+    session:
+        cookie_domain: '.willbrooks.fr'
+        cookie_path: /
+        cookie_secure: true
+        cookie_httponly: true
+        cookie_samesite: lax

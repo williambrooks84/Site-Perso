@@ -1,4 +1,4 @@
-name: Deploy (Clean Stable Version)
+name: Deploy SSR
 
 on:
   push:
@@ -12,37 +12,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # =========================
-      # Checkout
-      # =========================
       - name: Checkout
         uses: actions/checkout@v4
 
-      # =========================
-      # Node setup
-      # =========================
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
 
-      # =========================
-      # Build frontend
-      # =========================
       - name: Install frontend dependencies
         working-directory: client
         run: npm ci
 
-      - name: Build frontend
+      - name: Build frontend SSR
         working-directory: client
         env:
           NUXT_PUBLIC_API_URL: ${{ vars.NUXT_PUBLIC_API_URL }}
           NUXT_PUBLIC_SITE_URL: ${{ vars.NUXT_PUBLIC_SITE_URL }}
-        run: npm run generate
+        run: npm run build
 
-      # =========================
-      # SSH setup
-      # =========================
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
@@ -50,74 +38,97 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H -p "${{ secrets.VPS_PORT }}" "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
 
-      # =========================
-      # DEPLOY FRONTEND
-      # =========================
-      - name: Deploy frontend
+      - name: Prepare frontend directory
+        run: |
+          ssh \
+            -i ~/.ssh/id_ed25519 \
+            -p "${{ secrets.VPS_PORT }}" \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
+            "mkdir -p /var/www/html/client/.output"
+
+      - name: Deploy frontend SSR
         run: |
           rsync -r --delete \
             -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }}" \
-            ./client/.output/public/ \
-            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/client/
+            ./client/.output/ \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/client/.output/"
 
-      # =========================
-      # DEPLOY API CODE
-      # =========================
       - name: Deploy API source
         run: |
           rsync -r \
+            --exclude .env \
             --exclude .env.local \
             --exclude vendor \
             --exclude var/cache \
             --exclude var/log \
             -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }}" \
             ./api/ \
-            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/api/
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/api/"
 
-      # =========================
-      # DEPLOY COMPOSE FILE
-      # =========================
       - name: Deploy docker-compose
         run: |
           rsync -r \
             -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }}" \
             api/docker-compose.yml \
-            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/api/
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/api/docker-compose.yml"
 
-      # =========================
-      # BUILD + UPDATE CONTAINERS
-      # =========================
-      - name: Build containers and run migrations
+      - name: Restart Nginx
         run: |
-          ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }} \
-          ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
-          "
-            set -e
-            cd /var/www/html/api
+          ssh \
+            -i ~/.ssh/id_ed25519 \
+            -p "${{ secrets.VPS_PORT }}" \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
+            "sudo nginx -t && sudo systemctl reload nginx"
 
-            echo 'Checking the VPS environment file...'
-            test -s .env || (echo 'Missing /var/www/html/api/.env on the VPS.'; exit 1)
-            grep -q '^DATABASE_URL=.*@db:' .env || (echo 'DATABASE_URL must point to the Docker service db.'; exit 1)
+      - name: Build and restart containers
+        run: |
+          ssh \
+            -i ~/.ssh/id_ed25519 \
+            -p "${{ secrets.VPS_PORT }}" \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
+            "
+              set -e
 
-            echo 'Building and starting containers without removing volumes...'
-            docker-compose up -d --build --force-recreate
+              cd /var/www/html/api
 
-            echo 'Waiting for MySQL...'
-            until docker-compose exec -T db mysqladmin ping -h localhost -uroot -proot --silent; do
-              sleep 2
-            done
+              test -s .env || (
+                echo 'Missing /var/www/html/api/.env on the VPS.'
+                exit 1
+              )
 
-            echo 'Clearing Symfony production cache...'
-            docker-compose exec -T api php bin/console cache:clear --env=prod --no-warmup
+              grep -q '^DATABASE_URL=.*@db:' .env || (
+                echo 'DATABASE_URL must point to the Docker service db.'
+                exit 1
+              )
 
-            echo 'Ensuring the application database exists...'
-            docker-compose exec -T db mysql -uroot -proot -e \"CREATE DATABASE IF NOT EXISTS portfolio CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; CREATE USER IF NOT EXISTS 'portfolio'@'%' IDENTIFIED BY 'PortfolioWill2025!'; GRANT ALL PRIVILEGES ON portfolio.* TO 'portfolio'@'%'; FLUSH PRIVILEGES;\"
+              echo 'Starting Docker containers...'
+              docker-compose up -d --build --force-recreate
 
-            echo 'Checking the database host used by Symfony...'
-            docker-compose exec -T api printenv DATABASE_URL | sed 's#:[^@]*@#:\***@#'
+              echo 'Waiting for MySQL...'
+              until docker-compose exec -T db mysqladmin ping -h localhost -uroot -proot --silent; do
+                sleep 2
+              done
 
-            echo 'Running Doctrine migrations...'
-            docker-compose exec -T api php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+              echo 'Waiting for Symfony...'
+              until curl -sf http://127.0.0.1:8000/api/me > /dev/null; do
+                sleep 2
+              done
 
-            echo 'Deployment completed.'
-          "
+              echo 'Waiting for Nuxt...'
+              until curl -sf http://127.0.0.1:3000/ > /dev/null; do
+                sleep 2
+              done
+
+              echo 'Clearing Symfony production cache...'
+              docker-compose exec -T api php bin/console cache:clear --env=prod --no-warmup
+
+              echo 'Running Doctrine migrations...'
+              docker-compose exec -T api php bin/console doctrine:migrations:migrate \
+                --no-interaction \
+                --allow-no-migration
+
+              echo 'Checking containers...'
+              docker-compose ps
+
+              echo 'Deployment completed successfully.'
+            "
