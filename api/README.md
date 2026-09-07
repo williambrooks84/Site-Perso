@@ -167,6 +167,10 @@ docker compose exec api php bin/console doctrine:migrations:migrate --no-interac
 docker compose exec api php bin/console doctrine:schema:validate
 
 
+### Check logs
+```bash
+docker logs symfony_api --tail 100
+```
 
 
 ### Create Admin user

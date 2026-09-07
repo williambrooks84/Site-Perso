@@ -9,6 +9,9 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Entity\Category;
+use App\Entity\Technology;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: ProjectRepository::class)]
 #[ApiResource(operations: [
@@ -33,6 +36,9 @@ class Project
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
+    #[ORM\ManyToMany(targetEntity: Technology::class)]
+    private Collection $technologies;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $projectLink = null;
 
@@ -41,6 +47,11 @@ class Project
 
     #[ORM\Column(length: 500, nullable: true)]
     private ?string $imagePath = null;
+
+    public function __construct()
+    {
+        $this->technologies = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -71,7 +82,31 @@ class Project
         return $this;
     }
 
-        public function getDescription(): ?string
+    /**
+     * @return Collection<int, Technology>
+     */
+    public function getTechnologies(): Collection
+    {
+        return $this->technologies;
+    }
+
+    public function addTechnology(Technology $technology): static
+    {
+        if (!$this->technologies->contains($technology)) {
+            $this->technologies->add($technology);
+        }
+
+        return $this;
+    }
+
+    public function removeTechnology(Technology $technology): static
+    {
+        $this->technologies->removeElement($technology);
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
     {
         return $this->description;
     }

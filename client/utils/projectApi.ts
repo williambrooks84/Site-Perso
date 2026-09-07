@@ -2,6 +2,7 @@ export type ProjectPayload = {
   title: string
   description: string
   categoryId: number
+  technologyIds: number[]
   projectLink?: string
   siteLink?: string
   image?: File | null
@@ -12,16 +13,36 @@ export async function createProject(
   apiUrl: string
 ) {
   const formData = new FormData()
+
   formData.append('title', payload.title)
   formData.append('description', payload.description)
   formData.append('categoryId', String(payload.categoryId))
-  if (payload.projectLink) formData.append('projectLink', payload.projectLink)
-  if (payload.siteLink) formData.append('siteLink', payload.siteLink)
-  if (payload.image) formData.append('image', payload.image, payload.image.name)
+
+  payload.technologyIds.forEach((technologyId) => {
+    formData.append('technologyIds[]', String(technologyId))
+  })
+
+  if (payload.projectLink) {
+    formData.append('projectLink', payload.projectLink)
+  }
+
+  if (payload.siteLink) {
+    formData.append('siteLink', payload.siteLink)
+  }
+
+  if (payload.image) {
+    formData.append(
+      'image',
+      payload.image,
+      payload.image.name
+    )
+  }
 
   const response = await fetch(`${apiUrl}/api/projects/upload`, {
     method: 'POST',
-    headers: { Accept: 'application/json' },
+    headers: {
+      Accept: 'application/json',
+    },
     credentials: 'include',
     body: formData,
   })
@@ -37,7 +58,9 @@ export async function createProject(
       // Keep the raw response when the API does not return JSON.
     }
 
-    throw new Error(message || `Erreur API (${response.status})`)
+    throw new Error(
+      message || `Erreur API (${response.status})`
+    )
   }
 
   return response.json()
