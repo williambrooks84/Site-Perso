@@ -7,9 +7,6 @@ export default defineNuxtConfig({
       apiUrl: process.env.NUXT_PUBLIC_API_URL || 'https://api.willbrooks.fr'
     }
   },
-  nitro: {
-    preset: 'static'
-  },
   compatibilityDate: '2024-11-01',
   devtools: { enabled: false },
   modules: ['@nuxt/ui', 'nuxt-ripple', '@nuxtjs/sitemap', '@i2d/nuxt-pdf-frame'],

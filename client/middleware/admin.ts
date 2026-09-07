@@ -10,19 +10,31 @@ export default defineNuxtRouteMiddleware(async (to: RouteLocationNormalized) => 
   const config = useRuntimeConfig()
   const apiUrl = config.public.apiUrl || 'https://api.willbrooks.fr'
 
+  if (import.meta.client) {
+    const nuxtApp = useNuxtApp()
+
+    if (nuxtApp.isHydrating && nuxtApp.payload.serverRendered) {
+      return
+    }
+  }
+
   try {
-    const headers = import.meta.server ? useRequestHeaders(['cookie']) : {}
-    
     const response = await $fetch<AuthResponse>(`${apiUrl}/api/me`, {
       credentials: 'include',
-      headers,
+      headers: import.meta.server
+        ? useRequestHeaders(['cookie'])
+        : undefined,
     })
 
-    if (isLoginPage && response?.authenticated === true && response?.roles?.includes('ROLE_ADMIN')) {
+    const isAdmin =
+      response.authenticated === true &&
+      response.roles?.includes('ROLE_ADMIN') === true
+
+    if (isLoginPage && isAdmin) {
       return navigateTo('/admin/projects')
     }
 
-    if (!isLoginPage && response?.authenticated !== true) {
+    if (!isLoginPage && !isAdmin) {
       return navigateTo('/admin')
     }
   } catch {
