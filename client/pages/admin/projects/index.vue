@@ -1,10 +1,9 @@
 <template>
-  <main class="mx-auto max-w-3xl px-4 py-12">
+  <main class="mx-auto w-200 max-w-full px-4 py-12">
     <section class="rounded-2xl border border-border-grey bg-light p-8 shadow-sm">
       <header class="flex flex-col items-center justify-between gap-4">
         <h1 class="text-3xl font-bold text-dark">Administration des projets</h1>
-        <NuxtLink to="/admin/projects/new"
-          class="btn-primary text-sm">
+        <NuxtLink to="/admin/projects/new" class="btn-primary text-sm">
           Ajouter un projet
         </NuxtLink>
       </header>
@@ -14,13 +13,8 @@
         {{ message.text }}
       </div>
 
-      <AdminProjectsList 
-        :projects="projects"
-        :removing-project-id="removingProjectId"
-        :api-base-url="apiBaseUrl"
-        @refresh="loadProjects"
-        @delete="deleteProject"
-      />
+      <AdminProjectsList :projects="projects" :removing-project-id="removingProjectId" :api-base-url="apiBaseUrl"
+        @refresh="loadProjects" @delete="deleteProject" />
     </section>
   </main>
 </template>
