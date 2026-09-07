@@ -1,9 +1,11 @@
 <template>
-    <NavBar/>
-    <div class="pt-40 p-10 lg:p-32">
-        <slot/>
-    </div>
-    <Footer/>
+  <NavBar />
+
+  <div class="pt-30 p-10 lg:p-32">
+    <slot />
+  </div>
+
+  <Footer />
 </template>
 
 <script setup>
@@ -12,5 +14,4 @@ import Footer from '~/components/Footer/Footer.vue'
 </script>
 
 <style scoped>
-
 </style>

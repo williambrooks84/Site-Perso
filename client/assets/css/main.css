@@ -125,6 +125,39 @@ h4 {
   transition: all 0.2s;
 }
 
+.btn-unselected {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  background-color: var(--color-light);
+  color: var(--color-dark);
+  border: 1px solid var(--color-border-grey);
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 1.125rem;
+  transition: all 0.2s;
+}
+
+.btn-unselected-small {
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+}
+
+.btn-disabled {
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  background-color: var(--color-light);
+  color: var(--color-dark);
+  border: 1px solid var(--color-border-grey);
+  border-radius: 0.5rem;
+  font-weight: 600;
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .btn-primary:hover {
   text-decoration: underline;
   text-decoration-color: var(--color-primary);
@@ -143,7 +176,28 @@ h4 {
   background-color: var(--color-hover);
 }
 
+.btn-unselected:hover {
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 7px;
+  color: var(--color-light);
+  background-color: var(--color-secondary);
+}
+
 .btn-sm{
   padding: 0.5rem 1rem !important;
   font-size: 0.875rem !important;
+}
+
+.btn-category {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+@media (min-width: 768px) {
+  .btn-category {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.125rem;
+  }
 }

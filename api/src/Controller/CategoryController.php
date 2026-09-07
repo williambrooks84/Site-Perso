@@ -16,11 +16,19 @@ class CategoryController extends AbstractController
 {
     #[Route('/api/categories/submit', name: 'api_category_submit', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function upload(Request $request, EntityManagerInterface $entityManager): JsonResponse
-    {
-        $name = trim((string) $request->request->get('description', ''));
+    public function upload(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): JsonResponse {
+        $data = json_decode($request->getContent(), true);
+
+        $name = trim((string) ($data['name'] ?? ''));
+
         if ($name === '') {
-            return $this->json(['error' => 'Le nom de la catégorie est obligatoire.'], Response::HTTP_BAD_REQUEST);
+            return $this->json(
+                ['error' => 'Le nom de la catégorie est obligatoire.'],
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         $category = new Category();
@@ -31,7 +39,7 @@ class CategoryController extends AbstractController
 
         return $this->json([
             'id' => $category->getId(),
-            'title' => $category->getName(),
+            'name' => $category->getName(),
         ], Response::HTTP_CREATED);
     }
 
@@ -42,5 +50,4 @@ class CategoryController extends AbstractController
 
         return $this->json($categories);
     }
-
 }
