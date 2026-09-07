@@ -241,6 +241,193 @@ class ProjectAdminController extends AbstractController
         );
     }
 
+    #[Route('/api/projects/{id}/update', name: 'api_project_update', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function update(
+        int $id,
+        Request $request,
+        ProjectRepository $projectRepository,
+        CategoryRepository $categoryRepository,
+        TechnologyRepository $technologyRepository,
+        EntityManagerInterface $entityManager
+    ): JsonResponse {
+        $project = $projectRepository->find($id);
+
+        if (!$project) {
+            return $this->json(
+                ['error' => 'Projet introuvable.'],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $title = trim((string) $request->request->get('title', ''));
+        $description = trim((string) $request->request->get('description', ''));
+
+        if ($title === '' || $description === '') {
+            return $this->json(
+                ['error' => 'Le titre et la description sont obligatoires.'],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        $categoryId = $request->request->get('categoryId');
+
+        if ($categoryId === null || !ctype_digit((string) $categoryId)) {
+            return $this->json(
+                ['error' => 'Une catégorie valide est obligatoire.'],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        $category = $categoryRepository->find((int) $categoryId);
+
+        if ($category === null) {
+            return $this->json(
+                ['error' => 'Catégorie introuvable.'],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        $technologyIds = $request->request->all('technologyIds');
+
+        if (empty($technologyIds)) {
+            return $this->json(
+                ['error' => 'Au moins une technologie est obligatoire.'],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        $technologies = [];
+
+        foreach ($technologyIds as $technologyId) {
+            if (!ctype_digit((string) $technologyId)) {
+                return $this->json(
+                    ['error' => 'Une technologie sélectionnée est invalide.'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            $technology = $technologyRepository->find((int) $technologyId);
+
+            if ($technology === null) {
+                return $this->json(
+                    ['error' => 'Une technologie sélectionnée est introuvable.'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            $technologies[] = $technology;
+        }
+
+        $project->setTitle($title);
+        $project->setDescription($description);
+        $project->setCategory($category);
+
+        $project->getTechnologies()->clear();
+
+        foreach ($technologies as $technology) {
+            $project->addTechnology($technology);
+        }
+
+        $project->setProjectLink(
+            $this->nullableString(
+                $request->request->get('projectLink')
+            )
+        );
+
+        $project->setSiteLink(
+            $this->nullableString(
+                $request->request->get('siteLink')
+            )
+        );
+
+        $imageFile = $request->files->get('image');
+
+        if ($imageFile instanceof UploadedFile && $imageFile->isValid()) {
+            if ($imageFile->getSize() > 10 * 1024 * 1024) {
+                return $this->json(
+                    ['error' => 'L’image ne doit pas dépasser 10 Mo.'],
+                    Response::HTTP_REQUEST_ENTITY_TOO_LARGE
+                );
+            }
+
+            $imageInfo = @getimagesize($imageFile->getPathname());
+            $mimeType = $imageInfo['mime'] ?? '';
+
+            $allowedMimeTypes = [
+                'image/jpeg' => 'jpg',
+                'image/png' => 'png',
+                'image/webp' => 'webp',
+            ];
+
+            if (!isset($allowedMimeTypes[$mimeType])) {
+                return $this->json(
+                    ['error' => 'Format d’image non accepté.'],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
+
+            $uploadDirectory =
+                $this->getParameter('kernel.project_dir')
+                . '/public/uploads/projects';
+
+            if (
+                !is_dir($uploadDirectory)
+                && !mkdir($uploadDirectory, 0775, true)
+                && !is_dir($uploadDirectory)
+            ) {
+                return $this->json(
+                    ['error' => 'Impossible de créer le dossier des images.'],
+                    Response::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
+
+            $filename =
+                bin2hex(random_bytes(16))
+                . '.'
+                . $allowedMimeTypes[$mimeType];
+
+            try {
+                $imageFile->move($uploadDirectory, $filename);
+            } catch (\Throwable $exception) {
+                return $this->json(
+                    ['error' => 'Impossible d’enregistrer la nouvelle image.'],
+                    Response::HTTP_INTERNAL_SERVER_ERROR
+                );
+            }
+
+            $project->setImagePath(
+                '/uploads/projects/' . $filename
+            );
+        }
+
+        $entityManager->flush();
+
+        return $this->json([
+            'id' => $project->getId(),
+            'title' => $project->getTitle(),
+            'description' => $project->getDescription(),
+            'category' => [
+                'id' => $project->getCategory()->getId(),
+                'name' => $project->getCategory()->getName(),
+            ],
+            'technologies' => array_map(
+                static function ($technology) {
+                    return [
+                        'id' => $technology->getId(),
+                        'name' => $technology->getName(),
+                        'icon' => $technology->getIconPath(),
+                    ];
+                },
+                $project->getTechnologies()->toArray()
+            ),
+            'projectLink' => $project->getProjectLink(),
+            'siteLink' => $project->getSiteLink(),
+            'imagePath' => $project->getImagePath(),
+        ]);
+    }
+
+
     private function nullableString(mixed $value): ?string
     {
         $value = trim((string) $value);

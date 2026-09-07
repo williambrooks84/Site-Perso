@@ -41,3 +41,5 @@ Le projet est accessible ici 👉 [https://willbrooks.fr](https://willbrooks.fr)
 
 
 ssh -i "C:\Users\William\.ssh\id_ed25519" -L 3307:127.0.0.1:3306 root@willbrooks.fr
+
+node .output/server/index.mjs

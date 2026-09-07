@@ -86,3 +86,63 @@ export async function deleteProject(projectId: number | string, apiUrl: string) 
     throw new Error(message || `Erreur API (${response.status})`)
   }
 }
+
+export async function updateProject(
+  projectId: number | string,
+  payload: ProjectPayload,
+  apiUrl: string
+) {
+  const formData = new FormData()
+
+  formData.append('title', payload.title)
+  formData.append('description', payload.description)
+  formData.append('categoryId', String(payload.categoryId))
+
+  payload.technologyIds.forEach((technologyId) => {
+    formData.append('technologyIds[]', String(technologyId))
+  })
+
+  if (payload.projectLink) {
+    formData.append('projectLink', payload.projectLink)
+  }
+
+  if (payload.siteLink) {
+    formData.append('siteLink', payload.siteLink)
+  }
+
+  if (payload.image) {
+    formData.append(
+      'image',
+      payload.image,
+      payload.image.name
+    )
+  }
+
+  const response = await fetch(
+    `${apiUrl}/api/projects/${projectId}/update`,
+    {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+      body: formData,
+    }
+  )
+
+  if (!response.ok) {
+    const errorText = await response.text().catch(() => '')
+    let message = errorText
+
+    try {
+      const error = JSON.parse(errorText)
+      message = error.error || error.message || errorText
+    } catch {}
+
+    throw new Error(
+      message || `Erreur API (${response.status})`
+    )
+  }
+
+  return response.json()
+}

@@ -11,234 +11,152 @@
         </NuxtLink>
       </header>
 
-      <div v-if="message" class="mb-6 rounded-xl border px-4 py-3 text-sm" :class="message.type === 'success'
-        ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-        : 'border-red-200 bg-red-50 text-red-700'
-        ">
+      <div
+        v-if="message"
+        class="mb-6 rounded-xl border px-4 py-3 text-sm"
+        :class="
+          message.type === 'success'
+            ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+            : 'border-red-200 bg-red-50 text-red-700'
+        "
+      >
         {{ message.text }}
       </div>
 
-      <!-- Création d'un projet -->
-      <form class="space-y-6" @submit.prevent="submitProject">
-        <div>
-          <label for="title" class="mb-2 block text-sm font-medium text-dark">
-            Titre
-          </label>
+      <AdminProjectForm
+        :categories="categories"
+        :technologies="technologies"
+        :api-base-url="apiBaseUrl"
+        :is-submitting="isSubmitting"
+        :reset-key="projectFormResetKey"
+        submit-label="Enregistrer le projet"
+        loading-label="Enregistrement..."
+        image-label="Image"
+        image-input-id="project-image"
+        @submit="submitProject"
+      />
 
-          <input id="title" v-model="form.title" type="text" required
-            class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark outline-none transition focus:border-primary focus:ring-2 focus:ring-hover" />
-        </div>
+      <AdminProjectsList
+        :projects="projects"
+        :removing-project-id="removingProjectId"
+        :api-base-url="apiBaseUrl"
+        @refresh="loadProjects"
+        @delete="deleteProject"
+        @edit="openEditModal"
+      />
 
-        <div>
-          <label for="description" class="mb-2 block text-sm font-medium text-dark">
-            Description
-          </label>
-
-          <textarea id="description" v-model="form.description" rows="6" required
-            class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark outline-none transition focus:border-primary focus:ring-2 focus:ring-hover"></textarea>
-        </div>
-
-        <div class="grid gap-6 md:grid-cols-2">
-          <div>
-            <label for="projectLink" class="mb-2 block text-sm font-medium text-dark">
-              Lien du projet
-            </label>
-
-            <input id="projectLink" v-model="form.projectLink" type="url"
-              class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark outline-none transition focus:border-primary focus:ring-2 focus:ring-hover"
-              placeholder="https://..." />
-          </div>
-
-          <div>
-            <label for="siteLink" class="mb-2 block text-sm font-medium text-dark">
-              Lien du site
-            </label>
-
-            <input id="siteLink" v-model="form.siteLink" type="url"
-              class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark outline-none transition focus:border-primary focus:ring-2 focus:ring-hover"
-              placeholder="https://..." />
-          </div>
-        </div>
-
-        <div>
-          <label for="category" class="mb-2 block text-sm font-medium text-dark">
-            Catégorie
-          </label>
-
-          <select id="category" v-model="form.categoryId" required
-            class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark outline-none transition focus:border-primary focus:ring-2 focus:ring-hover">
-            <option value="" disabled>
-              Sélectionner une catégorie
-            </option>
-
-            <option v-for="category in categories" :key="category.id" :value="category.id">
-              {{ category.name }}
-            </option>
-          </select>
-        </div>
-
-        <div>
-          <label class="mb-2 block text-sm font-medium text-dark">
-            Technologies
-          </label>
-
-          <div class="relative">
-            <button type="button"
-              class="flex min-h-[52px] w-full items-center justify-between gap-3 rounded-xl border border-border-grey bg-light px-4 py-3 text-left text-dark outline-none transition hover:border-primary focus:border-primary focus:ring-2 focus:ring-hover"
-              @click="showTechnologyDropdown = !showTechnologyDropdown">
-              <span v-if="form.technologyIds.length === 0" class="text-sm text-dark/50">
-                Sélectionner les technologies
-              </span>
-
-              <div v-else class="flex flex-1 flex-wrap gap-2">
-                <span v-for="technologyId in form.technologyIds" :key="technologyId"
-                  class="flex items-center gap-2 rounded-lg border border-border-grey bg-light px-2.5 py-1.5">
-                  <img v-if="getTechnologyIcon(technologyId)" :src="getTechnologyIcon(technologyId)"
-                    :alt="getTechnologyName(technologyId)" class="h-5 w-5 object-contain">
-
-                  <span class="text-sm font-medium text-dark">
-                    {{ getTechnologyName(technologyId) }}
-                  </span>
-
-                  <span class="cursor-pointer text-dark/40 transition hover:text-red-500"
-                    @click.stop="toggleTechnology(technologyId)">
-                    ×
-                  </span>
-                </span>
-              </div>
-
-              <span class="shrink-0 text-dark/50 transition" :class="{ 'rotate-180': showTechnologyDropdown }">
-                ⌄
-              </span>
-            </button>
-
-            <div v-if="showTechnologyDropdown"
-              class="absolute left-0 top-full z-[100] mt-2 w-full rounded-xl border border-border-grey bg-light p-2 shadow-xl">
-              <div class="max-h-64 overflow-y-auto">
-                <button v-for="technology in technologies" :key="technology.id" type="button"
-                  class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-dark transition hover:bg-hover"
-                  :class="{
-                    'bg-light': form.technologyIds.includes(technology.id),
-                  }" @click="toggleTechnology(technology.id)">
-                  <span
-                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border-grey bg-light">
-                    <img v-if="getTechnologyIconUrl(technology)" :src="getTechnologyIconUrl(technology)"
-                      :alt="technology.name" class="h-6 w-6 object-contain">
-                  </span>
-
-                  <span class="flex-1 text-sm font-medium">
-                    {{ technology.name }}
-                  </span>
-
-                  <span v-if="form.technologyIds.includes(technology.id)"
-                    class="flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-white">
-                    ✓
-                  </span>
-                </button>
-
-                <div v-if="technologies.length === 0" class="px-3 py-4 text-center text-sm text-dark/50">
-                  Aucune technologie disponible.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <label for="image" class="mb-2 block text-sm font-medium text-dark">
-            Image
-          </label>
-
-          <input id="image" type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" @change="onImageSelected"
-            class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark file:mr-4 file:rounded-md file:border-0 file:bg-light file:px-3 file:py-2 file:text-sm file:font-medium" />
-        </div>
-
-        <div class="flex items-center justify-end gap-4">
-          <button type="submit" :disabled="isSubmitting"
-            class="btn-primary btn-sm disabled:cursor-not-allowed disabled:opacity-60">
-            {{
-              isSubmitting
-                ? 'Enregistrement...'
-                : 'Enregistrer le projet'
-            }}
-          </button>
-        </div>
-      </form>
-
-      <!-- Liste des projets -->
-      <AdminProjectsList :projects="projects" :removing-project-id="removingProjectId" :api-base-url="apiBaseUrl"
-        @refresh="loadProjects" @delete="deleteProject" />
-
-      <!-- Création d'une catégorie -->
-      <div class="mb-2 flex items-end gap-2">
+      <div class="mb-2 mt-8 flex items-end gap-2">
         <div class="flex-1">
-          <label for="newCategory" class="mb-2 block text-sm font-medium text-dark">
+          <label
+            for="newCategory"
+            class="mb-2 block text-sm font-medium text-dark"
+          >
             Nouvelle catégorie
           </label>
 
-          <input id="newCategory" v-model="newCategoryName" type="text"
-            class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark outline-none transition focus:border-primary focus:ring-2 focus:ring-hover" />
+          <input
+            id="newCategory"
+            v-model="newCategoryName"
+            type="text"
+            class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark outline-none transition focus:border-primary focus:ring-2 focus:ring-hover"
+          />
         </div>
 
-        <button type="button" :disabled="isCreatingCategory"
-          class="btn-primary btn-sm w-fit disabled:cursor-not-allowed disabled:opacity-60" @click="createCategory">
+        <button
+          type="button"
+          :disabled="isCreatingCategory"
+          class="btn-primary btn-sm w-fit disabled:cursor-not-allowed disabled:opacity-60"
+          @click="createCategory"
+        >
           {{ isCreatingCategory ? 'Ajout...' : 'Ajouter' }}
         </button>
       </div>
 
-      <!-- Création d'une technologie -->
       <div class="mb-2 flex flex-col gap-2">
         <div class="flex-1">
-          <label for="newTechnology" class="mb-2 block text-sm font-medium text-dark">
+          <label
+            for="newTechnology"
+            class="mb-2 block text-sm font-medium text-dark"
+          >
             Nouvelle technologie
           </label>
 
-          <input id="newTechnology" v-model="newTechnologyName" type="text"
-            class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark outline-none transition focus:border-primary focus:ring-2 focus:ring-hover" />
+          <input
+            id="newTechnology"
+            v-model="newTechnologyName"
+            type="text"
+            class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark outline-none transition focus:border-primary focus:ring-2 focus:ring-hover"
+          />
         </div>
 
         <div class="flex flex-col">
-          <label for="technologyIcon" class="mb-2 block text-sm font-medium text-dark">
+          <label
+            for="technologyIcon"
+            class="mb-2 block text-sm font-medium text-dark"
+          >
             Icon
           </label>
 
-          <input id="technologyIcon" type="file" accept=".svg,image/svg+xml" @change="onIconSelected"
-            class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark file:mr-4 file:rounded-md file:border-0 file:bg-light file:px-3 file:py-2 file:text-sm file:font-medium" />
+          <input
+            id="technologyIcon"
+            type="file"
+            accept=".svg,image/svg+xml"
+            class="w-full rounded-xl border border-border-grey bg-light px-4 py-3 text-dark file:mr-4 file:rounded-md file:border-0 file:bg-light file:px-3 file:py-2 file:text-sm file:font-medium"
+            @change="onIconSelected"
+          />
         </div>
 
-        <button type="button" :disabled="isCreatingTechnology"
-          class="btn-primary btn-sm w-fit disabled:cursor-not-allowed disabled:opacity-60" @click="createTechnology">
+        <button
+          type="button"
+          :disabled="isCreatingTechnology"
+          class="btn-primary btn-sm w-fit disabled:cursor-not-allowed disabled:opacity-60"
+          @click="createTechnology"
+        >
           {{ isCreatingTechnology ? 'Ajout...' : 'Ajouter' }}
         </button>
       </div>
 
-      <!-- Liste des technologies -->
-      <TechnologiesList :technologies="technologies" :removing-technology-id="removingTechnologyId"
-        :api-base-url="apiBaseUrl" @refresh="loadTechnologies" @delete="deleteTechnology" />
+      <TechnologiesList
+        :technologies="technologies"
+        :removing-technology-id="removingTechnologyId"
+        :api-base-url="apiBaseUrl"
+        @refresh="loadTechnologies"
+        @delete="deleteTechnology"
+      />
     </section>
+
+    <AdminProjectEditModal
+      :is-open="isEditModalOpen"
+      :project="editingProject"
+      :categories="categories"
+      :technologies="technologies"
+      :api-base-url="apiBaseUrl"
+      :is-submitting="isUpdatingProject"
+      @close="closeEditModal"
+      @submit="updateProjectFromModal"
+    />
   </main>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
-
 import {
   createProject,
+  updateProject,
   deleteProject as deleteProjectRequest,
 } from '~/utils/projectApi'
-
 import {
   getTechnologies,
   createTechnology as createTechnologyRequest,
   deleteTechnology as deleteTechnologyRequest,
 } from '~/utils/technologyApi'
-
 import {
   getCategories,
   createCategory as createCategoryRequest,
 } from '~/utils/categoryApi'
-
+import AdminProjectForm from '~/components/Admin/ProjectForm.vue'
 import AdminProjectsList from '~/components/Admin/ProjectsList.vue'
+import AdminProjectEditModal from '~/components/Admin/ProjectEditModal.vue'
 import TechnologiesList from '~/components/Admin/TechnologiesList.vue'
 
 definePageMeta({
@@ -250,21 +168,8 @@ const runtimeConfig = useRuntimeConfig()
 const apiBaseUrl =
   runtimeConfig.public.apiUrl || 'https://api.willbrooks.fr'
 
-const form = ref({
-  title: '',
-  description: '',
-  projectLink: '',
-  siteLink: '',
-  categoryId: '',
-  technologyIds: [],
-})
-
-const selectedImageFile = ref(null)
-const selectedTechnologyIconFile = ref(null)
-
 const isSubmitting = ref(false)
 const removingProjectId = ref(null)
-
 const message = ref(null)
 
 const projects = ref([])
@@ -277,12 +182,14 @@ const newTechnologyName = ref('')
 const isCreatingCategory = ref(false)
 const isCreatingTechnology = ref(false)
 
+const selectedTechnologyIconFile = ref(null)
 const removingTechnologyId = ref(null)
 
+const isEditModalOpen = ref(false)
+const editingProject = ref(null)
+const isUpdatingProject = ref(false)
 
-// =====================================================
-// PROJETS
-// =====================================================
+const projectFormResetKey = ref(0)
 
 const loadProjects = async () => {
   try {
@@ -304,13 +211,65 @@ const loadProjects = async () => {
   }
 }
 
+const loadCategories = async () => {
+  try {
+    categories.value = await getCategories(apiBaseUrl)
+  } catch (error) {
+    console.error('Erreur chargement catégories:', error)
+  }
+}
 
-const deleteProject = async (project) => {
-  if (
-    !window.confirm(
-      `Supprimer le projet « ${project.title} » ?`
+const loadTechnologies = async () => {
+  try {
+    technologies.value = await getTechnologies(apiBaseUrl)
+  } catch (error) {
+    console.error('Erreur chargement technologies:', error)
+  }
+}
+
+const submitProject = async projectForm => {
+  isSubmitting.value = true
+  message.value = null
+
+  try {
+    await createProject(
+      {
+        title: projectForm.title.trim(),
+        description: projectForm.description.trim(),
+        projectLink: projectForm.projectLink?.trim() || null,
+        siteLink: projectForm.siteLink?.trim() || null,
+        categoryId: Number(projectForm.categoryId),
+        technologyIds: projectForm.technologyIds.map(
+          technologyId => Number(technologyId)
+        ),
+        image: projectForm.image,
+      },
+      apiBaseUrl
     )
-  ) {
+
+    projectFormResetKey.value++
+
+    message.value = {
+      type: 'success',
+      text: 'Le projet a bien été créé.',
+    }
+
+    await loadProjects()
+  } catch (error) {
+    message.value = {
+      type: 'error',
+      text:
+        error instanceof Error
+          ? error.message
+          : 'Une erreur est survenue.',
+    }
+  } finally {
+    isSubmitting.value = false
+  }
+}
+
+const deleteProject = async project => {
+  if (!window.confirm(`Supprimer le projet « ${project.title} » ?`)) {
     return
   }
 
@@ -318,10 +277,7 @@ const deleteProject = async (project) => {
   message.value = null
 
   try {
-    await deleteProjectRequest(
-      project.id,
-      apiBaseUrl
-    )
+    await deleteProjectRequest(project.id, apiBaseUrl)
 
     message.value = {
       type: 'success',
@@ -342,100 +298,73 @@ const deleteProject = async (project) => {
   }
 }
 
-
-const onImageSelected = (event) => {
-  const file = event.target.files?.[0]
-
-  if (!file) {
-    selectedImageFile.value = null
-    return
-  }
-
-  if (file.size > 10 * 1024 * 1024) {
-    selectedImageFile.value = null
-    event.target.value = ''
-
-    message.value = {
-      type: 'error',
-      text: 'L’image ne doit pas dépasser 10 Mo.',
-    }
-
-    return
-  }
-
-  selectedImageFile.value = file
+const openEditModal = project => {
+  editingProject.value = project
+  isEditModalOpen.value = true
+  message.value = null
 }
 
+const closeEditModal = () => {
+  if (isUpdatingProject.value) {
+    return
+  }
 
-const submitProject = async () => {
-  isSubmitting.value = true
+  isEditModalOpen.value = false
+  editingProject.value = null
+}
+
+const updateProjectFromModal = async projectForm => {
+  if (!editingProject.value) {
+    return
+  }
+
+  isUpdatingProject.value = true
   message.value = null
 
   try {
-    const payload = {
-      title: form.value.title.trim(),
-      description: form.value.description.trim(),
-      projectLink: form.value.projectLink.trim() || null,
-      siteLink: form.value.siteLink.trim() || null,
-      categoryId: form.value.categoryId,
-      technologyIds: form.value.technologyIds,
-      image: selectedImageFile.value,
-    }
+    const updatedProject = await updateProject(
+      editingProject.value.id,
+      {
+        title: projectForm.title.trim(),
+        description: projectForm.description.trim(),
+        projectLink: projectForm.projectLink?.trim() || null,
+        siteLink: projectForm.siteLink?.trim() || null,
+        categoryId: Number(projectForm.categoryId),
+        technologyIds: projectForm.technologyIds.map(
+          technologyId => Number(technologyId)
+        ),
+        image: projectForm.image,
+      },
+      apiBaseUrl
+    )
 
-    await createProject(payload, apiBaseUrl)
+    const index = projects.value.findIndex(
+      project => project.id === updatedProject.id
+    )
+
+    if (index !== -1) {
+      projects.value[index] = updatedProject
+    }
 
     message.value = {
       type: 'success',
-      text: 'Le projet a bien été créé.',
+      text: 'Le projet a bien été modifié.',
     }
 
-    form.value = {
-      title: '',
-      description: '',
-      projectLink: '',
-      siteLink: '',
-      categoryId: '',
-      technologyIds: [],
-    }
-
-    selectedImageFile.value = null
-
-    const input = document.getElementById('image')
-
-    if (input) {
-      input.value = ''
-    }
-
-    await loadProjects()
+    isEditModalOpen.value = false
+    editingProject.value = null
   } catch (error) {
     message.value = {
       type: 'error',
       text:
         error instanceof Error
           ? error.message
-          : 'Une erreur est survenue.',
+          : 'Impossible de modifier le projet.',
     }
   } finally {
-    isSubmitting.value = false
+    isUpdatingProject.value = false
   }
 }
-
-
-// =====================================================
-// CATEGORIES
-// =====================================================
-
-const loadCategories = async () => {
-  try {
-    categories.value = await getCategories(apiBaseUrl)
-  } catch (error) {
-    console.error(
-      'Erreur chargement catégories:',
-      error
-    )
-  }
-}
-
 
 const createCategory = async () => {
   const name = newCategoryName.value.trim()
@@ -453,10 +382,7 @@ const createCategory = async () => {
   message.value = null
 
   try {
-    await createCategoryRequest(
-      name,
-      apiBaseUrl
-    )
+    await createCategoryRequest(name, apiBaseUrl)
 
     message.value = {
       type: 'success',
@@ -479,12 +405,7 @@ const createCategory = async () => {
   }
 }
 
-
-// =====================================================
-// TECHNOLOGIES
-// =====================================================
-
-const onIconSelected = (event) => {
+const onIconSelected = event => {
   const file = event.target.files?.[0]
 
   if (!file) {
@@ -523,7 +444,6 @@ const onIconSelected = (event) => {
   selectedTechnologyIconFile.value = file
 }
 
-
 const createTechnology = async () => {
   const name = newTechnologyName.value.trim()
 
@@ -560,9 +480,7 @@ const createTechnology = async () => {
     newTechnologyName.value = ''
     selectedTechnologyIconFile.value = null
 
-    const input = document.getElementById(
-      'technologyIcon'
-    )
+    const input = document.getElementById('technologyIcon')
 
     if (input) {
       input.value = ''
@@ -585,22 +503,7 @@ const createTechnology = async () => {
   }
 }
 
-
-const loadTechnologies = async () => {
-  try {
-    technologies.value = await getTechnologies(
-      apiBaseUrl
-    )
-  } catch (error) {
-    console.error(
-      'Erreur chargement technologies:',
-      error
-    )
-  }
-}
-
-
-const deleteTechnology = async (technology) => {
+const deleteTechnology = async technology => {
   if (
     !window.confirm(
       `Supprimer la technologie « ${technology.name} » ?`
@@ -637,53 +540,6 @@ const deleteTechnology = async (technology) => {
   }
 }
 
-const showTechnologyDropdown = ref(false)
-
-const toggleTechnology = (technologyId) => {
-  if (form.value.technologyIds.includes(technologyId)) {
-    form.value.technologyIds = form.value.technologyIds.filter(
-      id => id !== technologyId
-    )
-  } else {
-    form.value.technologyIds = [
-      ...form.value.technologyIds,
-      technologyId,
-    ]
-  }
-}
-
-const getTechnologyName = (technologyId) => {
-  return technologies.value.find(
-    technology => technology.id === technologyId
-  )?.name || ''
-}
-
-const getTechnologyIconUrl = (technology) => {
-  if (!technology) {
-    return ''
-  }
-
-  const icon = technology.icon || technology.iconPath
-
-  if (!icon) {
-    return ''
-  }
-
-  if (/^https?:\/\//.test(icon)) {
-    return icon
-  }
-
-  return `${apiBaseUrl}${icon.startsWith('/') ? '' : '/'}${icon}`
-}
-
-const getTechnologyIcon = (technologyId) => {
-  const technology = technologies.value.find(
-    technology => technology.id === technologyId
-  )
-
-  return getTechnologyIconUrl(technology)
-}
-
 onMounted(() => {
   loadProjects()
   loadCategories()
@@ -691,4 +547,9 @@ onMounted(() => {
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+input,
+textarea {
+  font: inherit;
+}
+</style>

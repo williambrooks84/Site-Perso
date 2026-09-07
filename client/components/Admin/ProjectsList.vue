@@ -59,11 +59,19 @@
             #{{ project.id }}
           </span>
 
-          <button type="button" title="Supprimer le projet" aria-label="Supprimer le projet"
-            class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-red-600 text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
-            :disabled="removingProjectId === project.id" @click="emit('delete', project)">
-            <i class="bi bi-trash" aria-hidden="true"></i>
-          </button>
+          <div class="flex shrink-0 items-center gap-2">
+            <button type="button" title="Modifier le projet" aria-label="Modifier le projet"
+              class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-white transition hover:opacity-90"
+              @click="emit('edit', project)">
+              <i class="bi bi-pencil" aria-hidden="true"></i>
+            </button>
+
+            <button type="button" title="Supprimer le projet" aria-label="Supprimer le projet"
+              class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-red-600 text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+              :disabled="removingProjectId === project.id" @click="emit('delete', project)">
+              <i class="bi bi-trash" aria-hidden="true"></i>
+            </button>
+          </div>
         </div>
       </article>
     </ul>
@@ -86,7 +94,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['refresh', 'delete'])
+const emit = defineEmits(['refresh', 'delete', 'edit'])
 
 const getProjectImage = (project) => {
   if (!project.imagePath) return ''
