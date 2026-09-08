@@ -193,6 +193,7 @@ h4 {
 .btn-category {
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
+  white-space: nowrap;
 }
 
 @media (min-width: 768px) {

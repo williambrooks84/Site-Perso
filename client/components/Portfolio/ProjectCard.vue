@@ -1,7 +1,7 @@
 <template>
     <article
-        class="grid h-150 overflow-hidden rounded-2xl border-2 border-primary/50 bg-light shadow-sm md:h-125 md:grid-cols-2">
-        <div class="aspect-video overflow-hidden md:aspect-auto">
+        class="grid w-full min-w-0 min-h-150 overflow-hidden rounded-2xl border-2 border-primary/50 bg-light shadow-sm md:h-125 md:grid-cols-2">
+        <div class="min-w-0 aspect-video overflow-hidden md:aspect-auto">
             <img v-if="projectImage" :src="projectImage" :alt="project.title"
                 class="h-full w-full object-cover transition duration-500 hover:scale-105" />
 
@@ -10,29 +10,30 @@
             </div>
         </div>
 
-        <div class="flex min-h-0 flex-col justify-between p-4 md:p-8">
-            <div>
-                <h3 class="text-xl font-bold text-dark md:text-2xl uppercase">
+        <div class="flex min-w-0 min-h-0 flex-col justify-between p-4 md:p-8">
+            <div class="min-w-0">
+                <h3 class="min-w-0 wrap-break-word text-xl font-bold uppercase text-dark md:text-2xl">
                     {{ project.title }}
                 </h3>
 
-                <p class="mt-3 text-sm leading-6 text-dark md:mt-4 md:text-base md:leading-7">
+                <p
+                    class="mt-3 min-w-0 wrap-break-word text-justify text-sm leading-6 text-dark md:mt-4 md:text-base md:leading-7">
                     {{ project.description }}
                 </p>
 
-                <div v-if="project.technologies?.length" class="mt-4 md:mt-6">
+                <div v-if="project.technologies?.length" class="mt-4 min-w-0 md:mt-6">
                     <p class="mb-2 text-base font-semibold uppercase text-secondary md:mb-3 md:text-lg">
                         Technologies utilisées
                     </p>
 
-                    <div class="flex flex-wrap gap-2">
+                    <div class="flex min-w-0 flex-wrap justify-center gap-2 md:justify-start">
                         <span v-for="technology in project.technologies" :key="technology.id"
-                            class="group flex items-center justify-center gap-2 rounded-lg bg-secondary px-2.5 py-1.5 text-sm font-semibold text-dark transition duration-200 hover:scale-150 hover:shadow-md md:px-3 md:py-2 md:text-lg">
+                            class="group flex max-w-full min-w-0 items-center justify-center gap-2 rounded-lg bg-secondary px-2.5 py-1.5 text-sm font-semibold text-dark transition duration-200 hover:scale-150 hover:shadow-md md:px-3 md:py-2 md:text-lg">
                             <img v-if="getTechnologyIcon(technology)" :src="getTechnologyIcon(technology)"
                                 :alt="technology.name"
-                                class="h-4 w-4 object-contain transition duration-200 group-hover:scale-110 md:h-5 md:w-5" />
+                                class="h-4 w-4 shrink-0 object-contain transition duration-200 group-hover:scale-110 md:h-5 md:w-5" />
 
-                            <span>
+                            <span class="min-w-0 wrap-break-word">
                                 {{ technology.name }}
                             </span>
                         </span>
@@ -40,7 +41,7 @@
                 </div>
             </div>
 
-            <div class="mt-6 flex shrink-0 flex-row justify-center gap-2 md:mt-8 md:gap-3">
+            <div class="mt-6 flex min-w-0 shrink-0 flex-row flex-wrap justify-center gap-2 md:mt-8 md:gap-3">
                 <a v-if="project.siteLink" :href="project.siteLink" target="_blank" rel="noopener noreferrer"
                     class="btn-primary btn-sm">
                     Voir le site

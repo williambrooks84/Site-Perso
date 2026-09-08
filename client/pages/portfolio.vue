@@ -29,6 +29,10 @@
 import { onMounted, ref } from 'vue'
 import ProjectsCarousel from '~/components/Portfolio/ProjectsCarousel.vue'
 
+definePageMeta({
+    layout: 'portfolio',
+})
+
 const runtimeConfig = useRuntimeConfig()
 
 const apiBaseUrl =
