@@ -62,7 +62,7 @@ import ThemeButton from './ThemeButton.vue';
 const navLinks = [
   { name: 'Accueil', href: '/' },
   { name: 'Qui suis-je ?', href: '/quisuisje' },
-  { name: 'Mon portfolio', href: '/portfolio' },
+  { name: 'Mes réalisations', href: '/portfolio' },
   { name: 'Mon CV', href: '/moncv' },
   { name: 'Me contacter', href: '/contact', icon: 'bi-pencil-fill' },
 ];

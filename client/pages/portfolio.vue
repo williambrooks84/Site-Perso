@@ -1,11 +1,7 @@
 <template>
   <main class="flex flex-col items-center justify-center gap-20 pb-20 pt-0 md:pt-12">
     <section class="w-full max-w-6xl px-4">
-      <ProjectsCarousel
-        :projects="projects"
-        :categories="categories"
-        :api-base-url="apiBaseUrl"
-      />
+      <ProjectsCarousel :projects="projects" :categories="categories" :api-base-url="apiBaseUrl" />
     </section>
 
     <section class="flex flex-col items-center justify-center gap-7 px-4 text-center">
@@ -13,24 +9,22 @@
         Envie d'aller plus loin dans mes réalisations ?
       </p>
 
-      <a
-        href="https://sites.google.com/view/portfoliobrooksw"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="btn-secondary"
-      >
+      <a href="https://sites.google.com/view/portfoliobrooksw" target="_blank" rel="noopener noreferrer"
+        class="btn-secondary">
         Consultez mon portfolio de compétences
       </a>
     </section>
+    <!-- <FigmaPrototype /> -->
   </main>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
+//import FigmaPrototype from '~/components/Portfolio/FigmaPrototype.vue'
 import ProjectsCarousel from '~/components/Portfolio/ProjectsCarousel.vue'
 
 definePageMeta({
-    layout: 'portfolio',
+  layout: 'portfolio',
 })
 
 const runtimeConfig = useRuntimeConfig()
