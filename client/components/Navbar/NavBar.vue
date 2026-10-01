@@ -1,45 +1,49 @@
 <template>
-    <nav class="fixed top-0 left-0 z-50 w-full shadow-md">
-        <div class="bg-[var(--color-primary)]">
-            <div class="container mx-auto p-4 flex items-center justify-between">
-                <client-only>
-                    <img :src="logoSrc" alt="logo" class="h-8" />
-                </client-only>
-                <a href="#" class="flex items-center">
-                    <svg width="133" height="48" viewBox="0 0 133 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- SVG paths stay the same -->
-                    </svg>
-                </a>
-                <div class="flex items-center flex-1 justify-end xl:justify-center space-x-4">
-                    <!-- Desktop nav links and theme toggle -->
-                    <div class="hidden xl:flex space-x-8 items-center">
-                        <NavLink v-for="link in navLinks" :key="link.name" :href="link.href" :name="link.name" :icon="link.icon"
-                            class="px-3 py-2 rounded" />
-                        <!-- Theme toggle button (desktop, left of contact) -->
-                        <client-only>
-                            <ThemeButton class="ml-4 mr-2" />
-                        </client-only>
-                        <client-only>
-                            <button v-if="isAuthenticated" type="button" class="text-light" @click="logout">
-                                <i class="bi bi-box-arrow-left"></i>
-                            </button>
-                        </client-only>
-                        <!-- Me contacter button -->
-                        <!--<ContactButton @click="showContactModal = true" />-->
-                    </div>
-                    <!-- Mobile theme toggle (left of burger) -->
+    <header>
+        <nav class="fixed top-0 left-0 z-50 w-full shadow-md">
+            <div class="bg-[var(--color-primary)]">
+                <div class="container mx-auto p-4 flex items-center justify-between">
                     <client-only>
-                      <ThemeButton class="ml-4 mr-2 xl:hidden" />
+                        <img :src="logoSrc" alt="logo" class="h-8" />
                     </client-only>
-                    <!-- Mobile menu button -->
-                    <button class="xl:hidden focus:outline-none transition" @click="isMobileMenuOpen = !isMobileMenuOpen">
-                        <i
-                            :class="isMobileMenuOpen ? 'bi bi-x-lg text-4xl text-light' : 'bi bi-list text-4xl text-light'"></i>
-                    </button>
+                    <a href="#" class="flex items-center">
+                        <svg width="133" height="48" viewBox="0 0 133 48" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <!-- SVG paths stay the same -->
+                        </svg>
+                    </a>
+                    <div class="flex items-center flex-1 justify-end xl:justify-center space-x-4">
+                        <!-- Desktop nav links and theme toggle -->
+                        <div class="hidden xl:flex space-x-8 items-center">
+                            <NavLink v-for="link in navLinks" :key="link.name" :href="link.href" :name="link.name"
+                                :icon="link.icon" class="px-3 py-2 rounded" />
+                            <!-- Theme toggle button (desktop, left of contact) -->
+                            <client-only>
+                                <ThemeButton class="ml-4 mr-2" />
+                            </client-only>
+                            <client-only>
+                                <button v-if="isAuthenticated" type="button" class="text-light" @click="logout">
+                                    <i class="bi bi-box-arrow-left"></i>
+                                </button>
+                            </client-only>
+                            <!-- Me contacter button -->
+                            <!--<ContactButton @click="showContactModal = true" />-->
+                        </div>
+                        <!-- Mobile theme toggle (left of burger) -->
+                        <client-only>
+                            <ThemeButton class="ml-4 mr-2 xl:hidden" />
+                        </client-only>
+                        <!-- Mobile menu button -->
+                        <button class="xl:hidden focus:outline-none transition"
+                            @click="isMobileMenuOpen = !isMobileMenuOpen">
+                            <i
+                                :class="isMobileMenuOpen ? 'bi bi-x-lg text-4xl text-light' : 'bi bi-list text-4xl text-light'"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
     <!-- Mobile nav links -->
     <div v-show="isMobileMenuOpen"
         class="xl:hidden fixed top-20 right-0 w-2/3 bg-[var(--color-primary)] flex flex-col px-4 pb-4 gap-2 space-y-2 z-50 transition">
@@ -60,11 +64,11 @@ import NavLink from './NavLink.vue';
 import ThemeButton from './ThemeButton.vue';
 
 const navLinks = [
-  { name: 'Accueil', href: '/' },
-  { name: 'Qui suis-je ?', href: '/quisuisje' },
-  { name: 'Mes réalisations', href: '/portfolio' },
-  { name: 'Mon CV', href: '/moncv' },
-  { name: 'Me contacter', href: '/contact', icon: 'bi-pencil-fill' },
+    { name: 'Accueil', href: '/' },
+    { name: 'Qui suis-je ?', href: '/quisuisje' },
+    { name: 'Mes réalisations', href: '/portfolio' },
+    { name: 'Mon CV', href: '/moncv' },
+    { name: 'Me contacter', href: '/contact', icon: 'bi-pencil-fill' },
 ];
 
 const isMobileMenuOpen = ref(false);

@@ -1,5 +1,5 @@
 <template>
-    <section class="space-y-4 md:space-y-8">
+    <div class="space-y-4 md:space-y-8">
         <div class="md:flex md:items-center md:justify-center md:gap-2">
             <div
                 v-if="desktopCategories.length >= 3"
@@ -7,6 +7,7 @@
             >
                 <button
                     type="button"
+                    aria-label="Catégories précédentes"
                     :class="
                         desktopCategoryIndex === 0
                             ? 'btn-disabled'
@@ -50,6 +51,7 @@
 
                 <button
                     type="button"
+                    aria-label="Catégories suivantes"
                     :class="
                         desktopCategoryIndex === desktopMaxIndex
                             ? 'btn-disabled'
@@ -85,6 +87,7 @@
             <div class="flex items-center justify-center gap-2 md:hidden">
                 <button
                     type="button"
+                    aria-label="Projet précédent"
                     :class="
                         mobileCategoryIndex === 0
                             ? 'btn-disabled'
@@ -126,6 +129,7 @@
 
                 <button
                     type="button"
+                    aria-label="Projet suivant"
                     :class="
                         mobileCategoryIndex === mobileCategories.length - 1
                             ? 'btn-disabled'
@@ -227,7 +231,7 @@
         >
             Aucun projet disponible.
         </div>
-    </section>
+    </div>
 </template>
 
 <script setup>

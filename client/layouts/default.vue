@@ -1,9 +1,9 @@
 <template>
   <NavBar />
 
-  <div class="pt-30 p-10 lg:p-32">
+  <main class="pt-30 p-10 lg:p-32">
     <slot />
-  </div>
+  </main>
 
   <Footer />
 </template>

@@ -1,56 +1,19 @@
 <template>
-    <div class="space-y-8 mt-15">
+    <section id="tools" class="space-y-8 mt-15">
         <h2>Mon environnement technique</h2>
 
-        <div class="flex flex-col gap-30 pb-20">
-            <div class="flex flex-col gap-5">
-                <h3>Développement :</h3>
+        <div class="flex flex-col gap-10 pb-20">
+            <h3>Développement :</h3>
+            <ToolCategory title="Langages" :tools="devTools.languages" />
+            <ToolCategory title="Frameworks" :tools="devTools.frameworks" />
+            <ToolCategory title="Outils & environnements" :tools="devTools.tools" />
+            <ToolCategory title="Intelligence artificielle" :tools="devTools.ai" />
 
-                <div class="flex flex-col gap-5">
-                    <h4>Langages</h4>
-                    <div class="flex flex-wrap justify-center gap-3">
-                        <Tool v-for="(devTool, index) in devTools.languages" :key="`lang-${index}`" :icon="devTool.icon"
-                            :icon-dark="devTool.iconDark" :label="devTool.label" class="w-1/4 xl:w-1/8" />
-                    </div>
-                </div>
+            <h3>Design et graphisme :</h3>
+            <ToolCategory title="Logiciels" :tools="designTools" />
 
-                <div class="flex flex-col gap-5">
-                    <h4>Frameworks</h4>
-                    <div class="flex flex-wrap justify-center gap-3">
-                        <Tool v-for="(devTool, index) in devTools.frameworks" :key="`fw-${index}`" :icon="devTool.icon"
-                            :icon-dark="devTool.iconDark" :label="devTool.label" class="w-1/4 xl:w-1/8" />
-                    </div>
-                </div>
-
-                <div class="flex flex-col gap-5">
-                    <h4>Outils & environnements</h4>
-                    <div class="flex flex-wrap justify-center gap-3">
-                        <Tool v-for="(devTool, index) in devTools.tools" :key="`tool-${index}`" :icon="devTool.icon"
-                            :icon-dark="devTool.iconDark" :label="devTool.label" class="w-1/4 xl:w-1/8" />
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex flex-col gap-5">
-                <h3>Design et graphisme :</h3>
-                <div class="flex flex-wrap justify-center gap-3">
-                    <Tool v-for="(designTool, index) in designTools" :key="index" :icon="designTool.icon"
-                        :icon-dark="designTool.iconDark" :label="designTool.label" class="w-1/4 xl:w-1/8" />
-                </div>
-            </div>
-
-            <div class="flex flex-col gap-5">
-                <h3>En cours d'acquisition :</h3>
-
-                <div class="flex flex-col gap-5">
-                    <h4>Technologies & frameworks</h4>
-                    <div class="flex flex-wrap justify-center gap-3">
-                        <Tool v-for="(pendingTool, index) in pendingTools.tech" :key="`pending-tech-${index}`"
-                            :icon="pendingTool.icon" :icon-dark="pendingTool.iconDark" :label="pendingTool.label"
-                            class="w-1/4 xl:w-1/8" />
-                    </div>
-                </div>
-            </div>
+            <h3>En cours d'acquisition :</h3>
+            <ToolCategory title="Technologies & frameworks" :tools="pendingTools.tech" />
         </div>
 
         <div class="flex flex-col items-center justify-center gap-3 pb-20">
@@ -59,11 +22,11 @@
                 Consultez mes projets
             </a>
         </div>
-    </div>
+    </section>
 </template>
 
 <script setup>
-import Tool from './Tool.vue'
+import ToolCategory from './ToolCategory.vue'
 
 const devTools = {
     languages: [
@@ -99,7 +62,13 @@ const devTools = {
         { icon: '/assets/icons/tools/linux.svg', label: 'Linux' },
         { icon: '/assets/icons/tools/postman.svg', label: 'Postman' },
         { icon: '/assets/icons/tools/copilot.svg', label: 'Copilot' },
+        { icon: '/assets/icons/tools/docker.svg', label: 'Docker' },
+        { icon: '/assets/icons/tools/nginx.svg', label: 'Nginx' },
     ],
+    ai: [
+        { icon: '/assets/icons/tools/copilot.svg', label: 'Copilot' },
+        { icon: '/assets/icons/tools/codex.svg', label: 'Codex' },
+    ]
 }
 
 const pendingTools = {
@@ -109,10 +78,8 @@ const pendingTools = {
         { icon: '/assets/icons/tools/flutter.svg', label: 'Flutter' },
         { icon: '/assets/icons/tools/dart.svg', label: 'Dart' },
         { icon: '/assets/icons/tools/nodejs.svg', label: 'Node.js' },
-        { icon: '/assets/icons/tools/mongodb.svg', label: 'MongoDB' }, 
-        { icon: '/assets/icons/tools/docker.svg', label: 'Docker' }, 
-        { icon: '/assets/icons/tools/nginx.svg', label: 'Nginx' }, 
-        { icon: '/assets/icons/tools/csharp.svg', label: 'C#' }, 
+        { icon: '/assets/icons/tools/mongodb.svg', label: 'MongoDB' },
+        { icon: '/assets/icons/tools/csharp.svg', label: 'C#' },
         { icon: '/assets/icons/tools/wordpress.svg', label: 'Wordpress' },
         { icon: '/assets/icons/tools/cloud.svg', label: 'Google Cloud' },
         { icon: '/assets/icons/tools/firebase.svg', label: 'Firebase' },

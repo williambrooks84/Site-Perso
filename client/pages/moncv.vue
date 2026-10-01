@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full flex flex-col justify-center items-center gap-10">
+    <section id="Cv" class="w-full flex flex-col justify-center items-center gap-10">
         <ClientOnly>
             <Cv />
             <DownloadCvButton
@@ -8,7 +8,7 @@
               :label="buttonProps[0].label"
             />
         </ClientOnly>
-    </div>
+      </section>
 </template>
 
 <script setup>

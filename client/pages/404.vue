@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center min-h-[60vh]">
+  <section id="404" class="flex flex-col items-center justify-center min-h-[60vh]">
     <h1 class="text-primary dark:text-secondary text-5xl font-bold mb-6 text-center">404</h1>
     <p class="text-lg text-dark dark:text-light mb-8 text-center">Oups, cette page n'existe pas.</p>
     <a
@@ -8,7 +8,7 @@
     >
       Retour à l'accueil
     </a>
-  </div>
+  </section>
 </template>
 
 <script setup>

@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col justify-center items-center gap-8 lg:gap-10">
+    <section id="hero" class="flex flex-col justify-center items-center gap-8 lg:gap-10">
         <h2>Qui suis-je ?</h2>
         <div class="flex flex-col lg:flex-row gap-7 lg:gap-15 items-center justify-center">
             <img class="w-75 xl:w-auto h-auto rounded-3xl xl:rounded-4xl" src="/assets/img/will.jpg" alt="will" />
@@ -13,7 +13,7 @@
             class="btn-primary">
             En savoir plus
         </a>
-    </div>
+    </section>
 </template>
 
 <script setup>
@@ -21,13 +21,11 @@ import HeroPoint from './HeroPoint.vue';
 
 const items = [
     { icon: 'bi-person-fill', text: 'William Brooks' },
-    { icon: 'bi-calendar-fill', text: '21 ans' },
-    { icon: 'bi-geo-alt-fill', text: 'Limoges, France (binational France/Royaume-Uni)' },
+    { icon: 'bi-calendar-fill', text: '22 ans' },
+    { icon: 'bi-geo-alt-fill', text: 'Janailhac (près de Limoges), France' },
+    { icon: 'bi-translate', text: 'Français & Anglais (binational)' },
     { icon: 'bi-code-slash', text: 'Développeur Web Junior' },
-    { icon: 'bi-camera-fill', text: 'Photographe' },
-    { icon: 'bi-bus-front-fill', text: 'Passionné de transports en commun (bus, trains, trams, etc)' },
-    { icon: 'bi-controller', text: 'Amateur de jeux vidéos' },
-    { icon: 'bi-music-note-beamed', text: 'Fan de musique (toutes sortes mais principalement Rock, Métal et Britpop)' }
+    { icon: 'bi-camera-fill', text: 'Photographe de transports en commun (bus, trains, trams) & paysages' },
 ];
 
 </script>

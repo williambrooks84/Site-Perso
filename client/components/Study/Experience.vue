@@ -1,6 +1,6 @@
 <template>
 
-    <div class="space-y-8 mt-15">
+    <section id="experience" class="space-y-8 mt-15">
         <h2>Mes expériences</h2>
         <StudyPoint
             v-for="(experience, index) in experiences"
@@ -19,7 +19,7 @@
                 Consultez mes projets
             </a>
         </div>
-    </div>
+    </section>
 </template>
 
 <script setup>

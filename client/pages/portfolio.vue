@@ -1,10 +1,10 @@
 <template>
-  <main class="flex flex-col items-center justify-center gap-20 pb-20 pt-0 md:pt-12">
-    <section class="w-full max-w-6xl px-4">
+  <section id="portfolio" class="flex flex-col items-center justify-center gap-20 pb-20 pt-0 md:pt-12">
+    <section id="projects"  class="w-full max-w-6xl px-4">
       <ProjectsCarousel :projects="projects" :categories="categories" :api-base-url="apiBaseUrl" />
     </section>
 
-    <section class="flex flex-col items-center justify-center gap-7 px-4 text-center">
+    <div class="flex flex-col items-center justify-center gap-7 px-4 text-center">
       <p class="body-text">
         Envie d'aller plus loin dans mes réalisations ?
       </p>
@@ -13,9 +13,9 @@
         class="btn-secondary">
         Consultez mon portfolio de compétences
       </a>
-    </section>
+    </div>
     <!-- <FigmaPrototype /> -->
-  </main>
+  </section>
 </template>
 
 <script setup>

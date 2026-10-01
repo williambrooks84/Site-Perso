@@ -1,11 +1,6 @@
 <template>
     <Hero />
     <ToolsShowcase />
-    <div class="flex flex-col gap-8">
-        <h2>Venez voir mes réseaux :</h2>
-        <MediaShowcase />
-    </div>
-
 </template>
 
 <script setup>

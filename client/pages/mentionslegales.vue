@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-3xl mx-auto py-12 px-4">
+  <section id="mentions" class="max-w-3xl mx-auto py-12 px-4">
     <h1 class="text-primary text-3xl md:text-5xl font-bold mb-8 text-center">Mentions légales</h1>
     <section class="mb-8">
       <h2 class="text-xl font-semibold mb-2">Éditeur du site</h2>
@@ -37,7 +37,7 @@
         Ce site utilise des cookies techniques nécessaires à son fonctionnement (préférences de thème, etc.). Aucun cookie publicitaire ou de suivi n'est utilisé.
       </p>
     </section>
-  </div>
+  </section>
 </template>
 
 <script setup>

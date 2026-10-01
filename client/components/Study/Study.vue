@@ -1,6 +1,6 @@
 <template>
 
-    <div class="space-y-8 mt-15">
+    <section id="studies" class="space-y-8 mt-15">
         <h2>Mon parcours d'études</h2>
         <StudyPoint
             v-for="(study, index) in studies"
@@ -11,7 +11,7 @@
             :image="study.image"
             :imageDark="study.imageDark"
         />
-    </div>
+    </section>
 </template>
 
 <script setup>

@@ -1,14 +1,10 @@
 <template>
-    <div class="flex flex-wrap gap-6 lg:flex-row justify-between items-center">
-      <Media
-        v-for="(mediaItem, index) in media"
-        :key="index"
-        :icon="mediaItem.icon"
-        :name="mediaItem.name"
-        :link="mediaItem.link"
-        size="large"
-      />
+  <section id="social-media">
+    <div class="flex flex-wrap p-8 gap-10 lg:flex-row justify-center items-center">
+      <Media v-for="(mediaItem, index) in media" :key="index" :icon="mediaItem.icon" :name="mediaItem.name"
+        :link="mediaItem.link" size="large" />
     </div>
+  </section>
 </template>
 
 <script setup>
