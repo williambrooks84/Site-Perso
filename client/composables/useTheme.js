@@ -8,43 +8,28 @@ export function useTheme() {
     () => theme.value === 'dark'
   )
 
-  const applyTheme = (dark) => {
-    const newTheme = dark ? 'dark' : 'light'
-
+  const setTheme = (dark) => {
     isDark.value = dark
-    theme.value = newTheme
-
-    if (import.meta.client) {
-      document.documentElement.classList.toggle(
-        'dark',
-        dark
-      )
-    }
+    theme.value = dark ? 'dark' : 'light'
   }
 
   const toggleTheme = () => {
-    applyTheme(!isDark.value)
+    setTheme(!isDark.value)
   }
 
-  if (import.meta.client) {
-    if (theme.value === 'dark') {
-      isDark.value = true
-      document.documentElement.classList.add('dark')
-    } else if (theme.value === 'light') {
-      isDark.value = false
-      document.documentElement.classList.remove('dark')
-    } else {
-      const prefersDark = window.matchMedia(
-        '(prefers-color-scheme: dark)'
-      ).matches
+  // Première visite uniquement :
+  // aucun choix utilisateur n'existe encore.
+  if (import.meta.client && theme.value === null) {
+    const prefersDark = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    ).matches
 
-      applyTheme(prefersDark)
-    }
+    setTheme(prefersDark)
   }
 
   return {
     isDark,
     toggleTheme,
-    setTheme: applyTheme
+    setTheme
   }
 }

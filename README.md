@@ -76,6 +76,13 @@ services:
 Ce fichier est volontairement ignoré par Git.
 
 
+```bash
+Remove-Item -Recurse -Force node_modules\.vite -ErrorAction SilentlyContinue
+Remove-Item -Recurse -Force .nuxt
+npm run dev
+```
+S'il y a des erreurs du style "**Pre-transform error: Failed to resolve import "#app-manifest" from "node_modules/nuxt/dist/app/composables/manifest.js?v=b70d02fc". Does the file exist?**", vous pouvez utiliser ces commandes pour vider le cache de Nuxt et Vite.
+
 ## 🌍 Démo en ligne
 Le projet est accessible ici 👉 [willbrooks.fr](https://willbrooks.fr)
 
