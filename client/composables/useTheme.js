@@ -1,26 +1,50 @@
-import { ref, watchEffect } from 'vue'
+export function useTheme() {
+  const theme = useCookie('theme', {
+    default: () => null
+  })
 
-const isDark = ref(false)
+  const isDark = useState(
+    'theme-is-dark',
+    () => theme.value === 'dark'
+  )
 
-// Initialize theme from localStorage or system preference
-if (typeof window !== 'undefined') {
-  const savedTheme = localStorage.getItem('theme')
-  isDark.value = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)
-}
+  const applyTheme = (dark) => {
+    const newTheme = dark ? 'dark' : 'light'
 
-// Watch for changes and update localStorage and html class
-watchEffect(() => {
-  if (typeof window !== 'undefined') {
-    if (isDark.value) {
-      document.documentElement.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-      localStorage.setItem('theme', 'light')
+    isDark.value = dark
+    theme.value = newTheme
+
+    if (import.meta.client) {
+      document.documentElement.classList.toggle(
+        'dark',
+        dark
+      )
     }
   }
-})
 
-export function useTheme() {
-  return { isDark }
+  const toggleTheme = () => {
+    applyTheme(!isDark.value)
+  }
+
+  if (import.meta.client) {
+    if (theme.value === 'dark') {
+      isDark.value = true
+      document.documentElement.classList.add('dark')
+    } else if (theme.value === 'light') {
+      isDark.value = false
+      document.documentElement.classList.remove('dark')
+    } else {
+      const prefersDark = window.matchMedia(
+        '(prefers-color-scheme: dark)'
+      ).matches
+
+      applyTheme(prefersDark)
+    }
+  }
+
+  return {
+    isDark,
+    toggleTheme,
+    setTheme: applyTheme
+  }
 }

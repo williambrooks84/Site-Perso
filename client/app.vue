@@ -1,21 +1,23 @@
 <template>
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { computed } from 'vue'
 
-onMounted(() => {
-  try {
-    const theme = localStorage.getItem('theme');
-    if (
-      theme === 'dark' ||
-      (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)
-    ) {
-      document.documentElement.classList.add('dark');
-    }
-  } catch (e) {}
-});
+const theme = useCookie('theme', {
+  default: () => null
+})
+
+useHead({
+  htmlAttrs: {
+    class: computed(() => {
+      return theme.value === 'dark'
+        ? 'dark'
+        : undefined
+    })
+  }
+})
 </script>

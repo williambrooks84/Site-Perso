@@ -1,5 +1,6 @@
 <template>
-  <section id="portfolio" class="flex flex-col items-center justify-center gap-20 pb-20 pt-0 md:pt-12">
+  <Loading v-if="loading" />
+  <section v-else id="portfolio" class="flex flex-col items-center justify-center gap-20 pb-20 pt-0 md:pt-12">
     <section id="projects"  class="w-full max-w-6xl px-4">
       <ProjectsCarousel :projects="projects" :categories="categories" :api-base-url="apiBaseUrl" />
     </section>
@@ -22,6 +23,7 @@
 import { onMounted, ref } from 'vue'
 //import FigmaPrototype from '~/components/Portfolio/FigmaPrototype.vue'
 import ProjectsCarousel from '~/components/Portfolio/ProjectsCarousel.vue'
+import Loading from '~/components/Loading/Loading.vue'
 
 definePageMeta({
   layout: 'portfolio',
@@ -34,6 +36,7 @@ const apiBaseUrl =
 
 const projects = ref([])
 const categories = ref([])
+const loading = ref(true)
 
 const loadProjects = async () => {
   try {
@@ -82,10 +85,14 @@ const loadCategories = async () => {
 }
 
 onMounted(async () => {
-  await Promise.all([
-    loadProjects(),
-    loadCategories(),
-  ])
+  try {
+    await Promise.all([
+      loadProjects(),
+      loadCategories(),
+    ])
+  } finally {
+    loading.value = false
+  }
 })
 
 useHead({

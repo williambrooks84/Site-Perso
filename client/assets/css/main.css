@@ -2,72 +2,73 @@
 @import "@nuxt/ui";
 
 :root {
-  --color-primary: #265f00;
-  --color-secondary: #60a5fa;
-  --color-hover: #aaefdf;
-  --color-border-grey: #bbbbbb;
-  --color-grey: #b3b3b3;
-  --color-light: #effdfa;
-  --color-dark: #1a2523;
+  --app-color-primary: #265f00;
+  --app-color-secondary: #60a5fa;
+  --app-color-hover: #aaefdf;
+  --app-color-border-grey: #bbbbbb;
+  --app-color-grey: #b3b3b3;
+  --app-color-light: #effdfa;
+  --app-color-dark: #1a2523;
 }
 
 .dark {
-  --color-primary: #a3e635;
-  --color-secondary: #3f79f7;
-  --color-hover: #334155;
-  --color-border-grey: #444;
-  --color-grey: #888;
-  --color-light: #1a2523;
-  --color-dark: #f3f4f6;
+  --app-color-primary: #a3e635;
+  --app-color-secondary: #3f79f7;
+  --app-color-hover: #334155;
+  --app-color-border-grey: #444;
+  --app-color-grey: #888;
+  --app-color-light: #1a2523;
+  --app-color-dark: #f3f4f6;
 }
 
 @theme static {
-  --color-primary: var(--color-primary);
-  --color-secondary: var(--color-secondary);
-  --color-hover: var(--color-hover);
-  --color-border-grey: var(--color-border-grey);
-  --color-light: var(--color-light);
-  --color-dark: var(--color-dark);
+  --color-primary: var(--app-color-primary);
+  --color-secondary: var(--app-color-secondary);
+  --color-hover: var(--app-color-hover);
+  --color-border-grey: var(--app-color-border-grey);
+  --color-light: var(--app-color-light);
+  --color-dark: var(--app-color-dark);
 }
 
 .body-text {
   font-size: 1rem;
-  color: var(--color-dark);
+  color: var(--app-color-dark);
+
   @media (min-width: 1024px) {
     font-size: 1.5rem;
   }
 }
 
 .body-link {
-  color: var(--color-primary);
+  color: var(--app-color-primary);
   font-weight: 700;
   text-decoration: underline;
 }
 
 h1 {
   text-align: center;
-  color: var(--color-primary);
+  color: var(--app-color-primary);
   font-size: 2rem;
   font-weight: 700;
 }
 
 h2 {
   text-align: center;
-  color: var(--color-primary);
+  color: var(--app-color-primary);
   font-size: 1.5rem;
   font-weight: 700;
 }
 
 h3 {
   text-align: center;
-  color: var(--color-primary);
+  color: var(--app-color-primary);
   font-size: 1.25rem;
   font-weight: 600;
 }
 
 h4 {
   text-align: center;
-  color: var(--color-primary);
+  color: var(--app-color-primary);
   font-size: 1rem;
   font-weight: 600;
   margin-top: 0.75rem;
@@ -96,12 +97,9 @@ h4 {
 }
 
 .btn-primary {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  background-color: var(--color-primary);
-  color: var(--color-light);
+  padding: 0.75rem 1.5rem;
+  background-color: var(--app-color-primary);
+  color: var(--app-color-light);
   border-radius: 0.5rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -111,12 +109,9 @@ h4 {
 }
 
 .btn-secondary {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  background-color: var(--color-secondary);
-  color: var(--color-dark);
+  padding: 0.75rem 1.5rem;
+  background-color: var(--app-color-secondary);
+  color: var(--app-color-dark);
   border-radius: 0.5rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -126,13 +121,10 @@ h4 {
 }
 
 .btn-unselected {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
-  background-color: var(--color-light);
-  color: var(--color-dark);
-  border: 1px solid var(--color-border-grey);
+  padding: 0.75rem 1.5rem;
+  background-color: var(--app-color-light);
+  color: var(--app-color-dark);
+  border: 1px solid var(--app-color-border-grey);
   border-radius: 0.5rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -149,9 +141,9 @@ h4 {
 .btn-disabled {
   padding: 0.5rem 0.75rem;
   font-size: 1rem;
-  background-color: var(--color-light);
-  color: var(--color-dark);
-  border: 1px solid var(--color-border-grey);
+  background-color: var(--app-color-light);
+  color: var(--app-color-dark);
+  border: 1px solid var(--app-color-border-grey);
   border-radius: 0.5rem;
   font-weight: 600;
   opacity: 0.4;
@@ -160,20 +152,20 @@ h4 {
 
 .btn-primary:hover {
   text-decoration: underline;
-  text-decoration-color: var(--color-primary);
+  text-decoration-color: var(--app-color-primary);
   text-decoration-thickness: 2px;
   text-underline-offset: 7px;
-  color: var(--color-primary);
-  background-color: var(--color-hover);
+  color: var(--app-color-primary);
+  background-color: var(--app-color-hover);
 }
 
 .btn-secondary:hover {
   text-decoration: underline;
-  text-decoration-color: var(--color-secondary);
+  text-decoration-color: var(--app-color-secondary);
   text-decoration-thickness: 2px;
   text-underline-offset: 7px;
-  color: var(--color-secondary);
-  background-color: var(--color-hover);
+  color: var(--app-color-secondary);
+  background-color: var(--app-color-hover);
 }
 
 .btn-unselected:hover {
@@ -181,11 +173,11 @@ h4 {
   text-decoration-color: currentColor;
   text-decoration-thickness: 2px;
   text-underline-offset: 7px;
-  color: var(--color-light);
-  background-color: var(--color-secondary);
+  color: var(--app-color-light);
+  background-color: var(--app-color-secondary);
 }
 
-.btn-sm{
+.btn-sm {
   padding: 0.5rem 1rem !important;
   font-size: 0.875rem !important;
 }

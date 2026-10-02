@@ -4,7 +4,9 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      apiUrl: process.env.NUXT_PUBLIC_API_URL || 'https://api.willbrooks.fr'
+      apiUrl:
+        process.env.NUXT_PUBLIC_API_URL ||
+        'https://api.willbrooks.fr'
     }
   },
 
@@ -20,6 +22,10 @@ export default defineNuxtConfig({
     '@nuxtjs/sitemap',
     '@i2d/nuxt-pdf-frame'
   ],
+
+  ui: {
+    colorMode: false
+  },
 
   css: [
     './assets/css/main.css',
@@ -45,10 +51,28 @@ export default defineNuxtConfig({
     baseURL: '/',
     head: {
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' },
-        { rel: 'icon', type: 'image/png', sizes: '48x48', href: '/favicon-48x48.png' },
-        { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' }
+        {
+          rel: 'icon',
+          type: 'image/x-icon',
+          href: '/favicon.ico'
+        },
+        {
+          rel: 'icon',
+          type: 'image/png',
+          sizes: '32x32',
+          href: '/favicon-32x32.png'
+        },
+        {
+          rel: 'icon',
+          type: 'image/png',
+          sizes: '48x48',
+          href: '/favicon-48x48.png'
+        },
+        {
+          rel: 'apple-touch-icon',
+          sizes: '180x180',
+          href: '/apple-touch-icon.png'
+        }
       ]
     }
   },
