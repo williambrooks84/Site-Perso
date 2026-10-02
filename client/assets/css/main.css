@@ -1,9 +1,10 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+@import "bootstrap-icons/font/bootstrap-icons.css";
 
 :root {
   --app-color-primary: #265f00;
-  --app-color-secondary: #60a5fa;
+  --app-color-secondary: #6290f3;
   --app-color-hover: #aaefdf;
   --app-color-border-grey: #bbbbbb;
   --app-color-grey: #b3b3b3;
@@ -13,7 +14,7 @@
 
 .dark {
   --app-color-primary: #a3e635;
-  --app-color-secondary: #3f79f7;
+  --app-color-secondary: #db652a;
   --app-color-hover: #334155;
   --app-color-border-grey: #444;
   --app-color-grey: #888;
@@ -43,6 +44,10 @@
   color: var(--app-color-primary);
   font-weight: 700;
   text-decoration: underline;
+}
+
+.bi {
+  font-display: swap;
 }
 
 h1 {

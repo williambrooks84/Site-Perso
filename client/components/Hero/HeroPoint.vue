@@ -1,10 +1,8 @@
 <template>
-    <ul>
-        <li class="flex items-center text-md lg:text-xl font-semibold text-dark">
-            <i :class="['bi', icon]" class="mr-3 text-secondary"></i>
-            {{ text }}
-        </li>
-    </ul>
+    <li class="flex items-center text-md lg:text-xl font-semibold text-dark">
+        <i :class="['bi', icon]" class="mr-3 text-secondary" aria-hidden="true"></i>
+        {{ text }}
+    </li>
 </template>
 
 <script setup>
@@ -23,6 +21,4 @@ const props = defineProps({
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

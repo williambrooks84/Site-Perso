@@ -28,8 +28,7 @@ export default defineNuxtConfig({
   },
 
   css: [
-    './assets/css/main.css',
-    'bootstrap-icons/font/bootstrap-icons.css'
+    './assets/css/main.css'
   ],
 
   site: {

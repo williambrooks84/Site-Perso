@@ -18,6 +18,7 @@ const isDark = useState(
 
 useHead({
   htmlAttrs: {
+    lang: 'fr',
     class: computed(() => {
       return isDark.value ? 'dark' : undefined
     })
