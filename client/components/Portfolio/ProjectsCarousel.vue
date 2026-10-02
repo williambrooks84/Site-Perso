@@ -1,23 +1,18 @@
 <template>
     <div class="space-y-4 md:space-y-8">
+        <!-- Categories -->
         <div class="md:flex md:items-center md:justify-center md:gap-2">
+            <!-- Desktop categories -->
             <div
                 v-if="desktopCategories.length >= 3"
                 class="hidden items-center justify-center gap-2 md:flex"
             >
-                <button
-                    type="button"
-                    aria-label="Catégories précédentes"
-                    :class="
-                        desktopCategoryIndex === 0
-                            ? 'btn-disabled'
-                            : 'btn-unselected btn-unselected-small'
-                    "
+                <CarouselButton
+                    direction="left"
+                    label="Catégories précédentes"
                     :disabled="desktopCategoryIndex === 0"
                     @click="previousDesktopCategory"
-                >
-                    <i class="bi bi-caret-left-fill"></i>
-                </button>
+                />
 
                 <div class="max-w-full overflow-hidden">
                     <div
@@ -39,7 +34,7 @@
                                     selectedCategoryId === category.id
                                         ? 'btn-primary'
                                         : 'btn-unselected',
-                                    'btn-category whitespace-nowrap'
+                                    'btn-category whitespace-nowrap',
                                 ]"
                                 @click="selectCategory(category.id)"
                             >
@@ -49,21 +44,17 @@
                     </div>
                 </div>
 
-                <button
-                    type="button"
-                    aria-label="Catégories suivantes"
-                    :class="
+                <CarouselButton
+                    direction="right"
+                    label="Catégories suivantes"
+                    :disabled="
                         desktopCategoryIndex === desktopMaxIndex
-                            ? 'btn-disabled'
-                            : 'btn-unselected btn-unselected-small'
                     "
-                    :disabled="desktopCategoryIndex === desktopMaxIndex"
                     @click="nextDesktopCategory"
-                >
-                    <i class="bi bi-caret-right-fill"></i>
-                </button>
+                />
             </div>
 
+            <!-- Desktop categories without carousel -->
             <div
                 v-else
                 class="hidden items-center justify-center gap-3 md:flex"
@@ -76,7 +67,7 @@
                         selectedCategoryId === category.id
                             ? 'btn-primary'
                             : 'btn-unselected',
-                        'btn-category whitespace-nowrap'
+                        'btn-category whitespace-nowrap',
                     ]"
                     @click="selectCategory(category.id)"
                 >
@@ -84,20 +75,14 @@
                 </button>
             </div>
 
+            <!-- Mobile categories -->
             <div class="flex items-center justify-center gap-2 md:hidden">
-                <button
-                    type="button"
-                    aria-label="Projet précédent"
-                    :class="
-                        mobileCategoryIndex === 0
-                            ? 'btn-disabled'
-                            : 'btn-unselected btn-unselected-small'
-                    "
+                <CarouselButton
+                    direction="left"
+                    label="Catégories précédentes"
                     :disabled="mobileCategoryIndex === 0"
                     @click="previousCategory"
-                >
-                    <i class="bi bi-caret-left-fill"></i>
-                </button>
+                />
 
                 <div class="min-w-0 flex-1 overflow-hidden">
                     <div
@@ -117,7 +102,7 @@
                                     selectedCategoryId === category.id
                                         ? 'btn-primary'
                                         : 'btn-unselected',
-                                    'btn-category w-full min-w-0 whitespace-nowrap'
+                                    'btn-category w-full min-w-0 whitespace-nowrap',
                                 ]"
                                 @click="selectCategory(category.id)"
                             >
@@ -127,84 +112,92 @@
                     </div>
                 </div>
 
-                <button
-                    type="button"
-                    aria-label="Projet suivant"
-                    :class="
-                        mobileCategoryIndex === mobileCategories.length - 1
-                            ? 'btn-disabled'
-                            : 'btn-unselected btn-unselected-small'
-                    "
+                <CarouselButton
+                    direction="right"
+                    label="Catégories suivantes"
                     :disabled="
                         mobileCategoryIndex === mobileCategories.length - 1
                     "
                     @click="nextCategory"
-                >
-                    <i class="bi bi-caret-right-fill"></i>
-                </button>
+                />
             </div>
         </div>
 
+        <!-- Projects -->
         <div
             v-if="selectedProjects.length"
             class="space-y-3 md:space-y-5"
         >
-            <div class="flex justify-center gap-4">
-                <div
-                    v-if="selectedProjects.length > 1"
-                    class="flex items-center gap-2"
-                >
-                    <button
-                        type="button"
-                        :class="
-                            currentIndex === 0
-                                ? 'btn-disabled'
-                                : 'btn-unselected btn-unselected-small'
-                        "
+            <!-- Mobile arrows -->
+            <div
+                v-if="selectedProjects.length > 1"
+                class="flex justify-center gap-4 md:hidden"
+            >
+                <CarouselButton
+                    direction="left"
+                    label="Projet précédent"
+                    :disabled="currentIndex === 0"
+                    @click="previous"
+                />
+
+                <CarouselButton
+                    direction="right"
+                    label="Projet suivant"
+                    :disabled="
+                        currentIndex === selectedProjects.length - 1
+                    "
+                    @click="next"
+                />
+            </div>
+
+            <!-- Project carousel -->
+            <div class="flex items-center justify-center gap-4 md:gap-6">
+                <!-- Desktop left arrow -->
+                <div class="hidden w-10 shrink-0 md:block">
+                    <CarouselButton
+                        direction="left"
+                        label="Projet précédent"
                         :disabled="currentIndex === 0"
                         @click="previous"
-                    >
-                        <i class="bi bi-caret-left-fill"></i>
-                    </button>
+                    />
+                </div>
 
-                    <button
-                        type="button"
-                        :class="
-                            currentIndex === selectedProjects.length - 1
-                                ? 'btn-disabled'
-                                : 'btn-unselected btn-unselected-small'
-                        "
+                <!-- Carousel -->
+                <div class="min-w-0 max-w-full flex-1 overflow-hidden">
+                    <div
+                        class="flex transition-transform duration-500 ease-out"
+                        :style="{
+                            transform: `translateX(-${currentIndex * 100}%)`,
+                        }"
+                    >
+                        <div
+                            v-for="project in selectedProjects"
+                            :key="project.id"
+                            class="w-full shrink-0"
+                        >
+                            <ProjectCard
+                                :project="project"
+                                :category-name="getCategoryName(project)"
+                                :api-base-url="apiBaseUrl"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desktop right arrow -->
+                <div class="hidden w-10 shrink-0 md:block">
+                    <CarouselButton
+                        direction="right"
+                        label="Projet suivant"
                         :disabled="
                             currentIndex === selectedProjects.length - 1
                         "
                         @click="next"
-                    >
-                        <i class="bi bi-caret-right-fill"></i>
-                    </button>
+                    />
                 </div>
             </div>
 
-            <div class="overflow-hidden">
-                <div
-                    class="flex transition-transform duration-500 ease-out"
-                    :style="{
-                        transform: `translateX(-${currentIndex * 100}%)`,
-                    }"
-                >
-                    <div
-                        v-for="project in selectedProjects"
-                        :key="project.id"
-                        class="w-full shrink-0"
-                    >
-                        <ProjectCard
-                            :project="project"
-                            :category-name="getCategoryName(project)"
-                            :api-base-url="apiBaseUrl"
-                        />
-                    </div>
-                </div>
-            </div>
-
+            <!-- Indicators -->
             <div
                 v-if="selectedProjects.length > 1"
                 class="flex justify-center gap-2"
@@ -225,6 +218,7 @@
             </div>
         </div>
 
+        <!-- No projects -->
         <div
             v-else
             class="py-12 text-center text-dark/50"
@@ -237,16 +231,19 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import ProjectCard from '~/components/Portfolio/ProjectCard.vue'
+import CarouselButton from './CarouselButton.vue'
 
 const props = defineProps({
     projects: {
         type: Array,
         default: () => [],
     },
+
     categories: {
         type: Array,
         default: () => [],
     },
+
     apiBaseUrl: {
         type: String,
         required: true,
