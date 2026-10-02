@@ -1,11 +1,13 @@
 <template>
-    <div class="space-y-4 md:space-y-8">
+    <div class="w-full space-y-4 md:space-y-8">
         <!-- Categories -->
-        <div class="md:flex md:items-center md:justify-center md:gap-2">
+        <div
+            class="w-full md:flex md:items-center md:justify-center md:gap-2"
+        >
             <!-- Desktop categories -->
             <div
                 v-if="desktopCategories.length >= 3"
-                class="hidden items-center justify-center gap-2 md:flex"
+                class="hidden min-w-0 flex-1 items-center justify-center gap-2 md:flex"
             >
                 <CarouselButton
                     direction="left"
@@ -14,7 +16,9 @@
                     @click="previousDesktopCategory"
                 />
 
-                <div class="max-w-full overflow-hidden">
+                <div
+                    class="min-w-0 flex-1 overflow-hidden"
+                >
                     <div
                         class="flex transition-transform duration-300 ease-out"
                         :style="{
@@ -22,21 +26,28 @@
                         }"
                     >
                         <div
-                            v-for="(page, pageIndex) in desktopCategoryPages"
+                            v-for="(
+                                page, pageIndex
+                            ) in desktopCategoryPages"
                             :key="pageIndex"
-                            class="flex w-full shrink-0 items-center justify-center gap-6"
+                            class="flex w-full shrink-0 items-center justify-center gap-3 lg:gap-6"
                         >
                             <button
                                 v-for="category in page"
                                 :key="category.id ?? 'all'"
                                 type="button"
                                 :class="[
-                                    selectedCategoryId === category.id
+                                    selectedCategoryId ===
+                                    category.id
                                         ? 'btn-primary'
                                         : 'btn-unselected',
-                                    'btn-category whitespace-nowrap',
+                                    'btn-category whitespace-nowrap md:px-3 md:py-2 lg:px-6 lg:py-3',
                                 ]"
-                                @click="selectCategory(category.id)"
+                                @click="
+                                    selectCategory(
+                                        category.id
+                                    )
+                                "
                             >
                                 {{ category.name }}
                             </button>
@@ -48,7 +59,8 @@
                     direction="right"
                     label="Catégories suivantes"
                     :disabled="
-                        desktopCategoryIndex === desktopMaxIndex
+                        desktopCategoryIndex ===
+                        desktopMaxIndex
                     "
                     @click="nextDesktopCategory"
                 />
@@ -57,7 +69,7 @@
             <!-- Desktop categories without carousel -->
             <div
                 v-else
-                class="hidden items-center justify-center gap-3 md:flex"
+                class="hidden min-w-0 items-center justify-center gap-3 md:flex"
             >
                 <button
                     v-for="category in desktopCategories"
@@ -67,16 +79,20 @@
                         selectedCategoryId === category.id
                             ? 'btn-primary'
                             : 'btn-unselected',
-                        'btn-category whitespace-nowrap',
+                        'btn-category whitespace-nowrap md:px-3 md:py-2 lg:px-6 lg:py-3',
                     ]"
-                    @click="selectCategory(category.id)"
+                    @click="
+                        selectCategory(category.id)
+                    "
                 >
                     {{ category.name }}
                 </button>
             </div>
 
             <!-- Mobile categories -->
-            <div class="flex items-center justify-center gap-2 md:hidden">
+            <div
+                class="flex min-w-0 items-center justify-center gap-2 md:hidden"
+            >
                 <CarouselButton
                     direction="left"
                     label="Catégories précédentes"
@@ -84,7 +100,9 @@
                     @click="previousCategory"
                 />
 
-                <div class="min-w-0 flex-1 overflow-hidden">
+                <div
+                    class="min-w-0 flex-1 overflow-hidden"
+                >
                     <div
                         class="flex transition-transform duration-300 ease-out"
                         :style="{
@@ -99,12 +117,17 @@
                             <button
                                 type="button"
                                 :class="[
-                                    selectedCategoryId === category.id
+                                    selectedCategoryId ===
+                                    category.id
                                         ? 'btn-primary'
                                         : 'btn-unselected',
                                     'btn-category w-full min-w-0 whitespace-nowrap',
                                 ]"
-                                @click="selectCategory(category.id)"
+                                @click="
+                                    selectCategory(
+                                        category.id
+                                    )
+                                "
                             >
                                 {{ category.name }}
                             </button>
@@ -116,7 +139,8 @@
                     direction="right"
                     label="Catégories suivantes"
                     :disabled="
-                        mobileCategoryIndex === mobileCategories.length - 1
+                        mobileCategoryIndex ===
+                        mobileCategories.length - 1
                     "
                     @click="nextCategory"
                 />
@@ -144,16 +168,21 @@
                     direction="right"
                     label="Projet suivant"
                     :disabled="
-                        currentIndex === selectedProjects.length - 1
+                        currentIndex ===
+                        selectedProjects.length - 1
                     "
                     @click="next"
                 />
             </div>
 
             <!-- Project carousel -->
-            <div class="flex items-center justify-center gap-4 md:gap-6">
+            <div
+                class="flex min-w-0 items-center justify-center gap-4 md:gap-6"
+            >
                 <!-- Desktop left arrow -->
-                <div class="hidden w-10 shrink-0 md:block">
+                <div
+                    class="hidden w-10 shrink-0 md:block"
+                >
                     <CarouselButton
                         direction="left"
                         label="Projet précédent"
@@ -163,7 +192,9 @@
                 </div>
 
                 <!-- Carousel -->
-                <div class="min-w-0 max-w-full flex-1 overflow-hidden">
+                <div
+                    class="min-w-0 max-w-full flex-1 overflow-hidden"
+                >
                     <div
                         class="flex transition-transform duration-500 ease-out"
                         :style="{
@@ -177,7 +208,11 @@
                         >
                             <ProjectCard
                                 :project="project"
-                                :category-name="getCategoryName(project)"
+                                :category-name="
+                                    getCategoryName(
+                                        project
+                                    )
+                                "
                                 :api-base-url="apiBaseUrl"
                             />
                         </div>
@@ -185,12 +220,15 @@
                 </div>
 
                 <!-- Desktop right arrow -->
-                <div class="hidden w-10 shrink-0 md:block">
+                <div
+                    class="hidden w-10 shrink-0 md:block"
+                >
                     <CarouselButton
                         direction="right"
                         label="Projet suivant"
                         :disabled="
-                            currentIndex === selectedProjects.length - 1
+                            currentIndex ===
+                            selectedProjects.length - 1
                         "
                         @click="next"
                     />
@@ -284,7 +322,10 @@ const desktopCategoryPages = computed(() => {
         index += 3
     ) {
         pages.push(
-            desktopCategories.value.slice(index, index + 3)
+            desktopCategories.value.slice(
+                index,
+                index + 3
+            )
         )
     }
 
@@ -318,19 +359,23 @@ const selectCategory = categoryId => {
     selectedCategoryId.value = categoryId
     currentIndex.value = 0
 
-    const mobileIndex = mobileCategories.value.findIndex(
-        category =>
-            Number(category.id) === Number(categoryId)
-    )
+    const mobileIndex =
+        mobileCategories.value.findIndex(
+            category =>
+                Number(category.id) ===
+                Number(categoryId)
+        )
 
     if (mobileIndex !== -1) {
         mobileCategoryIndex.value = mobileIndex
     }
 
-    const desktopIndex = desktopCategories.value.findIndex(
-        category =>
-            Number(category.id) === Number(categoryId)
-    )
+    const desktopIndex =
+        desktopCategories.value.findIndex(
+            category =>
+                Number(category.id) ===
+                Number(categoryId)
+        )
 
     if (desktopIndex !== -1) {
         desktopCategoryIndex.value = Math.floor(
@@ -364,8 +409,10 @@ const getCategoryName = project => {
 
 const previousCategory = () => {
     if (mobileCategoryIndex.value > 0) {
-        const index = mobileCategoryIndex.value - 1
-        const category = mobileCategories.value[index]
+        const index =
+            mobileCategoryIndex.value - 1
+        const category =
+            mobileCategories.value[index]
 
         selectCategory(category.id)
     }
@@ -376,8 +423,10 @@ const nextCategory = () => {
         mobileCategoryIndex.value <
         mobileCategories.value.length - 1
     ) {
-        const index = mobileCategoryIndex.value + 1
-        const category = mobileCategories.value[index]
+        const index =
+            mobileCategoryIndex.value + 1
+        const category =
+            mobileCategories.value[index]
 
         selectCategory(category.id)
     }
@@ -421,7 +470,9 @@ watch(
             !categories.some(
                 category =>
                     Number(category.id) ===
-                    Number(selectedCategoryId.value)
+                    Number(
+                        selectedCategoryId.value
+                    )
             )
         ) {
             selectedCategoryId.value = null
@@ -431,11 +482,16 @@ watch(
         }
 
         const maxIndex = Math.max(
-            Math.ceil((categories.length + 1) / 3) - 1,
+            Math.ceil(
+                (categories.length + 1) / 3
+            ) - 1,
             0
         )
 
-        if (desktopCategoryIndex.value > maxIndex) {
+        if (
+            desktopCategoryIndex.value >
+            maxIndex
+        ) {
             desktopCategoryIndex.value = maxIndex
         }
     },
