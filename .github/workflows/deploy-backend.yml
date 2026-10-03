@@ -1,10 +1,12 @@
-name: Deploy SSR
+name: Deploy Backend
 
 on:
   push:
     branches:
       - main
       - ssr
+    paths:
+      - 'api/**'
   workflow_dispatch:
 
 jobs:
@@ -15,43 +17,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
-      - name: Install frontend dependencies
-        working-directory: client
-        run: npm ci
-
-      - name: Build frontend SSR
-        working-directory: client
-        env:
-          NUXT_PUBLIC_API_URL: ${{ vars.NUXT_PUBLIC_API_URL }}
-          NUXT_PUBLIC_SITE_URL: ${{ vars.NUXT_PUBLIC_SITE_URL }}
-        run: npm run build
-
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H -p "${{ secrets.VPS_PORT }}" "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
-
-      - name: Prepare frontend directory
-        run: |
-          ssh \
-            -i ~/.ssh/id_ed25519 \
-            -p "${{ secrets.VPS_PORT }}" \
-            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
-            "mkdir -p /var/www/html/client/.output"
-
-      - name: Deploy frontend SSR
-        run: |
-          rsync -r --delete \
-            -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }}" \
-            ./client/.output/ \
-            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/client/.output/"
 
       - name: Deploy API source
         run: |
@@ -65,22 +36,7 @@ jobs:
             ./api/ \
             "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/api/"
 
-      - name: Deploy docker-compose
-        run: |
-          rsync -r \
-            -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }}" \
-            api/docker-compose.yml \
-            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/api/docker-compose.yml"
-
-      - name: Restart Nginx
-        run: |
-          ssh \
-            -i ~/.ssh/id_ed25519 \
-            -p "${{ secrets.VPS_PORT }}" \
-            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
-            "sudo nginx -t && sudo systemctl reload nginx"
-
-      - name: Build and restart containers
+      - name: Build and restart API
         run: |
           ssh \
             -i ~/.ssh/id_ed25519 \
@@ -101,8 +57,8 @@ jobs:
                 exit 1
               )
 
-              echo 'Starting Docker containers...'
-              docker-compose up -d --build --force-recreate
+              echo 'Building and restarting Symfony API...'
+              docker-compose up -d --build --force-recreate api
 
               echo 'Waiting for MySQL...'
               until docker-compose exec -T db mysqladmin ping -h localhost -uroot -proot --silent; do
@@ -111,11 +67,6 @@ jobs:
 
               echo 'Waiting for Symfony...'
               until curl -sf http://127.0.0.1:8000/api/me > /dev/null; do
-                sleep 2
-              done
-
-              echo 'Waiting for Nuxt...'
-              until curl -sf http://127.0.0.1:3000/ > /dev/null; do
                 sleep 2
               done
 
@@ -130,5 +81,16 @@ jobs:
               echo 'Checking containers...'
               docker-compose ps
 
-              echo 'Deployment completed successfully.'
+              echo 'Backend deployment completed successfully.'
             "
+
+      - name: Restart Nginx
+        run: |
+          ssh \
+            -i ~/.ssh/id_ed25519 \
+            -p "${{ secrets.VPS_PORT }}" \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
+            "sudo nginx -t && sudo systemctl reload nginx"
+
+      - name: Deployment completed
+        run: echo "Backend deployment completed successfully."

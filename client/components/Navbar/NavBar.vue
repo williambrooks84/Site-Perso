@@ -2,92 +2,54 @@
   <header>
     <nav class="fixed top-0 left-0 z-50 w-full shadow-md">
       <div class="bg-[var(--color-primary)]">
-        <div
-          class="container mx-auto flex items-center justify-between p-4"
-        >
-          <!-- Logo -->
-          <img
-            :src="
-              isDark
-                ? '/assets/img/logo-dark.svg'
-                : '/assets/img/logo.svg'
-            "
-            alt="Logo"
-            class="h-8"
-          />
-
-          <!-- Logo central -->
-          <a
-            href="/"
-            class="flex items-center"
-            aria-label="Accueil"
-          >
-            <svg
-              width="133"
-              height="48"
-              viewBox="0 0 133 48"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <!--
-                CONSERVE ICI LES PATHS DE TON SVG ACTUEL
-              -->
-            </svg>
-          </a>
+        <div class="container mx-auto flex items-center justify-between px-6 py-4 xl:p-4">
 
           <!-- Navigation -->
-          <div
-            class="flex flex-1 items-center justify-end space-x-4 xl:justify-center"
-          >
+          <div class="flex flex-1 items-center justify-between space-x-4 xl:justify-center">
+            <!-- Logo central -->
+            <ClientOnly>
+              <a href="/" class="flex items-center mr-10" aria-label="Accueil">
+                <img :src="isDark
+                  ? '/assets/img/logo-dark.svg'
+                  : '/assets/img/logo.svg'
+                  " alt="Logo" class="h-8" />
+              </a>
+            </ClientOnly>
             <!-- Navigation desktop -->
-            <div
-              class="hidden items-center space-x-8 xl:flex"
-            >
-              <NavLink
-                v-for="link in navLinks"
-                :key="link.name"
-                :href="link.href"
-                :name="link.name"
-                :icon="link.icon"
-                class="rounded px-3 py-2"
-              />
+            <div class="hidden items-center space-x-8 xl:flex">
+              <NavLink v-for="link in navLinks" :key="link.name" :href="link.href" :name="link.name" :icon="link.icon"
+                class="rounded px-3 py-2" />
 
               <!-- Bouton thème -->
-              <ThemeButton class="ml-4 mr-2" />
+              <ClientOnly>
+                <ThemeButton class="ml-4 mr-2" />
+              </ClientOnly>
 
               <!-- Déconnexion -->
-              <button
-                v-if="isAuthenticated"
-                type="button"
-                class="text-light"
-                aria-label="Se déconnecter"
-                @click="logout"
-              >
+              <button v-if="isAuthenticated" type="button" class="text-light" aria-label="Se déconnecter"
+                @click="logout">
                 <i class="bi bi-box-arrow-left"></i>
               </button>
             </div>
 
-            <!-- Bouton thème mobile -->
-            <ThemeButton
-              class="ml-4 mr-2 xl:hidden"
-            />
+            <!-- Navigation mobile -->
+            <div class="flex flex-row items-center gap-4 xl:hidden">
+              <!-- Bouton thème -->
+              <ClientOnly>
+                <ThemeButton />
+              </ClientOnly>
 
-            <!-- Bouton menu mobile -->
-            <button
-              type="button"
-              class="transition focus:outline-none xl:hidden"
-              :aria-expanded="isMobileMenuOpen"
-              aria-label="Ouvrir le menu"
-              @click="isMobileMenuOpen = !isMobileMenuOpen"
-            >
-              <i
-                :class="
-                  isMobileMenuOpen
-                    ? 'bi bi-x-lg text-4xl text-light'
-                    : 'bi bi-list text-4xl text-light'
-                "
-              ></i>
-            </button>
+              <!-- Bouton menu burger-->
+              <button type="button" class="flex items-center justify-center p-0 transition focus:outline-none"
+                :aria-expanded="isMobileMenuOpen" aria-label="Ouvrir le menu"
+                @click="isMobileMenuOpen = !isMobileMenuOpen">
+                <i :class="isMobileMenuOpen
+                  ? 'bi bi-x-lg text-4xl text-light'
+                  : 'bi bi-list text-4xl text-light'
+                  "></i>
+              </button>
+            </div>
+
           </div>
         </div>
       </div>
@@ -95,28 +57,17 @@
   </header>
 
   <!-- Menu mobile -->
-  <div
-    v-show="isMobileMenuOpen"
-    class="fixed top-20 right-0 z-50 flex w-2/3 flex-col gap-2 space-y-2 bg-[var(--color-primary)] px-4 pb-4 xl:hidden"
-  >
-    <NavLink
-      v-for="link in navLinks"
-      :key="link.name"
-      :href="link.href"
-      :name="link.name"
-      :icon="link.icon"
-    />
+  <div v-show="isMobileMenuOpen"
+    class="fixed top-18 right-0 z-50 flex w-2/3 flex-col gap-2 space-y-2 bg-[var(--color-primary)] px-4 pb-4 xl:hidden">
+    <NavLink v-for="link in navLinks" :key="link.name" :href="link.href" :name="link.name" :icon="link.icon" />
 
     <!-- Déconnexion mobile -->
-    <button
-      v-if="isAuthenticated"
-      type="button"
-      class="mt-2 w-fit text-light"
-      aria-label="Se déconnecter"
-      @click="logout"
-    >
+    <button v-if="isAuthenticated" type="button" class="mt-2 w-fit text-light" aria-label="Se déconnecter"
+      @click="logout">
       <i class="bi bi-box-arrow-left"></i>
     </button>
+  </div>
+  <div v-show="isMobileMenuOpen" class="fixed inset-0 z-40 bg-black/80 xl:hidden" @click="isMobileMenuOpen = false">
   </div>
 </template>
 
@@ -180,5 +131,4 @@ const logout = async () => {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
