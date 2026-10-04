@@ -1,11 +1,12 @@
 <template>
   <Loading v-if="loading" />
-  <section v-else id="portfolio" class="flex flex-col items-center justify-center gap-20 pb-20 pt-0 md:pt-12">
+  <section v-else id="portfolio" class="flex flex-col items-center justify-center gap-5 pb-20">
+    <h1>Mes réalisations</h1>
     <section id="projects"  class="w-full max-w-6xl px-4">
       <ProjectsCarousel :projects="projects" :categories="categories" :api-base-url="apiBaseUrl" />
     </section>
 
-    <div class="flex flex-col items-center justify-center gap-7 px-4 text-center">
+    <section id="portfolio-competences" class="flex flex-col items-center justify-center gap-7 px-4 text-center">
       <p class="body-text">
         Envie d'aller plus loin dans mes réalisations ?
       </p>
@@ -14,14 +15,12 @@
         class="btn-secondary">
         Consultez mon portfolio de compétences
       </a>
-    </div>
-    <!-- <FigmaPrototype /> -->
+    </section>
   </section>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue'
-//import FigmaPrototype from '~/components/Portfolio/FigmaPrototype.vue'
 import ProjectsCarousel from '~/components/Portfolio/ProjectsCarousel.vue'
 import Loading from '~/components/Loading/Loading.vue'
 
