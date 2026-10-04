@@ -10,7 +10,6 @@
                 v-if="projectImage"
                 :src="projectImage"
                 :alt="project.title"
-                class="block h-full w-full"
             >
                 <img
                     :src="projectImage"
@@ -41,7 +40,7 @@
 
                 <!-- Description -->
                 <p
-                    class="mt-3 w-full min-w-0 wrap-break-word text-left text-sm leading-6 text-dark sm:text-justify md:mt-4 lg:text-base md:leading-7"
+                    class="mt-3 w-full min-w-0 wrap-break-word text-left text-sm leading-6 text-dark sm:text-justify md:mt-4 md:leading-7 lg:text-base"
                 >
                     {{ project.description }}
                 </p>
@@ -67,7 +66,11 @@
                         >
                             <img
                                 v-if="getTechnologyIcon(technology)"
-                                :src="getTechnologyIcon(technology)"
+                                :src="
+                                    getTechnologyIcon(
+                                        technology
+                                    )
+                                "
                                 :alt="technology.name"
                                 class="h-4 w-4 shrink-0 object-contain transition duration-200 group-hover:scale-110 md:h-5 md:w-5"
                             />
@@ -82,7 +85,7 @@
                 </div>
             </div>
 
-            <!-- Buttons -->
+            <!-- Links -->
             <div
                 class="mt-5 flex min-w-0 w-full shrink-0 flex-wrap justify-center gap-2 sm:mt-6 md:mt-8 md:gap-3"
             >

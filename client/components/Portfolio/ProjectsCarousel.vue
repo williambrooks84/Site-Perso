@@ -1,15 +1,19 @@
 <template>
-    <div class="flex w-full flex-col items-center space-y-4 md:space-y-8">
+    <div
+        class="flex w-full min-w-0 max-w-full flex-col items-center space-y-4 md:space-y-8"
+    >
         <!-- Categories -->
-        <CategorySelect
-            v-model="selectedCategoryId"
-            :categories="categoriesWithProjects"
-        />
+        <div class="w-full min-w-0 max-w-full">
+            <CategorySelect
+                v-model="selectedCategoryId"
+                :categories="categoriesWithProjects"
+            />
+        </div>
 
         <!-- Projects -->
         <div
             v-if="selectedProjects.length"
-            class="space-y-3 md:space-y-5"
+            class="w-full min-w-0 max-w-full space-y-3 md:space-y-5"
         >
             <!-- Mobile controls -->
             <div
@@ -37,12 +41,14 @@
                 </div>
 
                 <!-- Mobile indicators -->
-                <div class="flex justify-center gap-2">
+                <div
+                    class="flex max-w-full flex-wrap justify-center gap-2"
+                >
                     <button
                         v-for="(_, index) in selectedProjects"
                         :key="index"
                         type="button"
-                        class="h-2.5 rounded-full transition-all"
+                        class="h-2.5 shrink-0 rounded-full transition-all"
                         :class="
                             currentIndex === index
                                 ? 'w-8 bg-primary'
@@ -56,7 +62,7 @@
 
             <!-- Project carousel -->
             <div
-                class="flex min-w-0 items-center justify-center gap-4 md:gap-6"
+                class="flex w-full min-w-0 max-w-full items-center justify-center gap-2 sm:gap-4 md:gap-6"
             >
                 <!-- Desktop left arrow -->
                 <div class="hidden w-10 shrink-0 md:block">
@@ -68,20 +74,22 @@
                     />
                 </div>
 
-                <!-- Carousel -->
+                <!-- Carousel viewport -->
                 <div
                     class="min-w-0 max-w-full flex-1 overflow-hidden"
                 >
+                    <!-- Carousel track -->
                     <div
                         class="flex transition-transform duration-500 ease-out"
                         :style="{
-                            transform: `translateX(-${currentIndex * 100}%)`,
+                            transform: `translate3d(-${currentIndex * 100}%, 0, 0)`,
                         }"
                     >
+                        <!-- Slide -->
                         <div
                             v-for="project in selectedProjects"
                             :key="project.id"
-                            class="w-full shrink-0"
+                            class="w-full min-w-0 shrink-0"
                         >
                             <ProjectCard
                                 :project="project"
@@ -117,7 +125,7 @@
                     v-for="(_, index) in selectedProjects"
                     :key="index"
                     type="button"
-                    class="h-2.5 rounded-full transition-all"
+                    class="h-2.5 shrink-0 rounded-full transition-all"
                     :class="
                         currentIndex === index
                             ? 'w-8 bg-primary'
@@ -132,7 +140,7 @@
         <!-- No projects -->
         <div
             v-else
-            class="py-12 text-center text-dark/50"
+            class="w-full min-w-0 max-w-full py-12 text-center text-dark/50"
         >
             Aucun projet disponible.
         </div>
@@ -164,8 +172,6 @@ const props = defineProps({
 
 const selectedCategoryId = ref(null)
 const currentIndex = ref(0)
-const mobileCategoryIndex = ref(0)
-const desktopCategoryIndex = ref(0)
 
 const categoriesWithProjects = computed(() => {
     return props.categories.filter(category =>
@@ -174,46 +180,6 @@ const categoriesWithProjects = computed(() => {
                 Number(project.category?.id) ===
                 Number(category.id)
         )
-    )
-})
-
-const desktopCategories = computed(() => {
-    return [
-        {
-            id: null,
-            name: 'Tous',
-        },
-        ...categoriesWithProjects.value,
-    ]
-})
-
-const desktopCategoryPages = computed(() => {
-    const pages = []
-
-    for (
-        let index = 0;
-        index < desktopCategories.value.length;
-        index += 3
-    ) {
-        pages.push(
-            desktopCategories.value.slice(
-                index,
-                index + 3
-            )
-        )
-    }
-
-    return pages
-})
-
-const mobileCategories = computed(() => {
-    return desktopCategories.value
-})
-
-const desktopMaxIndex = computed(() => {
-    return Math.max(
-        desktopCategoryPages.value.length - 1,
-        0
     )
 })
 
@@ -228,35 +194,6 @@ const selectedProjects = computed(() => {
             Number(selectedCategoryId.value)
     )
 })
-
-const selectCategory = categoryId => {
-    selectedCategoryId.value = categoryId
-    currentIndex.value = 0
-
-    const mobileIndex =
-        mobileCategories.value.findIndex(
-            category =>
-                Number(category.id) ===
-                Number(categoryId)
-        )
-
-    if (mobileIndex !== -1) {
-        mobileCategoryIndex.value = mobileIndex
-    }
-
-    const desktopIndex =
-        desktopCategories.value.findIndex(
-            category =>
-                Number(category.id) ===
-                Number(categoryId)
-        )
-
-    if (desktopIndex !== -1) {
-        desktopCategoryIndex.value = Math.floor(
-            desktopIndex / 3
-        )
-    }
-}
 
 const previous = () => {
     if (currentIndex.value > 0) {
@@ -281,46 +218,6 @@ const getCategoryName = project => {
     return project.category?.name || ''
 }
 
-const previousCategory = () => {
-    if (mobileCategoryIndex.value > 0) {
-        const index =
-            mobileCategoryIndex.value - 1
-        const category =
-            mobileCategories.value[index]
-
-        selectCategory(category.id)
-    }
-}
-
-const nextCategory = () => {
-    if (
-        mobileCategoryIndex.value <
-        mobileCategories.value.length - 1
-    ) {
-        const index =
-            mobileCategoryIndex.value + 1
-        const category =
-            mobileCategories.value[index]
-
-        selectCategory(category.id)
-    }
-}
-
-const previousDesktopCategory = () => {
-    if (desktopCategoryIndex.value > 0) {
-        desktopCategoryIndex.value--
-    }
-}
-
-const nextDesktopCategory = () => {
-    if (
-        desktopCategoryIndex.value <
-        desktopMaxIndex.value
-    ) {
-        desktopCategoryIndex.value++
-    }
-}
-
 watch(
     selectedProjects,
     projects => {
@@ -336,41 +233,7 @@ watch(
     }
 )
 
-watch(
-    categoriesWithProjects,
-    categories => {
-        if (
-            selectedCategoryId.value !== null &&
-            !categories.some(
-                category =>
-                    Number(category.id) ===
-                    Number(
-                        selectedCategoryId.value
-                    )
-            )
-        ) {
-            selectedCategoryId.value = null
-            currentIndex.value = 0
-            mobileCategoryIndex.value = 0
-            desktopCategoryIndex.value = 0
-        }
-
-        const maxIndex = Math.max(
-            Math.ceil(
-                (categories.length + 1) / 3
-            ) - 1,
-            0
-        )
-
-        if (
-            desktopCategoryIndex.value >
-            maxIndex
-        ) {
-            desktopCategoryIndex.value = maxIndex
-        }
-    },
-    {
-        immediate: true,
-    }
-)
+watch(selectedCategoryId, () => {
+    currentIndex.value = 0
+})
 </script>
