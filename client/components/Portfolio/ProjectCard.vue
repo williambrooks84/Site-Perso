@@ -65,7 +65,7 @@
                         <span
                             v-for="technology in project.technologies"
                             :key="technology.id"
-                            class="group flex max-w-full min-w-0 shrink items-center justify-center gap-1.5 rounded-lg bg-secondary px-2 py-1.5 text-xs font-semibold text-dark transition duration-200 hover:shadow-md sm:gap-2 sm:px-2.5 sm:text-sm md:px-3 md:py-2 md:text-lg"
+                            class="group flex max-w-full min-w-0 shrink items-center justify-center gap-1.5 rounded-lg bg-secondary px-2 py-1.5 text-xs font-semibold text-dark transition duration-200 hover:shadow-md sm:gap-2 sm:px-2.5 sm:text-sm md:px-3 md:py-2 md:text-base"
                         >
                             <img
                                 v-if="getTechnologyIcon(technology)"
@@ -88,7 +88,7 @@
 
             <!-- Links -->
             <div
-                class="mt-3 flex min-w-0 w-full shrink-0 flex-wrap justify-center gap-2 pt-2 sm:mt-4 sm:pt-3 md:justify-start md:gap-3 md:pt-4 lg:mt-auto lg:pt-5"
+                class="mt-3 flex min-w-0 w-full shrink-0 flex-wrap justify-center gap-2 pt-2 sm:mt-4 sm:pt-3 md:gap-3 md:pt-4 lg:mt-auto lg:pt-5"
             >
                 <a
                     v-if="project.siteLink"

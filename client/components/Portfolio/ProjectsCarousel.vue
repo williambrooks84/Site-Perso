@@ -77,7 +77,7 @@
                 <!-- Carousel viewport -->
                 <div
                     ref="viewportRef"
-                    class="relative min-w-0 max-w-full flex-1 overflow-hidden"
+                    class="relative min-w-0 max-w-full flex-1 overflow-hidden xl:h-150"
                     :style="{
                         height:
                             maxHeight > 0
@@ -219,6 +219,8 @@ const measureRef = ref(null)
 const maxHeight = ref(0)
 const measurementWidth = ref(0)
 
+let resizeObserver = null
+
 const categoriesWithProjects = computed(() => {
     return props.categories.filter(category =>
         props.projects.some(
@@ -264,10 +266,35 @@ const getCategoryName = project => {
     return project.category?.name || ''
 }
 
-const updateMaxHeight = async () => {
+const waitForLayout = async () => {
     await nextTick()
 
+    if (document.fonts?.ready) {
+        await document.fonts.ready
+    }
+
+    await new Promise(resolve => {
+        requestAnimationFrame(() => {
+            requestAnimationFrame(resolve)
+        })
+    })
+}
+
+const updateMaxHeight = async () => {
+    await waitForLayout()
+
     if (!viewportRef.value || !measureRef.value) {
+        return
+    }
+
+    /*
+     * At XL and above the height is fixed to 600px.
+     * No dynamic measurement is necessary.
+     */
+    if (
+        window.matchMedia('(min-width: 1280px)').matches
+    ) {
+        maxHeight.value = 600
         return
     }
 
@@ -279,33 +306,34 @@ const updateMaxHeight = async () => {
 
     measurementWidth.value = width
 
-    await nextTick()
+    await waitForLayout()
 
     const cards = Array.from(
         measureRef.value.children
     )
 
     if (!cards.length) {
-        maxHeight.value = 0
         return
     }
 
-    const heights = cards.map(card =>
-        Math.ceil(
-            card.getBoundingClientRect().height
+    const heights = cards
+        .map(card =>
+            Math.ceil(
+                card.getBoundingClientRect().height
+            )
         )
-    )
+        .filter(height => height > 0)
+
+    if (!heights.length) {
+        return
+    }
 
     maxHeight.value = Math.max(...heights)
 }
 
-const handleResize = () => {
-    updateMaxHeight()
-}
-
 watch(
     selectedProjects,
-    projects => {
+    async projects => {
         if (currentIndex.value >= projects.length) {
             currentIndex.value = Math.max(
                 projects.length - 1,
@@ -313,7 +341,7 @@ watch(
             )
         }
 
-        updateMaxHeight()
+        await updateMaxHeight()
     },
     {
         immediate: true,
@@ -321,24 +349,26 @@ watch(
     }
 )
 
-watch(selectedCategoryId, () => {
+watch(selectedCategoryId, async () => {
     currentIndex.value = 0
-    updateMaxHeight()
+
+    await nextTick()
+    await updateMaxHeight()
 })
 
 onMounted(async () => {
     await updateMaxHeight()
 
-    window.addEventListener(
-        'resize',
-        handleResize
-    )
+    resizeObserver = new ResizeObserver(() => {
+        updateMaxHeight()
+    })
+
+    if (viewportRef.value) {
+        resizeObserver.observe(viewportRef.value)
+    }
 })
 
 onUnmounted(() => {
-    window.removeEventListener(
-        'resize',
-        handleResize
-    )
+    resizeObserver?.disconnect()
 })
 </script>
