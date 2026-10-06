@@ -43,13 +43,13 @@
                     <!-- Scrollable image viewport -->
                     <div
                         ref="viewport"
-                        class="h-full w-full touch-none overflow-auto overscroll-contain overflow-anchor-none"
+                        class="h-full w-full overflow-auto overscroll-contain"
                         @pointermove="movePan"
                         @pointerup="endPan"
                         @pointercancel="endPan"
                     >
                         <div
-                            class="flex min-h-full min-w-full items-center justify-center p-4 sm:p-8"
+                            class="flex min-h-full min-w-full items-center justify-center p-8"
                             :class="{
                                 'cursor-grabbing': isPanning,
                                 'cursor-grab': !isPanning,
@@ -58,7 +58,8 @@
                             <img
                                 :src="src"
                                 :alt="alt"
-                                class="block h-auto max-h-[calc(100vh-2rem)] max-w-[calc(100vw-2rem)] select-none object-contain sm:max-h-[calc(100vh-4rem)] sm:max-w-[calc(100vw-4rem)]"
+                                class="block h-auto max-w-none select-none object-contain"
+                                :style="imageStyle"
                                 draggable="false"
                                 @pointerdown="startPan"
                             />
@@ -69,7 +70,7 @@
                     <div
                         class="pointer-events-none absolute bottom-4 left-1/2 z-20 hidden -translate-x-1/2 rounded-lg bg-black/50 px-3 py-2 text-center text-xs text-white/70 sm:block"
                     >
-                        Faites glisser pour déplacer · Échap pour fermer
+                        Faites glisser pour déplacer · Molette pour faire défiler · Échap pour fermer
                     </div>
                 </div>
             </Transition>
@@ -98,7 +99,9 @@ defineProps({
 })
 
 const isOpen = ref(false)
+
 const viewport = ref(null)
+
 const isPanning = ref(false)
 
 const panStart = ref({
@@ -111,17 +114,20 @@ const scrollStart = ref({
     top: 0,
 })
 
+const imageStyle = {
+    width: '400%',
+    height: 'auto',
+}
+
 const open = async () => {
     isOpen.value = true
 
     await nextTick()
 
-    if (!viewport.value) {
-        return
+    if (viewport.value) {
+        viewport.value.scrollTop = 0
+        viewport.value.scrollLeft = 0
     }
-
-    viewport.value.scrollTop = 0
-    viewport.value.scrollLeft = 0
 }
 
 const close = () => {
@@ -161,19 +167,11 @@ const movePan = event => {
     const deltaY =
         event.clientY - panStart.value.y
 
-    const nextLeft =
+    viewport.value.scrollLeft =
         scrollStart.value.left - deltaX
 
-    const nextTop =
+    viewport.value.scrollTop =
         scrollStart.value.top - deltaY
-
-    if (viewport.value.scrollLeft !== nextLeft) {
-        viewport.value.scrollLeft = nextLeft
-    }
-
-    if (viewport.value.scrollTop !== nextTop) {
-        viewport.value.scrollTop = nextTop
-    }
 }
 
 const endPan = event => {

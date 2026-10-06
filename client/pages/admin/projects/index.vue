@@ -6,46 +6,29 @@
           Administration des projets
         </h1>
 
-        <NuxtLink
-          to="/admin/projects/new"
-          class="btn-primary text-sm"
-        >
+        <NuxtLink to="/admin/projects/new" class="btn-primary text-sm">
           Ajouter un projet
+        </NuxtLink>
+
+        <NuxtLink to="/admin/designs/" class="btn-primary text-sm">
+          Voir les designs
         </NuxtLink>
       </header>
 
-      <div
-        v-if="message"
-        class="mb-6 rounded-xl border px-4 py-3 text-sm"
-        :class="
-          message.type === 'success'
-            ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-            : 'border-red-200 bg-red-50 text-red-700'
-        "
-      >
+      <div v-if="message" class="mb-6 rounded-xl border px-4 py-3 text-sm" :class="message.type === 'success'
+          ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+          : 'border-red-200 bg-red-50 text-red-700'
+        ">
         {{ message.text }}
       </div>
 
-      <AdminProjectsList
-        :projects="projects"
-        :removing-project-id="removingProjectId"
-        :api-base-url="apiBaseUrl"
-        @refresh="loadProjects"
-        @delete="deleteProject"
-        @edit="openEditModal"
-      />
+      <AdminProjectsList :projects="projects" :removing-project-id="removingProjectId" :api-base-url="apiBaseUrl"
+        @refresh="loadProjects" @delete="deleteProject" @edit="openEditModal" />
     </section>
 
-    <AdminProjectEditModal
-      :is-open="isEditModalOpen"
-      :project="editingProject"
-      :categories="categories"
-      :technologies="technologies"
-      :api-base-url="apiBaseUrl"
-      :is-submitting="isUpdatingProject"
-      @close="closeEditModal"
-      @submit="updateProjectFromModal"
-    />
+    <AdminProjectEditModal :is-open="isEditModalOpen" :project="editingProject" :categories="categories"
+      :technologies="technologies" :api-base-url="apiBaseUrl" :is-submitting="isUpdatingProject" @close="closeEditModal"
+      @submit="updateProjectFromModal" />
   </main>
 </template>
 

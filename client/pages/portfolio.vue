@@ -1,18 +1,56 @@
 <template>
   <Loading v-if="loading" />
-  <section v-else id="portfolio" class="flex flex-col items-center justify-center gap-5 pb-20">
+
+  <section
+    v-else
+    id="portfolio"
+    class="flex flex-col items-center justify-center gap-5 pb-20"
+  >
     <h1>Mes réalisations</h1>
-    <section id="projects"  class="w-full max-w-6xl px-4">
-      <ProjectsCarousel :projects="projects" :categories="categories" :api-base-url="apiBaseUrl" />
+
+    <section
+      id="projects"
+      class="flex w-full max-w-6xl flex-col gap-5 px-4"
+    >
+      <h2 class="text-center">
+        Mes projets Web
+      </h2>
+
+      <ProjectsCarousel
+        :projects="projects"
+        :categories="categories"
+        :api-base-url="apiBaseUrl"
+      />
     </section>
 
-    <section id="portfolio-competences" class="flex flex-col items-center justify-center gap-7 px-4 text-center">
+    <section
+      id="designs"
+      class="mt-10 flex w-full max-w-6xl flex-col gap-5 px-4 pb-20"
+    >
+      <h2 class="text-center">
+        Mes designs
+      </h2>
+
+      <DesignGrid
+        :designs="designs"
+        :api-base-url="apiBaseUrl"
+      />
+    </section>
+
+    <section
+      id="portfolio-competences"
+      class="flex flex-col items-center justify-center gap-7 px-4 text-center"
+    >
       <p class="body-text">
         Envie d'aller plus loin dans mes réalisations ?
       </p>
 
-      <a href="https://sites.google.com/view/portfoliobrooksw" target="_blank" rel="noopener noreferrer"
-        class="btn-secondary">
+      <a
+        href="https://sites.google.com/view/portfoliobrooksw"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-secondary"
+      >
         Consultez mon portfolio de compétences
       </a>
     </section>
@@ -22,6 +60,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import ProjectsCarousel from '~/components/Portfolio/ProjectsCarousel.vue'
+import DesignGrid from '~/components/Portfolio/DesignGrid.vue'
 import Loading from '~/components/Loading/Loading.vue'
 
 definePageMeta({
@@ -35,6 +74,7 @@ const apiBaseUrl =
 
 const projects = ref([])
 const categories = ref([])
+const designs = ref([])
 const loading = ref(true)
 
 const loadProjects = async () => {
@@ -83,11 +123,35 @@ const loadCategories = async () => {
   }
 }
 
+const loadDesigns = async () => {
+  try {
+    const response = await fetch(
+      `${apiBaseUrl}/api/designs`,
+      {
+        headers: {
+          Accept: 'application/ld+json',
+        },
+      }
+    )
+
+    if (!response.ok) {
+      throw new Error('Impossible de charger les designs')
+    }
+
+    const data = await response.json()
+
+    designs.value = data.member || data
+  } catch (error) {
+    console.error('Erreur chargement designs:', error)
+  }
+}
+
 onMounted(async () => {
   try {
     await Promise.all([
       loadProjects(),
       loadCategories(),
+      loadDesigns(),
     ])
   } finally {
     loading.value = false
