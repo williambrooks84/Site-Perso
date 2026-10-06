@@ -74,8 +74,11 @@ jobs:
               echo 'Checking Docker Compose configuration...'
               docker-compose config
 
-              echo 'Building and restarting Symfony API...'
-              docker-compose up -d --build --force-recreate api
+              echo 'Building Symfony API without Docker cache...'
+              docker-compose build --no-cache api
+
+              echo 'Restarting Symfony API...'
+              docker-compose up -d --force-recreate api
 
               echo 'Waiting for MySQL...'
               until docker-compose exec -T db mysqladmin ping -h localhost -uroot -proot --silent; do
@@ -90,6 +93,14 @@ jobs:
               done
 
               echo 'Symfony is running.'
+
+              echo 'Checking migration file inside container...'
+              docker-compose exec -T api test -f migrations/Version20261004185727.php
+
+              echo 'Migration file found.'
+
+              echo 'Listing Doctrine migrations...'
+              docker-compose exec -T api php bin/console doctrine:migrations:list
 
               echo 'Clearing Symfony production cache...'
               docker-compose exec -T api php bin/console cache:clear --env=prod --no-warmup
