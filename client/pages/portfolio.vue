@@ -4,15 +4,14 @@
   <section
     v-else
     id="portfolio"
-    class="flex flex-col items-center justify-center gap-5 pb-20"
+    class="flex flex-col items-center pb-20"
   >
-    <h1>Mes réalisations</h1>
 
     <section
       id="projects"
-      class="flex w-full max-w-6xl flex-col gap-5 px-4"
+      class="flex w-full flex-col gap-3 px-4"
     >
-      <h2 class="text-center">
+      <h2 class="text-center mt-1">
         Mes projets Web
       </h2>
 

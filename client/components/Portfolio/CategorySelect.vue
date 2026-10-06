@@ -53,7 +53,7 @@
                     :aria-selected="selectedCategoryId === null"
                     @click="selectCategory(null)"
                 >
-                    <span class="flex-1 text-center">
+                    <span class="flex-1 text-center uppercase">
                         {{ allLabel }}
                     </span>
 
@@ -82,7 +82,7 @@
                     "
                     @click="selectCategory(category.id)"
                 >
-                    <span class="flex-1 text-center">
+                    <span class="flex-1 text-center uppercase">
                         {{ category.name }}
                     </span>
 

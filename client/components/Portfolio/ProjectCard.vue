@@ -1,10 +1,10 @@
 <template>
     <article
-        class="grid w-full min-w-0 overflow-hidden rounded-2xl border-2 border-primary/50 bg-light shadow-sm md:h-125 md:grid-cols-2"
+        class="flex h-full w-full min-w-0 flex-col overflow-hidden rounded-2xl border-2 border-primary/50 bg-light shadow-sm lg:grid lg:grid-cols-2"
     >
         <!-- Image -->
         <div
-            class="relative aspect-video min-w-0 w-full overflow-hidden md:aspect-auto md:h-full"
+            class="relative aspect-video min-h-0 min-w-0 w-full shrink-0 overflow-hidden lg:h-full lg:aspect-auto"
         >
             <ImagePreview
                 v-if="projectImage"
@@ -15,6 +15,8 @@
                     :src="projectImage"
                     :alt="project.title"
                     class="block h-full w-full object-cover transition duration-500 hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
                 />
             </ImagePreview>
 
@@ -28,8 +30,9 @@
 
         <!-- Content -->
         <div
-            class="flex min-w-0 w-full flex-col justify-between p-4 sm:p-5 md:p-8"
+            class="flex min-h-0 min-w-0 w-full flex-1 flex-col p-4 sm:p-5 md:p-8"
         >
+            <!-- Top content -->
             <div class="min-w-0 w-full">
                 <!-- Title -->
                 <h3
@@ -40,7 +43,7 @@
 
                 <!-- Description -->
                 <p
-                    class="mt-3 w-full min-w-0 wrap-break-word text-left text-sm leading-6 text-dark sm:text-justify md:mt-4 md:leading-7 lg:text-base"
+                    class="mt-2 w-full min-w-0 wrap-break-word text-left text-sm leading-6 text-dark line-clamp-5 sm:text-justify md:mt-3 md:leading-7 lg:line-clamp-none lg:text-base"
                 >
                     {{ project.description }}
                 </p>
@@ -48,10 +51,10 @@
                 <!-- Technologies -->
                 <div
                     v-if="project.technologies?.length"
-                    class="mt-4 min-w-0 w-full md:mt-6"
+                    class="mt-3 min-w-0 w-full md:mt-4"
                 >
                     <p
-                        class="mb-2 text-center text-sm font-semibold uppercase text-secondary sm:text-base md:mb-3 md:text-left md:text-lg"
+                        class="mb-2 text-center text-sm font-semibold uppercase text-secondary sm:text-base md:text-left md:text-lg"
                     >
                         Technologies utilisées
                     </p>
@@ -66,13 +69,11 @@
                         >
                             <img
                                 v-if="getTechnologyIcon(technology)"
-                                :src="
-                                    getTechnologyIcon(
-                                        technology
-                                    )
-                                "
+                                :src="getTechnologyIcon(technology)"
                                 :alt="technology.name"
                                 class="h-4 w-4 shrink-0 object-contain transition duration-200 group-hover:scale-110 md:h-5 md:w-5"
+                                loading="lazy"
+                                decoding="async"
                             />
 
                             <span
@@ -87,7 +88,7 @@
 
             <!-- Links -->
             <div
-                class="mt-5 flex min-w-0 w-full shrink-0 flex-wrap justify-center gap-2 sm:mt-6 md:mt-8 md:gap-3"
+                class="mt-3 flex min-w-0 w-full shrink-0 flex-wrap justify-center gap-2 pt-2 sm:mt-4 sm:pt-3 md:justify-start md:gap-3 md:pt-4 lg:mt-auto lg:pt-5"
             >
                 <a
                     v-if="project.siteLink"
@@ -144,7 +145,7 @@ const projectImage = computed(() => {
         return ''
     }
 
-    if (/^https?:\/\//.test(image)) {
+    if (/^https?:\/\//i.test(image)) {
         return image
     }
 
@@ -160,7 +161,7 @@ const getTechnologyIcon = technology => {
         return ''
     }
 
-    if (/^https?:\/\//.test(icon)) {
+    if (/^https?:\/\//i.test(icon)) {
         return icon
     }
 

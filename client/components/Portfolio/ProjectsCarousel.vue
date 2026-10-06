@@ -1,9 +1,9 @@
 <template>
     <div
-        class="flex w-full min-w-0 max-w-full flex-col items-center space-y-4 md:space-y-8"
+        class="flex w-full min-w-0 max-w-full flex-col items-center space-y-4 md:space-y-5"
     >
         <!-- Categories -->
-        <div class="w-full min-w-0 max-w-full">
+        <div class="w-full min-w-0 md:max-w-1/4">
             <CategorySelect
                 v-model="selectedCategoryId"
                 :categories="categoriesWithProjects"
@@ -20,7 +20,6 @@
                 v-if="selectedProjects.length > 1"
                 class="flex flex-col items-center gap-3 md:hidden"
             >
-                <!-- Mobile arrows -->
                 <div class="flex justify-center gap-4">
                     <CarouselButton
                         direction="left"
@@ -40,7 +39,6 @@
                     />
                 </div>
 
-                <!-- Mobile indicators -->
                 <div
                     class="flex max-w-full flex-wrap justify-center gap-2"
                 >
@@ -62,10 +60,12 @@
 
             <!-- Project carousel -->
             <div
-                class="flex w-full min-w-0 max-w-full items-center justify-center gap-2 sm:gap-4 md:gap-6"
+                class="flex w-full min-w-0 max-w-full items-stretch justify-center gap-2 sm:gap-4 md:gap-6"
             >
                 <!-- Desktop left arrow -->
-                <div class="hidden w-10 shrink-0 md:block">
+                <div
+                    class="hidden w-10 shrink-0 md:flex md:items-center"
+                >
                     <CarouselButton
                         direction="left"
                         label="Projet précédent"
@@ -76,20 +76,27 @@
 
                 <!-- Carousel viewport -->
                 <div
-                    class="min-w-0 max-w-full flex-1 overflow-hidden"
+                    ref="viewportRef"
+                    class="relative min-w-0 max-w-full flex-1 overflow-hidden"
+                    :style="{
+                        height:
+                            maxHeight > 0
+                                ? `${maxHeight}px`
+                                : undefined,
+                    }"
                 >
-                    <!-- Carousel track -->
+                    <!-- Track -->
                     <div
-                        class="flex transition-transform duration-500 ease-out"
+                        class="flex h-full items-stretch transition-transform duration-500 ease-out"
                         :style="{
                             transform: `translate3d(-${currentIndex * 100}%, 0, 0)`,
                         }"
                     >
-                        <!-- Slide -->
+                        <!-- Slides -->
                         <div
                             v-for="project in selectedProjects"
                             :key="project.id"
-                            class="w-full min-w-0 shrink-0"
+                            class="flex h-full w-full min-w-0 shrink-0 items-stretch"
                         >
                             <ProjectCard
                                 :project="project"
@@ -97,13 +104,16 @@
                                     getCategoryName(project)
                                 "
                                 :api-base-url="apiBaseUrl"
+                                class="h-full"
                             />
                         </div>
                     </div>
                 </div>
 
                 <!-- Desktop right arrow -->
-                <div class="hidden w-10 shrink-0 md:block">
+                <div
+                    class="hidden w-10 shrink-0 md:flex md:items-center"
+                >
                     <CarouselButton
                         direction="right"
                         label="Projet suivant"
@@ -145,10 +155,40 @@
             Aucun projet disponible.
         </div>
     </div>
+
+    <!-- Hidden measurement -->
+    <div
+        ref="measureRef"
+        class="pointer-events-none fixed left-0 top-0 invisible"
+        :style="{
+            width: `${measurementWidth}px`,
+        }"
+        aria-hidden="true"
+    >
+        <div
+            v-for="project in selectedProjects"
+            :key="`measure-${project.id}`"
+            class="w-full"
+        >
+            <ProjectCard
+                :project="project"
+                :category-name="getCategoryName(project)"
+                :api-base-url="apiBaseUrl"
+            />
+        </div>
+    </div>
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import {
+    computed,
+    nextTick,
+    onMounted,
+    onUnmounted,
+    ref,
+    watch,
+} from 'vue'
+
 import ProjectCard from '~/components/Portfolio/ProjectCard.vue'
 import CarouselButton from './CarouselButton.vue'
 import CategorySelect from './CategorySelect.vue'
@@ -172,6 +212,12 @@ const props = defineProps({
 
 const selectedCategoryId = ref(null)
 const currentIndex = ref(0)
+
+const viewportRef = ref(null)
+const measureRef = ref(null)
+
+const maxHeight = ref(0)
+const measurementWidth = ref(0)
 
 const categoriesWithProjects = computed(() => {
     return props.categories.filter(category =>
@@ -218,6 +264,45 @@ const getCategoryName = project => {
     return project.category?.name || ''
 }
 
+const updateMaxHeight = async () => {
+    await nextTick()
+
+    if (!viewportRef.value || !measureRef.value) {
+        return
+    }
+
+    const width = viewportRef.value.clientWidth
+
+    if (!width) {
+        return
+    }
+
+    measurementWidth.value = width
+
+    await nextTick()
+
+    const cards = Array.from(
+        measureRef.value.children
+    )
+
+    if (!cards.length) {
+        maxHeight.value = 0
+        return
+    }
+
+    const heights = cards.map(card =>
+        Math.ceil(
+            card.getBoundingClientRect().height
+        )
+    )
+
+    maxHeight.value = Math.max(...heights)
+}
+
+const handleResize = () => {
+    updateMaxHeight()
+}
+
 watch(
     selectedProjects,
     projects => {
@@ -227,13 +312,33 @@ watch(
                 0
             )
         }
+
+        updateMaxHeight()
     },
     {
         immediate: true,
+        deep: true,
     }
 )
 
 watch(selectedCategoryId, () => {
     currentIndex.value = 0
+    updateMaxHeight()
+})
+
+onMounted(async () => {
+    await updateMaxHeight()
+
+    window.addEventListener(
+        'resize',
+        handleResize
+    )
+})
+
+onUnmounted(() => {
+    window.removeEventListener(
+        'resize',
+        handleResize
+    )
 })
 </script>
