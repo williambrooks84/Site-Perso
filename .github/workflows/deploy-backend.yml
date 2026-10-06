@@ -21,13 +21,9 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-
-          ssh-keyscan -H \
-            -p "${{ secrets.VPS_PORT }}" \
-            "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
+          ssh-keyscan -H -p "${{ secrets.VPS_PORT }}" "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
 
       - name: Deploy API source
         run: |
@@ -74,8 +70,8 @@ jobs:
               echo 'Checking Docker Compose configuration...'
               docker-compose config
 
-              echo 'Building Symfony API without Docker cache...'
-              docker-compose build --no-cache api
+              echo 'Building Symfony API...'
+              docker-compose build api
 
               echo 'Restarting Symfony API...'
               docker-compose up -d --force-recreate api
@@ -106,7 +102,7 @@ jobs:
               docker-compose exec -T api php bin/console cache:clear --env=prod --no-warmup
 
               echo 'Marking existing project_technology migration as applied...'
-              docker-compose exec -T api php bin/console doctrine:migrations:version 20261004185727 --add --no-interaction
+              docker-compose exec -T api php bin/console doctrine:migrations:version 'DoctrineMigrations\\Version20261004185727' --add --no-interaction
 
               echo 'Running Doctrine migrations...'
               docker-compose exec -T api php bin/console doctrine:migrations:migrate \
