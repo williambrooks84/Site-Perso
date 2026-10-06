@@ -1,11 +1,15 @@
 <template>
     <Hero />
+    <Competences />
     <ToolsShowcase />
+    <OtherProjects/>
 </template>
 
 <script setup>
 import Hero from '~/components/Hero/Hero.vue'
 import ToolsShowcase from '~/components/ToolsShowcase/ToolsShowcase.vue';
+import Competences from '~/components/Competences/Competences.vue';
+import OtherProjects from '~/components/CallToAction/OtherProjects.vue';
 
 useHead({
     title: 'William Brooks - Développeur Web sur Limoges',
@@ -16,7 +20,7 @@ useHead({
         },
         {
             name: 'keywords',
-            content: 'développeur web, développeur front-end, étudiant, Limoges, informatique'
+            content: 'développeur web, développeur front-end, développeur back-end, développeur full stack, Limoges, informatique'
         },
         {
             property: 'og:title',

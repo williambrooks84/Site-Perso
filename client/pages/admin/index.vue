@@ -51,6 +51,8 @@ definePageMeta({
 	middleware: 'admin',
 })
 
+useRobotsRule({ noindex: true, nofollow: true })
+
 const config = useRuntimeConfig()
 const router = useRouter()
 const apiUrl = config.public.apiUrl || 'https://api.willbrooks.fr'

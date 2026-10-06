@@ -1,7 +1,7 @@
 <template>
   <NavBar />
 
-  <main class="pt-30 p-10 lg:p-32">
+  <main class="pt-25 p-10 lg:p-32">
     <slot />
   </main>
 

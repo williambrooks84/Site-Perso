@@ -2,7 +2,7 @@
     <div class="flex flex-col gap-5 sm:pl-10 sm:pb-10">
         <h4>{{ title }}</h4>
 
-        <div class="flex flex-wrap justify-center sm:justify-start">
+        <div class="flex flex-wrap justify-center sm:justify-start gap-5">
             <Tool
                 v-for="(tool, index) in tools"
                 :key="`${title}-${index}`"

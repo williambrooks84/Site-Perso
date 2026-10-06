@@ -50,7 +50,7 @@ useHead({
     },
     {
       name: 'keywords',
-      content: 'développeur web, développeur front-end, étudiant, Limoges, informatique'
+      content: 'développeur web, développeur front-end, développeur back-end, développeur full stack, Limoges, informatique'
     },
     {
       property: 'og:title',

@@ -9,7 +9,7 @@
 
     <section
       id="projects"
-      class="flex w-full flex-col gap-3 px-4"
+      class="flex w-full flex-col gap-3 md:gap-5 px-4"
     >
       <h2 class="text-center mt-1">
         Mes projets Web
@@ -35,24 +35,7 @@
         :api-base-url="apiBaseUrl"
       />
     </section>
-
-    <section
-      id="portfolio-competences"
-      class="flex flex-col items-center justify-center gap-7 px-4 text-center"
-    >
-      <p class="body-text">
-        Envie d'aller plus loin dans mes réalisations ?
-      </p>
-
-      <a
-        href="https://sites.google.com/view/portfoliobrooksw"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="btn-secondary"
-      >
-        Consultez mon portfolio de compétences
-      </a>
-    </section>
+    <PortfolioCompetences />
   </section>
 </template>
 
@@ -60,6 +43,7 @@
 import { onMounted, ref } from 'vue'
 import ProjectsCarousel from '~/components/Portfolio/ProjectsCarousel.vue'
 import DesignGrid from '~/components/Portfolio/DesignGrid.vue'
+import PortfolioCompetences from '~/components/CallToAction/PortfolioCompetences.vue'
 import Loading from '~/components/Loading/Loading.vue'
 
 definePageMeta({
@@ -158,17 +142,16 @@ onMounted(async () => {
 })
 
 useHead({
-  title: 'William Brooks - Portfolio',
+  title: 'William Brooks - Réalisations',
   meta: [
     {
       name: 'description',
       content:
-        'Retrouvez ici tous les projets réalisés par William Brooks, développeur web étudiant à Limoges.',
+        'Réalisations de William Brooks, développeur web sur Limoges.',
     },
     {
       name: 'keywords',
-      content:
-        'développeur web, développeur front-end, étudiant, Limoges, informatique',
+      content: 'développeur web, développeur front-end, développeur back-end, développeur full stack, Limoges, informatique'
     },
     {
       property: 'og:title',

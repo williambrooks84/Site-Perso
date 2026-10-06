@@ -1,5 +1,5 @@
 <template>
-    <li class="flex items-center text-md lg:text-xl font-semibold text-dark">
+    <li class="flex items-center text-base lg:text-xl font-semibold text-dark">
         <i :class="['bi', icon]" class="mr-3 text-secondary" aria-hidden="true"></i>
         {{ text }}
     </li>

@@ -15,13 +15,6 @@
             <h3>En cours d'acquisition :</h3>
             <ToolCategory title="Technologies & frameworks" :tools="pendingTools.tech" />
         </div>
-
-        <div class="flex flex-col items-center justify-center gap-3 pb-20">
-            <p class="body-text">Vous souhaitez voir mes compétences mises en application ?</p>
-            <a href="/portfolio" class="btn-primary">
-                Consultez mes projets
-            </a>
-        </div>
     </section>
 </template>
 
@@ -61,7 +54,6 @@ const devTools = {
         { icon: '/assets/icons/tools/filezilla.svg', label: 'FileZilla' },
         { icon: '/assets/icons/tools/linux.svg', label: 'Linux' },
         { icon: '/assets/icons/tools/postman.svg', label: 'Postman' },
-        { icon: '/assets/icons/tools/copilot.svg', label: 'Copilot' },
         { icon: '/assets/icons/tools/docker.svg', label: 'Docker' },
         { icon: '/assets/icons/tools/nginx.svg', label: 'Nginx' },
     ],

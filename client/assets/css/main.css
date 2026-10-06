@@ -153,7 +153,7 @@ h4 {
   cursor: not-allowed;
 }
 
-.btn-primary:hover {
+.btn-primary:hover, .btn-primary:focus {
   text-decoration: underline;
   text-decoration-color: var(--app-color-primary);
   text-decoration-thickness: 2px;
@@ -162,7 +162,7 @@ h4 {
   background-color: var(--app-color-hover);
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover, .btn-secondary:focus {
   text-decoration: underline;
   text-decoration-color: var(--app-color-secondary);
   text-decoration-thickness: 2px;
@@ -171,7 +171,7 @@ h4 {
   background-color: var(--app-color-hover);
 }
 
-.btn-unselected:hover {
+.btn-unselected:hover, .btn-unselected:focus {
   text-decoration: underline;
   text-decoration-color: currentColor;
   text-decoration-thickness: 2px;

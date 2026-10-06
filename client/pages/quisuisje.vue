@@ -1,6 +1,7 @@
 <template>
   <section id="qui-suis-je">
-    <div class="flex flex-col text-justify justify-center items-center gap-8 lg:gap-10">
+    <h1>Qui suis-je ?</h1>
+    <div class="flex flex-col text-justify justify-center items-center gap-8 lg:gap-10 pt-8">
       <img src="/assets/img/will.jpg" class="w-48 h-auto rounded-xl" alt="">
       <p class="body-text">Je suis William Brooks. J'ai 22 ans et je suis un développeur web junior full-stack.
         Intéressé par l'informatique depuis un jeune âge, j'ai décidé de faire des études dans le domaine du
@@ -14,13 +15,14 @@
   </section>
   <Study />
   <Experience />
-  <MediaShowcase />
+  <OtherProjects />
 </template>
 
 <script setup>
 import MediaShowcase from '~/components/Media/MediaShowcase.vue';
 import Study from '~/components/Study/Study.vue';
 import Experience from '~/components/Study/Experience.vue';
+import OtherProjects from '~/components/CallToAction/OtherProjects.vue';
 
 useHead({
   title: 'William Brooks - Qui suis-je ?',
@@ -31,7 +33,7 @@ useHead({
     },
     {
       name: 'keywords',
-      content: 'développeur web, développeur front-end, étudiant, Limoges, informatique'
+      content: 'développeur web, développeur front-end, développeur back-end, développeur full stack, Limoges, informatique'
     },
     {
       property: 'og:title',

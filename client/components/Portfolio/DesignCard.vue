@@ -55,7 +55,7 @@
                     :alt="`Aperçu de ${design.title}`"
                 >
                     <span
-                        class="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
+                        class="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-light transition hover:opacity-90"
                     >
                         <i
                             class="bi bi-eye"

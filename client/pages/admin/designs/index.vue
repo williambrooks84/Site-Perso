@@ -69,6 +69,8 @@ definePageMeta({
     middleware: 'admin',
 })
 
+useRobotsRule({ noindex: true, nofollow: true })
+
 const runtimeConfig = useRuntimeConfig()
 
 const apiBaseUrl =
