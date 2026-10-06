@@ -21,9 +21,13 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
+
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H -p "${{ secrets.VPS_PORT }}" "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
+
+          ssh-keyscan -H \
+            -p "${{ secrets.VPS_PORT }}" \
+            "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
 
       - name: Deploy API source
         run: |
@@ -55,6 +59,8 @@ jobs:
 
               cd /var/www/html/api
 
+              echo 'Checking environment...'
+
               test -s .env || (
                 echo 'Missing /var/www/html/api/.env on the VPS.'
                 exit 1
@@ -76,13 +82,20 @@ jobs:
                 sleep 2
               done
 
+              echo 'MySQL is ready.'
+
               echo 'Waiting for Symfony...'
               until curl -sf http://127.0.0.1:8000/api/me > /dev/null; do
                 sleep 2
               done
 
+              echo 'Symfony is running.'
+
               echo 'Clearing Symfony production cache...'
               docker-compose exec -T api php bin/console cache:clear --env=prod --no-warmup
+
+              echo 'Marking existing project_technology migration as applied...'
+              docker-compose exec -T api php bin/console doctrine:migrations:version 20261004185727 --add --no-interaction
 
               echo 'Running Doctrine migrations...'
               docker-compose exec -T api php bin/console doctrine:migrations:migrate \
