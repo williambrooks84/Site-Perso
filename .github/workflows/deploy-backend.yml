@@ -36,6 +36,13 @@ jobs:
             ./api/ \
             "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/api/"
 
+      - name: Deploy docker-compose
+        run: |
+          rsync -r \
+            -e "ssh -i ~/.ssh/id_ed25519 -p ${{ secrets.VPS_PORT }}" \
+            api/docker-compose.yml \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/html/api/docker-compose.yml"
+
       - name: Build and restart API
         run: |
           ssh \
@@ -56,6 +63,9 @@ jobs:
                 echo 'DATABASE_URL must point to the Docker service db.'
                 exit 1
               )
+
+              echo 'Checking Docker Compose configuration...'
+              docker-compose config
 
               echo 'Building and restarting Symfony API...'
               docker-compose up -d --build --force-recreate api
